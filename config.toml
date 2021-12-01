@@ -53,7 +53,7 @@ name = "HummingLab"
       # you can add extra information after the name (HTML format is supported), such as icons
       post = ""
       # DoIt NEW | 0.2.5 whether to use typeit animation for title name
-      typeit = false
+      typeit = true
 
   [params.page]
     ruby = true
@@ -101,6 +101,14 @@ name = "HummingLab"
         dataEmitMetadata = "0"
         lightTheme = "light"
         darkTheme = "dark"
+
+    [params.analytics]
+      enable = true
+      # Google Analytics
+      [params.analytics.google]
+        id = "UA-83257319-2"
+        # whether to anonymize IP
+        anonymizeIP = true
 
 [menu]
   [[menu.main]]
