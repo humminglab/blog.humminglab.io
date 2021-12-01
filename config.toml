@@ -8,10 +8,14 @@ title = "All about IoT"
 # Change the default theme to be use when building the site with Hugo
 theme = "DoIt"
 
+[author]
+link = "https://www.humminglab.io"
+name = "HummingLab"
+
 [params]
   # DoIt theme version
   version = "0.2.X"
-
+  
 [menu]
   [[menu.main]]
     identifier = "posts"
