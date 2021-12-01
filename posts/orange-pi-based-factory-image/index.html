@@ -20,7 +20,7 @@
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
 <link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/posts/orange-pi-based-factory-image/><link rel=prev href=https://blog.humminglab.io/posts/wiced-event-loop/><link rel=next href=https://blog.humminglab.io/posts/yocto-project-history/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/fontawesome-free/all.min.css>
 <noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/animate/animate.min.css>
-<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Orange Pi 보드용 이미지 수작업으로 만들기","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/orange-pi-based-factory-image\/"},"genre":"posts","keywords":"OrangePi","wordcount":1914,"url":"https:\/\/blog.humminglab.io\/posts\/orange-pi-based-factory-image\/","datePublished":"2018-05-30T10:00:00+09:00","dateModified":"2018-05-30T10:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head>
+<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Orange Pi 보드용 이미지 수작업으로 만들기","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/orange-pi-based-factory-image\/"},"genre":"posts","keywords":"OrangePi","wordcount":2070,"url":"https:\/\/blog.humminglab.io\/posts\/orange-pi-based-factory-image\/","datePublished":"2018-05-30T10:00:00+09:00","dateModified":"2018-05-30T10:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head>
 <body header-desktop header-mobile><script type=text/javascript>function setTheme(a){document.body.setAttribute('theme',a)}function saveTheme(a){window.localStorage&&localStorage.setItem('theme',a)}function getMeta(b){const a=document.getElementsByTagName('meta');for(let c=0;c<a.length;c++)if(a[c].getAttribute('name')===b)return a[c];return''}if(window.localStorage&&localStorage.getItem('theme')){let a=localStorage.getItem('theme');a==='light'||a==='dark'||a==='black'?setTheme(a):window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?setTheme('dark'):setTheme('light')}else''==='light'||''==='dark'||''==='black'?(setTheme(''),saveTheme('')):(saveTheme('auto'),window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?setTheme('dark'):setTheme('light'));let metaColors={light:'#f8f8f8',dark:'#252627',black:'#000000'};getMeta('theme-color').content=metaColors[document.body.getAttribute('theme')]</script>
 <div id=back-to-top></div>
 <div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
@@ -63,8 +63,8 @@
 <div class=post-meta-line>
 <span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
 </span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/embedded-linux/><i class="far fa-folder fa-fw"></i>Embedded Linux</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2018-05-30>2018-05-30</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2018-05-30>2018-05-30</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;1914 words&nbsp;
-<i class="far fa-clock fa-fw"></i>&nbsp;9 minutes&nbsp;</div>
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2018-05-30>2018-05-30</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2018-05-30>2018-05-30</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;2070 words&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;10 minutes&nbsp;</div>
 </div><div class="details toc" id=toc-static kept>
 <div class="details-summary toc-title">
 <span>Contents</span>
@@ -119,25 +119,71 @@
 <p>Orange Pi R1은 Allwinner H2+ 를 사용하고 있다.</p>
 <p>Orange Pi R1에 해당하는 이미지 중 Armbian Xenial 이미지를 다운로드 받는다. Armbian Xenial 은 ubuntu image이고, Stretch 는 debian 이미지 이다. Ubuntu와 Debian의 버전명은 다음과 같은 <a href=https://askubuntu.com/questions/445487/what-debian-version-are-the-different-ubuntu-versions-based-on target=_blank rel="noopener noreffer">페이지</a>에서 확인할 수 있다.</p>
 <p>해당 파일을 linux machine에서 아래와 같이 sd card로 writing 한다. 최소 2GB 이상의 sd card가 필요하다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>sudo fdisk -l 
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>sudo fdisk -l 
 sudo dd <span class=k>if</span><span class=o>=</span>Armbian_5.38_Orangepi-r1_Ubuntu_xenial_next_4.14.14.img <span class=nv>of</span><span class=o>=</span>/dev/sdb <span class=nv>bs</span><span class=o>=</span>1M <span class=nv>status</span><span class=o>=</span>progress
-</code></pre></div><p>of는 sdcard의 block device로 <code>fdisk -l</code> 명령 등으로 확인할 수 있다. 쓰기가 완료된 sd card를 orange pi 보드에 꽂은 후 전원을 넣으면 부팅한다.</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>of는 sdcard의 block device로 <code>fdisk -l</code> 명령 등으로 확인할 수 있다. 쓰기가 완료된 sd card를 orange pi 보드에 꽂은 후 전원을 넣으면 부팅한다.</p>
 <h2 id=기본-설정>기본 설정</h2>
 <p>Orange Pi R1 이더넷 커텍터 부근의 커넥터 핀으로 시리얼로 연결하거나, ssh로 접속한다. 초기 계정은 root, 1234 이다.</p>
 <p>Root는 임시로 적절한 암호로 변경하고, 사용자 계정을 하나 만든다. 아래 예에는 pi로 계정을 만든 것으로 가정하고 설명한다. 사용자 계정은 sudoer에 포함되어 있으므로 root의 password는 삭제하여 불필요하게 로그인이 되지 않도록 막는다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>sudo passwd -d root
-</code></pre></div><p>Ubuntu 패키지를 최신으로 업데이트 한다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>sudo apt update
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>sudo passwd -d root
+</code></pre></td></tr></table>
+</div>
+</div><p>Ubuntu 패키지를 최신으로 업데이트 한다.</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>sudo apt update
 sudo apt dist-upgrade 
 sudo apt autoremove
-</code></pre></div><p>apt를 ssh로 접속하여 실행하면 접속한 host locale과 설정이 다른 경우 warning 메시지가 뜰수 있다. 이를 막기 위하여 LC_CTYPE도 /etc/default/locale 에 추가한다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ sudo -u root -s
+</code></pre></td></tr></table>
+</div>
+</div><p>apt를 ssh로 접속하여 실행하면 접속한 host locale과 설정이 다른 경우 warning 메시지가 뜰수 있다. 이를 막기 위하여 LC_CTYPE도 /etc/default/locale 에 추가한다.</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ sudo -u root -s
 $ <span class=nb>echo</span> <span class=nv>LC_CTYPE</span><span class=o>=</span>en_US.UTF-8 &gt;&gt; /etc/default/locale
-</code></pre></div><p>서버를 pi 계정으로 띄우기 때문에 timezone 설정은 사용자 profile에 추가하였다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ <span class=nb>echo</span> <span class=s2>&#34;TZ=&#39;Asia/Seoul&#39;; export TZ&#34;</span> &gt;&gt; ~/.profile
-</code></pre></div><p>다음과 같이 추가로 필요한 패키지를 설치한다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>sudo apt i2c-tools ntpdate
-</code></pre></div><p>각각의 패키지 용도는 다음과 같다.</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>서버를 pi 계정으로 띄우기 때문에 timezone 설정은 사용자 profile에 추가하였다.</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ <span class=nb>echo</span> <span class=s2>&#34;TZ=&#39;Asia/Seoul&#39;; export TZ&#34;</span> &gt;&gt; ~/.profile
+</code></pre></td></tr></table>
+</div>
+</div><p>다음과 같이 추가로 필요한 패키지를 설치한다.</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>sudo apt i2c-tools ntpdate
+</code></pre></td></tr></table>
+</div>
+</div><p>각각의 패키지 용도는 다음과 같다.</p>
 <ul>
 <li>i2c-tools: i2cdetect 프로그램으로 I2C에 연결되어 있는 장치를 확인할 때 사용</li>
 <li>ntpdate: 수동으로 NTP로 시간을 얻을 때 이용</li>
@@ -146,8 +192,15 @@ $ <span class=nb>echo</span> <span class=nv>LC_CTYPE</span><span class=o>=</span
 <ul>
 <li>
 <p>/boot/armbianEnv.txt 파일의 overlays 항목에 아래와 같이 uart2와 i2c0 를 추가한다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=nv>overlays</span><span class=o>=</span>usbhost2 usbhost3 uart2 i2c0
-</code></pre></div></li>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=nv>overlays</span><span class=o>=</span>usbhost2 usbhost3 uart2 i2c0
+</code></pre></td></tr></table>
+</div>
+</div></li>
 <li>
 <p>다시 리부팅을 하면 uart2와 i2c0 를 사용할 수 있다. 장치 디바이스는 각각 /dev/ttyS2, /dev/i2c-0 로 생성된다.</p>
 </li>
@@ -164,7 +217,21 @@ $ <span class=nb>echo</span> <span class=nv>LC_CTYPE</span><span class=o>=</span
 <p>이를 보완하기 위하여 I2C로 <a href=http://www.microchip.com/wwwproducts/en/MCP79410 target=_blank rel="noopener noreffer">MCP47910</a> RTC를 연결하였다.</p>
 <p>I2C를 사용하지 않는다면 이 절은 건너띌 수 있다.</p>
 <p>i2cdetect를 이용하여 다음과 같이 I2C에 연결된 디바이스를 찾을 수 있다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ sudo i2cdetect -y <span class=m>0</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ sudo i2cdetect -y <span class=m>0</span>
      <span class=m>0</span>  <span class=m>1</span>  <span class=m>2</span>  <span class=m>3</span>  <span class=m>4</span>  <span class=m>5</span>  <span class=m>6</span>  <span class=m>7</span>  <span class=m>8</span>  <span class=m>9</span>  a  b  c  d  e  f
 00:          -- -- -- -- -- -- -- -- -- -- -- -- --
 10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
@@ -174,7 +241,9 @@ $ <span class=nb>echo</span> <span class=nv>LC_CTYPE</span><span class=o>=</span
 50: -- -- -- -- -- -- -- <span class=m>57</span> -- -- -- -- -- -- -- --
 60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 6f
 70: -- -- -- -- -- -- -- --
-</code></pre></div><p>0x57은 MCP79410의 EEPROM control address이고, 0x6f가 실제 RTC를 설정할 수 있는 번지 이다.</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>0x57은 MCP79410의 EEPROM control address이고, 0x6f가 실제 RTC를 설정할 수 있는 번지 이다.</p>
 <p>I2C로 연결되는 이와 같은 device를 linux device driver로 등록하는 방법은 다음과 같이 두 가지 방법이 주로 사용된다.</p>
 <ul>
 <li>/sys/class/i2c-adapter/i2c-0/new_device</li>
@@ -183,21 +252,75 @@ $ <span class=nb>echo</span> <span class=nv>LC_CTYPE</span><span class=o>=</span
 <p>첫번째 방법이 간단하여 여기에서는 첫번째 방식을 사용하였다.</p>
 <h3 id=sysclassi2c-adapteri2c-0new_device>/sys/class/i2c-adapter/i2c-0/new_device</h3>
 <p>다음과 같이 RTC device를 시험해 볼 수 있다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ sudo -u root -s 
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ sudo -u root -s 
 $ <span class=nb>echo</span> mcp7941x 0x6f &gt; /sys/class/i2c-adapter/i2c-0/new_device
 $ hwclock -f /dev/rtc1 -w
 $ hwclock -f /dev/rtc1 -r
-</code></pre></div><ul>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
 <li>/sys/class/i2c-adapter/i2c-0/new_device에 쓰면 해당 드라이버가 로드되어 /dev/rtc1 이 생성된다. 참고로 /dev/rtc0는 H2 프로세서 내부의 RTC이다.</li>
 </ul>
 <p>만일 디바이스를 삭제하려면 아래와 같이 하면 된다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ <span class=nb>echo</span> 0x6f &gt; /sys/class/i2c-adapter/i2c-0/delete_device
-</code></pre></div><p>위와 같은 script를 rc.local 등 적절한 시점에 넣어 주면 된다.</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ <span class=nb>echo</span> 0x6f &gt; /sys/class/i2c-adapter/i2c-0/delete_device
+</code></pre></td></tr></table>
+</div>
+</div><p>위와 같은 script를 rc.local 등 적절한 시점에 넣어 주면 된다.</p>
 <h3 id=device-tree-overlay>Device Tree Overlay</h3>
 <p>Armbian은 rapbian과 마찬가지로 <a href=https://www.raspberrypi.org/documentation/configuration/device-tree.md target=_blank rel="noopener noreffer">device tree overlay</a>를 지원한다. ARM 계열 리눅스에서 제공하는 device tree를 동적으로 설정할 수 있도록 하여 타겟 보드의 설정에 따라서 필요한 디바이스를 추가하거나 제거할 수 있다.</p>
 <p>정확히 말하면 동적으로 로딩은 리눅스가 실행된 상태에서 동적으로 디바이스를 올렸다 내렸다 하는 것이 아니라 u-boot에서 kernel을 메모리에 로딩하여 실행되는 시점에서 /boot/armbianEnv.txt 를 이용하여 필요한 항목을 device tree에 추가하는 것이다.</p>
 <p>MCP7941x RTC driver는 다음과 같이 dts 파일을 작성한다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-d data-lang=d><span class=o>/</span><span class=n>dts</span><span class=o>-</span><span class=n>v1</span><span class=o>/;</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-d data-lang=d><span class=o>/</span><span class=n>dts</span><span class=o>-</span><span class=n>v1</span><span class=o>/;</span>
 <span class=o>/</span><span class=n>plugin</span><span class=o>/;</span>
 
 <span class=o>/</span> <span class=o>{</span>
@@ -230,20 +353,51 @@ $ hwclock -f /dev/rtc1 -r
     <span class=o>};</span>
   <span class=o>};</span>
 <span class=o>};</span>
-</code></pre></div><p>위 문법을 보면 기존의 RTC와 유사하나 앞에 <code>/plugin/</code> 으로 overlay 형식을 알려주고, <code>fragment</code> 로 추가될 부분을 기록한다. Device tree 문법은 &lsquo;<a href=https://elinux.org/images/f/f9/Petazzoni-device-tree-dummies_0.pdf target=_blank rel="noopener noreffer">Device Tree for Dummies</a>&rsquo; 등의 참고 자료나 linux 소스의 Documentation/devicetree를 보고 이해하여야 한다.</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>위 문법을 보면 기존의 RTC와 유사하나 앞에 <code>/plugin/</code> 으로 overlay 형식을 알려주고, <code>fragment</code> 로 추가될 부분을 기록한다. Device tree 문법은 &lsquo;<a href=https://elinux.org/images/f/f9/Petazzoni-device-tree-dummies_0.pdf target=_blank rel="noopener noreffer">Device Tree for Dummies</a>&rsquo; 등의 참고 자료나 linux 소스의 Documentation/devicetree를 보고 이해하여야 한다.</p>
 <p>위 사항은 간략히 설명하면 fragment@0 은 새로 추가될 MCP7941x가 rtc1 alias로 등록되도록 하는 것이고, fragment@1 은 i2c0 버스 내dml 0x6f 주소에 &lsquo;microchip,mcp7941x&rsquo; driver를 등록하는 것이다. 해당 driver는 linux/drivers/rtc/rtc-ds1307.c 를 참고하면 된다.</p>
 <p>위와 같은 dts를 dtbo로 binary 형식으로 변환하기 위하여는 armbian에서 patch한 dtc를 사용하여야 한다. Overlay patch한 DTC를 아래처럼 받아서 빌드해서 사용한다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ git clone -b dt-overaly8 https://github.com/pantoniou/dtc
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ git clone -b dt-overaly8 https://github.com/pantoniou/dtc
 $ <span class=nb>cd</span> dtc
 $ sudo apt-get install flex bison 
 $ make 
 $ ./dtc -@ -O dtb -I dts -o sun8i-h3-rtc-mcp7941x.dtbo sun8i-h3-rtc-mcp7941x.dts
-</code></pre></div><p>생성된 파일을 /boot/dtb/overlay/ 에 복사한 후 /boot/amrbianEnv.txt 의 overlay에 &lsquo;rtc-mcp7941x&rsquo; (overlay_prefix 문자열을 제외한)를 적어주고 리부팅 하면 된다.</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>생성된 파일을 /boot/dtb/overlay/ 에 복사한 후 /boot/amrbianEnv.txt 의 overlay에 &lsquo;rtc-mcp7941x&rsquo; (overlay_prefix 문자열을 제외한)를 적어주고 리부팅 하면 된다.</p>
 <p>확인은 dmesg로 kernel log를 확인하여 RTC1 이 등록되어는지 확인 해보면 된다.</p>
 <h3 id=systemd-등록>Systemd 등록</h3>
 <p>위 두 방법 중 두번째 방법이 깔끔하기는 하지만 수정하여야 하는 범위가 넓어서 첫번째 방식으로 수정을 하여 systemd에 등록하는 것으로 한다.</p>
 <p>/etc/systemd/system/hwclock-i2c-mcp7941x.service 로 다음과 같이 파일을 생성한다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-ini data-lang=ini><span class=k>[Unit]</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-ini data-lang=ini><span class=k>[Unit]</span>
 <span class=na>Description</span><span class=o>=</span><span class=s>Restore / save MCP7941x RTC</span>
 <span class=na>DefaultDependencies</span><span class=o>=</span><span class=s>no</span>
 <span class=na>Before</span><span class=o>=</span><span class=s>sysinit.target</span>
@@ -257,8 +411,41 @@ $ ./dtc -@ -O dtb -I dts -o sun8i-h3-rtc-mcp7941x.dtbo sun8i-h3-rtc-mcp7941x.dts
 
 <span class=k>[Install]</span>
 <span class=na>WantedBy</span><span class=o>=</span><span class=s>sysinit.target</span>
-</code></pre></div><p>/sbin/hwclock-i2c-mcp7941x 로 다음과 같이 파일을 만든다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=cp>#!/bin/sh
+</code></pre></td></tr></table>
+</div>
+</div><p>/sbin/hwclock-i2c-mcp7941x 로 다음과 같이 파일을 만든다.</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=cp>#!/bin/sh
 </span><span class=cp></span>
 <span class=nv>RUNFILE</span><span class=o>=</span>/run/hwclock-i2c-mcp7941x
 
@@ -285,30 +472,85 @@ $ ./dtc -@ -O dtb -I dts -o sun8i-h3-rtc-mcp7941x.dtbo sun8i-h3-rtc-mcp7941x.dts
         <span class=nb>exit</span> <span class=m>1</span>
         <span class=p>;;</span>
 <span class=k>esac</span>
-</code></pre></div><p>다음과 같이 실행하여 daemon을 등록하고 시작한다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ sudo chmod +x /sbin/hwclock-i2c-mcp7941x
+</code></pre></td></tr></table>
+</div>
+</div><p>다음과 같이 실행하여 daemon을 등록하고 시작한다.</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ sudo chmod +x /sbin/hwclock-i2c-mcp7941x
 $ sudo systemctl daemon-reload
 $ sudo systemctl <span class=nb>enable</span> hwclokc-i2c-mcp7941x
 $ sudo systemctl start hwclokc-i2c-mcp7941x
-</code></pre></div><p>정상적으로 동작되는지 확인은 lsmod로 rtc_ds1307 모듈(이 모듈내에 유사한 드라이버가 다 포함되어 있음)이 로딩되었는지를 확인하거나 아래와 같이 hwclock으로 시간을 설정해보고 읽어보면 된다.</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>정상적으로 동작되는지 확인은 lsmod로 rtc_ds1307 모듈(이 모듈내에 유사한 드라이버가 다 포함되어 있음)이 로딩되었는지를 확인하거나 아래와 같이 hwclock으로 시간을 설정해보고 읽어보면 된다.</p>
 <h2 id=추가-필요한-모듈-설치>추가 필요한 모듈 설치</h2>
 <p>기본 설정을 마친 상태에서 필요한 프로그램을 추가로 설치하여 부팅 시 호출되도록 설정해주면 된다.</p>
 <p>모든 작업을 마친 후에는 SD card를 이미지화 하기 위하여 정상적으로 shutdown 시키고 SD card를 분리한다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ sudo shutdown -h now
-</code></pre></div><h2 id=디스크-이미지-shrink-하기>디스크 이미지 shrink 하기</h2>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ sudo shutdown -h now
+</code></pre></td></tr></table>
+</div>
+</div><h2 id=디스크-이미지-shrink-하기>디스크 이미지 shrink 하기</h2>
 <p>디스크 이미지의 rootfs 파티션은 보통 SD 카드의 전체 공간으로 할당되어 있다. 하지만 다른 SD card로 복제할 때 전체 공간을 그대로 복제하는 것 보다는 최소한으로 partition을 줄여서 읽어 들인 후, 이를 복제하고, 복제된 것으로 부팅 시 다시 SD card 전체 공간으로 파티션 크기를 넓히는 것이 시간면에서 유리하다.</p>
 <p>이 과정을 target에서 SD card로 하기에는 위험성도 있고, 시간도 걸려 host linux에서 하는 것으로 한다.</p>
 <p>위 과정으로 만들어진 SD 카드를 host PC에 USB 카드 리더기 등을 이용하여 꽂고 다음과 같이 전제 영역을 읽어 들인다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ sudo fdisk -l
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ sudo fdisk -l
 $ sudo dd <span class=k>if</span><span class=o>=</span>/dev/sdb <span class=nv>of</span><span class=o>=</span>target.img <span class=nv>bs</span><span class=o>=</span>1M <span class=nv>status</span><span class=o>=</span>progress
-</code></pre></div><p>SD card 읽고 쓰기 과정은 잘못해서 다른 디스크에 한다면 치명적일 수 있으므로, fdisk를 이용하여 해당 디스크가 맞는지 주의하여야 한다.</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>SD card 읽고 쓰기 과정은 잘못해서 다른 디스크에 한다면 치명적일 수 있으므로, fdisk를 이용하여 해당 디스크가 맞는지 주의하여야 한다.</p>
 <p>읽어 들인 이미지를 loop device를 이용하여 block device로 등록시킨다. 관련 부분은 이전에 &lsquo;<a href=https://blog.humminglab.io/how-to-make-sdcard-disk-image/ target=_blank rel="noopener noreffer">SD card 디스크 이미지 만들고 수정하는 방법 정리</a>&lsquo;를 참고할 수 있다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ sudo losetup -Pf --show target.img
-</code></pre></div><p>위와 같이 하면 /dev/loop0 과 파티션 개수만큼 /dev/loop0p1 처럼 생긴다.</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ sudo losetup -Pf --show target.img
+</code></pre></td></tr></table>
+</div>
+</div><p>위와 같이 하면 /dev/loop0 과 파티션 개수만큼 /dev/loop0p1 처럼 생긴다.</p>
 <p>Armbian은 ex4 파일시스템을 사용하고 있다. 디스크의 파일 시스템이 정상인지 확인하고 필요하면 수정한다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ sudo fsck -f /dev/loop0p1
-</code></pre></div><p>우선 파일 시스템의 크기를 줄여야 한다. 다음과 같이 하여 최소 크기로 줄이도록 실행한다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ sudo resize2fs -M -p  /dev/loop0p1
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ sudo fsck -f /dev/loop0p1
+</code></pre></td></tr></table>
+</div>
+</div><p>우선 파일 시스템의 크기를 줄여야 한다. 다음과 같이 하여 최소 크기로 줄이도록 실행한다.</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ sudo resize2fs -M -p  /dev/loop0p1
 resize2fs 1.42.13 <span class=o>(</span>17-May-2015<span class=o>)</span>
 Resizing the filesystem on /dev/loop0p1 to <span class=m>466744</span> <span class=o>(</span>4k<span class=o>)</span> blocks.
 Begin pass <span class=m>2</span> <span class=o>(</span><span class=nv>max</span> <span class=o>=</span> 112981<span class=o>)</span>
@@ -318,9 +560,27 @@ Scanning inode table          XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 Begin pass <span class=m>4</span> <span class=o>(</span><span class=nv>max</span> <span class=o>=</span> 5486<span class=o>)</span>
 Updating inode references     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 The filesystem on /dev/loop0p1 is now <span class=m>466744</span> <span class=o>(</span>4k<span class=o>)</span> blocks long.
-</code></pre></div><p>완료되면 위와 같이 446,744 개수의 4KiB 블럭만큼 줄었다고 알려준다. 466,744*4kiB=1,866,976kiB 크기가 된다. 위 과정은 file system을 줄인 과정이고, 다음은 전체 partiton 크기를 file system에 맞도록 줄여주어야 한다.</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>완료되면 위와 같이 446,744 개수의 4KiB 블럭만큼 줄었다고 알려준다. 466,744*4kiB=1,866,976kiB 크기가 된다. 위 과정은 file system을 줄인 과정이고, 다음은 전체 partiton 크기를 file system에 맞도록 줄여주어야 한다.</p>
 <p>다음과 같이 parted를 이용하여 파티션 공간을 확인한다(만일 GUI 환경이 있다면 gparted로 쉽게 할수도 있다).</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ sudo parted /dev/loop0
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ sudo parted /dev/loop0
 ...
 <span class=o>(</span>parted<span class=o>)</span> unit kiB
 <span class=o>(</span>parted<span class=o>)</span> print
@@ -332,8 +592,30 @@ Disk Flags:
 
 Number  Start    End          Size         Type     File system  Flags
  <span class=m>1</span>      4096kiB  15635216kiB  15631120kiB  primary  ext4
-</code></pre></div><p>표시 단위를 kiB로 변경 후 본 파티션 공간이다. parted로는 resizepart 로 파티션 크기 변경 시에는 End를 변경할 수 있다. 새로 변경할 End 위치는 Start(4,096kiB) + Filesystem Size(1,866,976kiB) = 1,871,072kiB가 된다. 이 크기로 partition 크기를 줄인다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ sudo parted /dev/loop0
+</code></pre></td></tr></table>
+</div>
+</div><p>표시 단위를 kiB로 변경 후 본 파티션 공간이다. parted로는 resizepart 로 파티션 크기 변경 시에는 End를 변경할 수 있다. 새로 변경할 End 위치는 Start(4,096kiB) + Filesystem Size(1,866,976kiB) = 1,871,072kiB가 된다. 이 크기로 partition 크기를 줄인다.</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ sudo parted /dev/loop0
 <span class=o>(</span>parted<span class=o>)</span> unit kiB
 <span class=o>(</span>parted<span class=o>)</span> resizepart
 Partition number? <span class=m>1</span>
@@ -349,17 +631,41 @@ Disk Flags:
 
 Number  Start    End         Size        Type     File system  Flags
  <span class=m>1</span>      4096kiB  1871072kiB  1866977kiB  primary  ext4
-</code></pre></div><p>위와 같이 정상적으로 줄어든 것을 볼 수 있다. 다시 fsck를 이용하여 해당 파티션이 문제가 없는지 확인해 보고, loop0 device를 제거한다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ sudo fsck -f /dev/loop0p1
+</code></pre></td></tr></table>
+</div>
+</div><p>위와 같이 정상적으로 줄어든 것을 볼 수 있다. 다시 fsck를 이용하여 해당 파티션이 문제가 없는지 확인해 보고, loop0 device를 제거한다.</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ sudo fsck -f /dev/loop0p1
 $ sudo losetup -d /dev/loop0
-</code></pre></div><p>Truncate 를 사용하여 image 파일의 뒷 부분을 제거한다. 아래와 같이 파티션의 끝 위치에 조금 여유를 두고 잘라 낸다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ sudo truncate --size<span class=o>=</span>$<span class=o>[(</span>1871072+1<span class=o>)</span>*1024<span class=o>]</span> target.img
-</code></pre></div><p>이와 같이 하면 해당 이미지를 target 용 SD 카드로 복제할 수 있는 수작업 이미지가 만들어 진다.</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>Truncate 를 사용하여 image 파일의 뒷 부분을 제거한다. 아래와 같이 파티션의 끝 위치에 조금 여유를 두고 잘라 낸다.</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ sudo truncate --size<span class=o>=</span>$<span class=o>[(</span>1871072+1<span class=o>)</span>*1024<span class=o>]</span> target.img
+</code></pre></td></tr></table>
+</div>
+</div><p>이와 같이 하면 해당 이미지를 target 용 SD 카드로 복제할 수 있는 수작업 이미지가 만들어 진다.</p>
 <h2 id=마무리>마무리</h2>
 <p>위와 같이 만들어진 이미지를 복제 후 부팅을 하여 정상동작 되는지 확인한다.</p>
 <p>초기화 설정이 안되어서 자동으로 파티션 영역이 확장되지는 않는다. 다음과 같이 하여 수동으로 전체 SD 공간으로 partition 및 파일 시스템 크기를 키울 수 있다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ sudo /etc/init.d/resize2fs start
-</code></pre></div><p>RTC를 사용한 다면 ntpdate 등으로 시간을 얻어온 후 RTC에 써주는 과정 등의 추가 초기 설정을 해주면 마무리 된다.</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ sudo /etc/init.d/resize2fs start
+</code></pre></td></tr></table>
+</div>
+</div><p>RTC를 사용한 다면 ntpdate 등으로 시간을 얻어온 후 RTC에 써주는 과정 등의 추가 초기 설정을 해주면 마무리 된다.</p>
 </div>
 <div class=post-footer id=post-footer>
 <div class=post-info>
@@ -397,6 +703,8 @@ Please enable JavaScript to view the comments powered by <a href=https://giscus.
 <i class="fas fa-comment fa-fw"></i>
 </a>
 </div><div class=assets><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/topbar/topbar.min.js></script><script type=text/javascript src=/lib/pjax/pjax.min.js></script><script type=text/javascript src=/js/theme.min.js></script></div>
-<div class=pjax-assets><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",lightTheme:"light"}}}</script></div>
+<div class=pjax-assets><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",lightTheme:"light"}},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1}}</script><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/katex/katex.min.css>
+<noscript><link rel=stylesheet href=/lib/katex/katex.min.css></noscript><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/katex/copy-tex.min.css>
+<noscript><link rel=stylesheet href=/lib/katex/copy-tex.min.css></noscript></div>
 </body>
 </html>

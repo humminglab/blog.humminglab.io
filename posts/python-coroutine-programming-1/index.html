@@ -18,7 +18,7 @@
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
 <link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/posts/python-coroutine-programming-1/><link rel=prev href=https://blog.humminglab.io/posts/github-through-proxy/><link rel=next href=https://blog.humminglab.io/posts/python-coroutine-programming-2/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/fontawesome-free/all.min.css>
 <noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/animate/animate.min.css>
-<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Python 비동기 프로그래밍 제대로 이해하기(1/2) - Asyncio, Coroutine","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/python-coroutine-programming-1\/"},"genre":"posts","keywords":"Python","wordcount":2482,"url":"https:\/\/blog.humminglab.io\/posts\/python-coroutine-programming-1\/","datePublished":"2018-03-26T23:00:00+09:00","dateModified":"2018-03-26T23:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head>
+<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Python 비동기 프로그래밍 제대로 이해하기(1/2) - Asyncio, Coroutine","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/python-coroutine-programming-1\/"},"genre":"posts","keywords":"Python","wordcount":2793,"url":"https:\/\/blog.humminglab.io\/posts\/python-coroutine-programming-1\/","datePublished":"2018-03-26T23:00:00+09:00","dateModified":"2018-03-26T23:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head>
 <body header-desktop header-mobile><script type=text/javascript>function setTheme(a){document.body.setAttribute('theme',a)}function saveTheme(a){window.localStorage&&localStorage.setItem('theme',a)}function getMeta(b){const a=document.getElementsByTagName('meta');for(let c=0;c<a.length;c++)if(a[c].getAttribute('name')===b)return a[c];return''}if(window.localStorage&&localStorage.getItem('theme')){let a=localStorage.getItem('theme');a==='light'||a==='dark'||a==='black'?setTheme(a):window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?setTheme('dark'):setTheme('light')}else''==='light'||''==='dark'||''==='black'?(setTheme(''),saveTheme('')):(saveTheme('auto'),window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?setTheme('dark'):setTheme('light'));let metaColors={light:'#f8f8f8',dark:'#252627',black:'#000000'};getMeta('theme-color').content=metaColors[document.body.getAttribute('theme')]</script>
 <div id=back-to-top></div>
 <div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
@@ -61,8 +61,8 @@
 <div class=post-meta-line>
 <span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
 </span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/python/><i class="far fa-folder fa-fw"></i>Python</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2018-03-26>2018-03-26</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2018-03-26>2018-03-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;2482 words&nbsp;
-<i class="far fa-clock fa-fw"></i>&nbsp;12 minutes&nbsp;</div>
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2018-03-26>2018-03-26</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2018-03-26>2018-03-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;2793 words&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;14 minutes&nbsp;</div>
 </div><div class="details toc" id=toc-static kept>
 <div class="details-summary toc-title">
 <span>Contents</span>
@@ -102,10 +102,19 @@
 <h2 id=iterator>Iterator</h2>
 <p>Coroutine과 직접적인 관련은 없지만, 이해를 쉽게 하기 위하여는 iterator 부터 설명을 시작하여야 한다.</p>
 <p>기존의 list 형태는 각 원소가 실제 메모리에 할당된다. 예를 들어 <code>[1,2,3,4]</code>와 같이 list를 정의하면 4개의 원소를 저장할 공간이 필요하다. 하지만 수십만개의 저장공간이 필요한 아래와 같은 코드는 잠재적인 메모리 부족 문제를 만들 수 있다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=nb>sum</span> <span class=o>=</span> <span class=mi>0</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=nb>sum</span> <span class=o>=</span> <span class=mi>0</span>
 <span class=k>for</span> <span class=n>i</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=mi>100000</span><span class=p>):</span>
     <span class=nb>sum</span> <span class=o>+=</span> <span class=n>i</span>
-</code></pre></div><p>물론 위 사항은 python2 에만 해당된다. python3의 경우 range() 함수의 경우 list가 아니라 iterator를 리턴하여 실제로 데이타가 할당되지 않는다.</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>물론 위 사항은 python2 에만 해당된다. python3의 경우 range() 함수의 경우 list가 아니라 iterator를 리턴하여 실제로 데이타가 할당되지 않는다.</p>
 <p>이와 같이 이전 원소로 다음 원소를 계산할 수 있는 데이타 구조체라면 굳이 메모리를 할당하지 않고, 다음 값을 리턴 해주는 next() method를 제공해주는 객체가 있다면 유사한 기능을 될 것이다.</p>
 <p>이와 같은 생각에서 만들어 진 것이 iterator이다. Python에서 iterator라는 것은 <code>__iter__()</code>와 <code>__next__()</code> method를 가진 객체를 말한다.</p>
 <ul>
@@ -113,7 +122,26 @@
 <li><code>__next__()</code>: 호출될 때 마다 다음 값을 리턴</li>
 </ul>
 <p>즉, 해당 객체에서 <code>__iter__()</code> method를 이용해서 iterator를 얻고, 이의 <code>__next__()</code> method를 이용해서 반복해서 값을 얻는 것이다. (Python2에서는 <code>__next__()</code> method가 아니라 <code>next()</code> method 이어야 한다)</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=k>class</span> <span class=nc>Counter</span><span class=p>(</span><span class=nb>object</span><span class=p>):</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=k>class</span> <span class=nc>Counter</span><span class=p>(</span><span class=nb>object</span><span class=p>):</span>
     <span class=k>def</span> <span class=fm>__iter__</span><span class=p>(</span><span class=bp>self</span><span class=p>):</span>
         <span class=nb>iter</span> <span class=o>=</span> <span class=n>Iterator</span><span class=p>()</span>
         <span class=k>return</span> <span class=nb>iter</span>
@@ -128,18 +156,40 @@
         <span class=n>n</span> <span class=o>=</span> <span class=bp>self</span><span class=o>.</span><span class=n>index</span> <span class=o>*</span> <span class=mi>2</span>
         <span class=bp>self</span><span class=o>.</span><span class=n>index</span> <span class=o>+=</span> <span class=mi>1</span>
         <span class=k>return</span> <span class=n>n</span>
-</code></pre></div><p>위 예는 짝수를 리턴하는 iterator이다.
+</code></pre></td></tr></table>
+</div>
+</div><p>위 예는 짝수를 리턴하는 iterator이다.
 실제 확인은 iterator의 다음 값을 얻는 builtin <code>next()</code> 함수를 사용할 수 있다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=o>&gt;&gt;&gt;</span> <span class=n>c</span> <span class=o>=</span> <span class=n>Counter</span><span class=p>()</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=o>&gt;&gt;&gt;</span> <span class=n>c</span> <span class=o>=</span> <span class=n>Counter</span><span class=p>()</span>
 <span class=o>&gt;&gt;&gt;</span> <span class=nb>next</span><span class=p>(</span><span class=n>c</span><span class=p>)</span>
 <span class=mi>0</span>
 <span class=o>&gt;&gt;&gt;</span> <span class=nb>next</span> <span class=p>(</span><span class=n>c</span><span class=p>)</span>
 <span class=mi>2</span>
-</code></pre></div><p>Iteration의 종료는 위 예와 같이 StopIteration exception을 발생 시키면 된다. 이와 같이 작성된 코드는 다음과 같이 for loop에 바로 사용할 수 있다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=o>&gt;&gt;&gt;</span> <span class=n>c</span> <span class=o>=</span> <span class=n>Counter</span><span class=p>()</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Iteration의 종료는 위 예와 같이 StopIteration exception을 발생 시키면 된다. 이와 같이 작성된 코드는 다음과 같이 for loop에 바로 사용할 수 있다.</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=o>&gt;&gt;&gt;</span> <span class=n>c</span> <span class=o>=</span> <span class=n>Counter</span><span class=p>()</span>
 <span class=o>&gt;&gt;&gt;</span> <span class=k>for</span> <span class=n>i</span> <span class=ow>in</span> <span class=n>c</span><span class=p>:</span>
         <span class=nb>print</span><span class=p>(</span><span class=n>i</span><span class=p>)</span>   <span class=c1># 0~20까지 짝수 출력 </span>
-</code></pre></div><p>즉, for 루프에 객체를 넘기는 경우 <code>__iter__</code> method가 있는 지를 확인하여 iterator로 동작되도록 언어 자체에서 지원하는 것이다.</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>즉, for 루프에 객체를 넘기는 경우 <code>__iter__</code> method가 있는 지를 확인하여 iterator로 동작되도록 언어 자체에서 지원하는 것이다.</p>
 <p>Iterator의 장점은 위와 같이 loop에 사용할 수 있다는 것이다. 이 의미는 iterator로 data structure와 algorithm을 분리할 수 있다는 것이다.</p>
 <p>이렇게 해서 Python 2.1 (참고: <a href=https://www.python.org/dev/peps/pep-0234/ target=_blank rel="noopener noreffer">PEP 234 &ndash; Iterators</a>) (PEP는 Python Enhancement Proposal이다. Python의 새로운 기능은 모두 이같은 proposal이 있다고 보면 된다) 부터 Iterator 기능을 지원하였다.</p>
 <p>정리를 해보면 다음과 같다.</p>
@@ -155,7 +205,20 @@
 <h2 id=generator-yield-키워드>Generator (yield 키워드)</h2>
 <p>Iterator를 좀더 편하게 사용하는 방법은 다른 언어처럼 yield 를 이용하여 coroutine을 지원하는 것이다. Python 2.2 (<a href=https://www.python.org/dev/peps/pep-0255/ target=_blank rel="noopener noreffer">PEP 255 &ndash; Simple Generator</a>)에서는 이와 같은 lightweight coroutine 지원이 추가되었다. 이를 generator라고 부른다.</p>
 <p>Generator 코드 예는 다음과 같다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=k>def</span> <span class=nf>test1</span><span class=p>():</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=k>def</span> <span class=nf>test1</span><span class=p>():</span>
     <span class=nb>print</span><span class=p>(</span><span class=s1>&#39;print 1&#39;</span><span class=p>)</span>
     <span class=k>yield</span> <span class=mi>1</span>
     <span class=nb>print</span><span class=p>(</span><span class=s1>&#39;print 2&#39;</span><span class=p>)</span>
@@ -164,13 +227,32 @@
 <span class=k>def</span> <span class=nf>test2</span><span class=p>():</span>
     <span class=k>for</span> <span class=n>i</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=mi>10</span><span class=p>):</span>
         <span class=k>yield</span> <span class=n>i</span> <span class=o>*</span> <span class=mi>2</span>
-</code></pre></div><p>Generator는 함수안에 yield keyword가 있다는 것을 제외하고는 일반 함수와 동일하지만, 이 함수를 호출하면 완전히 다른 동작을 한다.</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>Generator는 함수안에 yield keyword가 있다는 것을 제외하고는 일반 함수와 동일하지만, 이 함수를 호출하면 완전히 다른 동작을 한다.</p>
 <ul>
 <li>일반 함수 호출 시: 함수의 body 가 실행됨</li>
 <li>Generator(yield가 있는 함수) 호출 시: Generator가 실행되는 것이 아니라 이 함수를 감싸는 &lsquo;generator&rsquo; 객체가 리턴된다. Generator 객체는 iterator와 동일하게 <code>__next__()</code> 를 가진 객체이다.</li>
 </ul>
 <p>위 첫번째 함수를 실행하면 결과는 다음과 같다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=o>&gt;&gt;&gt;</span> <span class=n>g</span> <span class=o>=</span> <span class=n>test1</span><span class=p>()</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=o>&gt;&gt;&gt;</span> <span class=n>g</span> <span class=o>=</span> <span class=n>test1</span><span class=p>()</span>
 <span class=o>&gt;&gt;&gt;</span> <span class=nb>type</span><span class=p>(</span><span class=n>g</span><span class=p>)</span>
 <span class=n>generator</span>
 <span class=o>&gt;&gt;&gt;</span> <span class=nb>dir</span><span class=p>(</span><span class=n>g</span><span class=p>)</span>
@@ -183,7 +265,9 @@
 <span class=mi>2</span>
 <span class=o>&gt;&gt;&gt;</span> <span class=nb>next</span><span class=p>(</span><span class=n>g</span><span class=p>)</span>
 <span class=ne>StopIteration</span>
-</code></pre></div><ol>
+</code></pre></td></tr></table>
+</div>
+</div><ol>
 <li><code>test1()</code> 이 호출하여 리턴된 결과는 generator object이다 .</li>
 <li><code>dir()</code>로 확인해 보면 <code>__next__()</code>가 있는 것을 확인할 수 있다. 즉, iterator와 동일한 방법으로 실행될 수 있다는 것이다.</li>
 <li><code>test1()</code>을 하며 바로 실행되지 않는 것은 &lsquo;print 1&rsquo; 문장이 출력되지 않는 것으로 확인할 수도 있다.</li>
@@ -193,10 +277,37 @@
 </ol>
 <p>이와 같은 generator은 yield를 이용하여 중간에서 멈추고 결과를 받는 용도로, 실제 주용도는 위의 <code>test2()</code>와 같은 iterator를 쉽게 만드는 것일 것이다. 위 iterator의 Counter class 예와 비교해 보면 코드가 훨씬 간결해 진 것을 볼 수 있다.</p>
 <p>생성은 iterator와 generator가 다른지만, 생성된 후의 동작은 완전히 동일하다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=k>for</span> <span class=n>i</span> <span class=ow>in</span> <span class=n>x</span><span class=p>:</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=k>for</span> <span class=n>i</span> <span class=ow>in</span> <span class=n>x</span><span class=p>:</span>
     <span class=nb>print</span> <span class=n>i</span>
-</code></pre></div><p>Python에서는 iterator, generator가 추가되면서 위의 예와 같은 for loop는 대략 아래와 같은 pseudo code로 번역된다고 이해하면 될 것 같다 (정확히는 iter()함수를 사용한다).</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=k>if</span> <span class=s1>&#39;__next__&#39;</span> <span class=ow>in</span> <span class=n>x</span><span class=p>:</span>   <span class=c1># for iterator or generator</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Python에서는 iterator, generator가 추가되면서 위의 예와 같은 for loop는 대략 아래와 같은 pseudo code로 번역된다고 이해하면 될 것 같다 (정확히는 iter()함수를 사용한다).</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=k>if</span> <span class=s1>&#39;__next__&#39;</span> <span class=ow>in</span> <span class=n>x</span><span class=p>:</span>   <span class=c1># for iterator or generator</span>
     <span class=k>try</span><span class=p>:</span>
         <span class=k>while</span> <span class=kc>True</span><span class=p>:</span>
             <span class=n>i</span> <span class=o>=</span> <span class=nb>next</span><span class=p>(</span><span class=n>x</span><span class=p>)</span>
@@ -211,17 +322,49 @@
         <span class=n>i</span> <span class=o>=</span> <span class=n>x</span><span class=p>[</span><span class=n>idx</span><span class=p>]</span>
         <span class=nb>print</span> <span class=n>i</span>
         <span class=n>idx</span> <span class=o>+=</span> <span class=mi>1</span>
-</code></pre></div><p>참고로 python 2.4 에서는 더 간결하게 generator를 만드는 것을 지원한다 (<a href=https://www.python.org/dev/peps/pep-0289/ target=_blank rel="noopener noreffer">PEP 289 &ndash; Generator Expressions</a>).</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>참고로 python 2.4 에서는 더 간결하게 generator를 만드는 것을 지원한다 (<a href=https://www.python.org/dev/peps/pep-0289/ target=_blank rel="noopener noreffer">PEP 289 &ndash; Generator Expressions</a>).</p>
 <p>Python에서 list를 만들 때 다음과 같이 만들 수 있다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=o>&gt;&gt;&gt;</span> <span class=p>[</span> <span class=n>x</span> <span class=o>*</span> <span class=mi>2</span> <span class=k>for</span> <span class=n>x</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=mi>10</span><span class=p>)</span> <span class=p>]</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=o>&gt;&gt;&gt;</span> <span class=p>[</span> <span class=n>x</span> <span class=o>*</span> <span class=mi>2</span> <span class=k>for</span> <span class=n>x</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=mi>10</span><span class=p>)</span> <span class=p>]</span>
 <span class=p>[</span><span class=mi>0</span><span class=p>,</span> <span class=mi>2</span><span class=p>,</span> <span class=mi>4</span><span class=p>,</span> <span class=mi>6</span><span class=p>,</span> <span class=mi>8</span><span class=p>,</span> <span class=mi>10</span><span class=p>,</span> <span class=mi>12</span><span class=p>,</span> <span class=mi>14</span><span class=p>,</span> <span class=mi>16</span><span class=p>,</span> <span class=mi>18</span><span class=p>]</span>
-</code></pre></div><p>위의 대괄호를 소괄호로 바꾸면 list가 생성되는 것이 아니라 generator가 생성된다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=o>&gt;&gt;&gt;</span> <span class=p>(</span><span class=n>x</span> <span class=o>*</span> <span class=mi>2</span> <span class=k>for</span> <span class=n>x</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=mi>10</span><span class=p>))</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>위의 대괄호를 소괄호로 바꾸면 list가 생성되는 것이 아니라 generator가 생성된다.</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=o>&gt;&gt;&gt;</span> <span class=p>(</span><span class=n>x</span> <span class=o>*</span> <span class=mi>2</span> <span class=k>for</span> <span class=n>x</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=mi>10</span><span class=p>))</span>
 <span class=o>&lt;</span><span class=n>generator</span> <span class=nb>object</span> <span class=o>&lt;</span><span class=n>genexpr</span><span class=o>&gt;</span> <span class=n>at</span> <span class=mh>0x1072263b8</span><span class=o>&gt;</span> 
-</code></pre></div><h3 id=exception-처리>Exception 처리</h3>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id=exception-처리>Exception 처리</h3>
 <p>generator 안에서 동작 중 발생하는 exception은 일반 함수와 마찬가지로 처리된다.
 예를 들어 아래 코드를 실행하였을 때의 결과이다 .</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=o>&gt;&gt;&gt;</span> <span class=k>def</span> <span class=nf>f</span><span class=p>():</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=o>&gt;&gt;&gt;</span> <span class=k>def</span> <span class=nf>f</span><span class=p>():</span>
         <span class=k>return</span> <span class=mi>1</span><span class=o>/</span><span class=mi>0</span>
 <span class=o>&gt;&gt;&gt;</span> <span class=k>def</span> <span class=nf>g</span><span class=p>():</span>
         <span class=k>yield</span> <span class=n>f</span><span class=p>()</span>  <span class=c1># the zero division exception propagates</span>
@@ -231,14 +374,44 @@
 <span class=ne>ZeroDivisionError</span><span class=p>:</span> <span class=n>integer</span> <span class=n>division</span> <span class=ow>or</span> <span class=n>modulo</span> <span class=n>by</span> <span class=n>zero</span>
 <span class=o>&gt;&gt;&gt;</span> <span class=nb>next</span><span class=p>(</span><span class=n>k</span><span class=p>)</span>  <span class=c1># and the generator cannot be resumed</span>
 <span class=ne>StopIteration</span>
-</code></pre></div><p>위와 같이 generator안에서 0 으로 나누기를 실행하면 해당 exception은 next()를 호출한 부분으로 정상적으로 전달된다.</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>위와 같이 generator안에서 0 으로 나누기를 실행하면 해당 exception은 next()를 호출한 부분으로 정상적으로 전달된다.</p>
 <p>일반 exception과 차이가 나는 부분은 다음과 같이 두가지 이다.</p>
 <ul>
 <li>위처럼 한번 exception이 발생한 generator는 더 이상 실행할 수 없다. 위 처럼 next()를 다시 호출해도 42가 리턴되는 것이 아니라 StopIteration으로 generator가 종료되었다고 exception을 발생한다.</li>
 <li>generator 함수에서는 try/except 는 사용 가능하나, try/except/finally 처럼 finally를 사용할 수 없다.</li>
 </ul>
 <p>두번째는 실제 구현의 복잡함 때문이다. (다음에 설명하는 &lsquo;Yield 기반의 coroutine&rsquo;으로 기능이 확장되면서 try-finally도 정상적으로 지원한다).</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=o>&gt;&gt;&gt;</span> <span class=k>def</span> <span class=nf>f</span><span class=p>():</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=o>&gt;&gt;&gt;</span> <span class=k>def</span> <span class=nf>f</span><span class=p>():</span>
     <span class=k>try</span><span class=p>:</span>
         <span class=k>yield</span> <span class=mi>1</span>
         <span class=k>try</span><span class=p>:</span>
@@ -262,19 +435,47 @@
     <span class=k>yield</span> <span class=mi>11</span>
 <span class=o>&gt;&gt;&gt;</span> <span class=nb>print</span> <span class=nb>list</span><span class=p>(</span><span class=n>f</span><span class=p>())</span>
 <span class=p>[</span><span class=mi>1</span><span class=p>,</span> <span class=mi>2</span><span class=p>,</span> <span class=mi>4</span><span class=p>,</span> <span class=mi>5</span><span class=p>,</span> <span class=mi>8</span><span class=p>,</span> <span class=mi>9</span><span class=p>,</span> <span class=mi>10</span><span class=p>,</span> <span class=mi>11</span><span class=p>]</span>
-</code></pre></div><p>위의 예를 보면 yield 문장이 있는 라인은 finally를 제외한 try/except/raise는 사용이 가능하고, generator에 yield가 없는 부분은 finally도 사용 가능하다.</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>위의 예를 보면 yield 문장이 있는 라인은 finally를 제외한 try/except/raise는 사용이 가능하고, generator에 yield가 없는 부분은 finally도 사용 가능하다.</p>
 <p>여기까지는 loop를 편하게 사용할 수 있는 generator에 대한 설명이었다. 이후부터는 본격적으로 coroutine을 설명한다.</p>
 <h2 id=yield-기반의-coroutine>Yield 기반의 coroutine</h2>
 <p>위의 generator의 yield는 generator 함수내의 코드에서 호출하는 곳으로 데이타를 전달하는 것으로 볼수 있다. 즉 yield가 실행될 때 마다 해당 함수는 멈추고, 값을 <code>next(x)</code>를 호출한 함수로 전달하는 셈이다.</p>
 <p>참고: 이 부분부터 generator와 coroutine이 혼용되어 설명하되는데, yield 기반의 coroutine은 generator와 동일하다고 보면 된다. Python이 버전업 되면서 generator의 기능이 yield 기반의 generator로 확장되었다고 이해하면 된다. 나중에 설명하겠지만 python 3.5 에서는 async로 coroutine을 지원하는데, 이는 native coroutine이라고 한다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=k>def</span> <span class=nf>callee</span><span class=p>():</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=k>def</span> <span class=nf>callee</span><span class=p>():</span>
     <span class=k>yield</span> <span class=mi>1</span>
     <span class=k>yield</span> <span class=mi>2</span>
 		
 <span class=n>x</span> <span class=o>=</span> <span class=n>callee</span><span class=p>()</span>
 <span class=n>i</span> <span class=o>=</span> <span class=nb>next</span><span class=p>(</span><span class=n>x</span><span class=p>)</span>
 <span class=n>i</span> <span class=o>=</span> <span class=nb>next</span><span class=p>(</span><span class=n>x</span><span class=p>)</span>
-</code></pre></div><p>위의 그림을 도식적으로 그려보면 아래와 같이 된다(아래 부터는 표기를 편하게 하기 위하여 generator를 생성하거나 next()를 호출하는 곳을 caller라고 표기한다).</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>위의 그림을 도식적으로 그려보면 아래와 같이 된다(아래 부터는 표기를 편하게 하기 위하여 generator를 생성하거나 next()를 호출하는 곳을 caller라고 표기한다).</p>
+<div class=mermaid>
+sequenceDiagram
+Participant Caller
+Participant Callee
+Note left of Caller: i=next(x)
+Caller->>Callee: 제어권 넘김
+Note right of Callee: yield 1
+Callee->>Caller: 값 1 반환
+Note left of Caller: i=next(x)
+Caller->>Callee: 제어권 넘김
+Note right of Callee: yield 2
+Callee->>Caller: 값 2 반환
+</div>
 <ul>
 <li><code>next()</code>가 호출되는 시점에서 제어권을 generator로 넘김</li>
 <li>generator내의 코드는 yield를 만날때까지 실행되고, 이때의 값을 호출한 곳을 전달한다.</li>
@@ -289,7 +490,22 @@
 <li>Coroutine 실행동안 exception 처리를 지원한다 .</li>
 </ul>
 <p>다음은 간단한 yield와 send를 이용한 예이다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=k>def</span> <span class=nf>coroutine1</span><span class=p>():</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=k>def</span> <span class=nf>coroutine1</span><span class=p>():</span>
     <span class=nb>print</span><span class=p>(</span><span class=s1>&#39;callee 1&#39;</span><span class=p>)</span>
     <span class=n>x</span> <span class=o>=</span> <span class=k>yield</span> <span class=mi>1</span>
     <span class=nb>print</span><span class=p>(</span><span class=s1>&#39;callee 2: </span><span class=si>%d</span><span class=s1>&#39;</span> <span class=o>%</span> <span class=n>x</span><span class=p>)</span>
@@ -300,7 +516,23 @@
 <span class=n>i</span> <span class=o>=</span> <span class=nb>next</span><span class=p>(</span><span class=n>task</span><span class=p>)</span>    <span class=c1># callee 1 출력, i는 1이 됨 </span>
 <span class=n>i</span> <span class=o>=</span> <span class=n>task</span><span class=o>.</span><span class=n>send</span><span class=p>(</span><span class=mi>10</span><span class=p>)</span> <span class=c1># callee 2: 10 출력, i는 2가 됨 </span>
 <span class=n>task</span><span class=o>.</span><span class=n>send</span><span class=p>(</span><span class=mi>20</span><span class=p>)</span>     <span class=c1># callee 3: 20 출력 후 StopIteration exception 발생</span>
-</code></pre></div>
+</code></pre></td></tr></table>
+</div>
+</div><div class=mermaid>
+sequenceDiagram
+Participant Caller
+Participant C as coroutine1
+Note left of Caller: i=next(task)
+Caller->>C: 제어권 넘김
+Note right of C: print('callee 1') x = yield 1
+C->>Caller: 값 1 반환
+Note left of Caller: i=task.send(10)
+Caller->>C: 값 10과 제어권 넘김. Callee는 x로 값 받음
+Note right of C: print('callee 2: %d') x = yield 2
+C->>Caller: 값 2 반환
+Note left of Caller: i=task.send(20)
+Caller->>C: 값 20과 제어권 넘김. Callee는 x로 값 받음
+</div>
 <p>Coroutine은 generator와 yield 에서 값을 받을 수 있다는 것을 제외하고는 모든 것이 동일하다. <code>coroutine1()</code>을 실행하면 동일하게 코드가 실행되는 것이 아니라 generator 객체가 리턴된다.
 이를 실행 시키려면 마찬가지로 처음에 <code>next(task)</code> 처럼 실행해 주어야 한다. 이렇게 되면 yield 를 만날때 까지 실행된다. 이때 &lsquo;callee 1&rsquo; 문장이 출력되고, <code>next()</code>로 값 1을 반환한다.
 이후 부터가 generator와 사용방법이 다른 부분이다. 처음 한번 <code>next()</code>를 호출한 이후로는 <code>coroutine.send()</code>를 이용하여 <code>next()</code> 와 유사하게 coroutine의 동작을 재개한다. <code>next()</code>와의 차이점은 값을 coroutine으로 전달 할 수 있다는 것이다. 위 예에서는 10을 coroutine에 전달하여 &lsquo;callee 2: 10&rsquo;이 출력되고 다음 yield를 만나서 다시 2를 리턴한다.</p>
@@ -316,7 +548,23 @@
 <h2 id=yield-from>Yield from</h2>
 <p>이제 부터는 본격적으로 python3에서 지원되는 기능이다.</p>
 <p>일반 함수나 task도 1:1 통신을 하는 경우 말고, a &lt;-> b &lt;-> c 와 같이 통신을 하는 경우도 많다(task가 sub task를 재 호출하는 방식). Coroutine도 마찬가지이다. Coroutine이 다시 sub-coroutine을 호출하는 구조가 될 수 있다. 예제로 보면 다음과 같이 될 것이다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=k>def</span> <span class=nf>subcoroutine</span><span class=p>():</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=k>def</span> <span class=nf>subcoroutine</span><span class=p>():</span>
     <span class=k>yield</span> <span class=mi>1</span>
     <span class=k>yield</span> <span class=mi>2</span>
     
@@ -328,9 +576,32 @@
 <span class=nb>print</span><span class=p>(</span><span class=nb>next</span><span class=p>(</span><span class=n>x</span><span class=p>))</span>    <span class=c1># 1 출력</span>
 <span class=nb>print</span><span class=p>(</span><span class=nb>next</span><span class=p>(</span><span class=n>x</span><span class=p>))</span>    <span class=c1># 2 출력 </span>
 <span class=nb>next</span><span class=p>(</span><span class=n>x</span><span class=p>)</span>           <span class=c1># StopIteration </span>
-</code></pre></div><p>Caller가 <code>next()</code>를 호출하면 <code>coroutine()</code>으로 제어가 넘어가고, 여기서 다시 <code>subcoroutine()</code>으로 넘어간다. 다시, 여기에서 yield로 돌려준 값이 caller까지 돌아오게 된다.</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>Caller가 <code>next()</code>를 호출하면 <code>coroutine()</code>으로 제어가 넘어가고, 여기서 다시 <code>subcoroutine()</code>으로 넘어간다. 다시, 여기에서 yield로 돌려준 값이 caller까지 돌아오게 된다.</p>
 <p>하지만 yield base coroutine에서 추가된 <code>send()</code>, <code>throw()</code>, <code>close()</code>를 지원하려면 단순히 이것으로만 되지 않는다. 예를 들어, 간단히 <code>send()</code>만 지원하게 하려면 중간의 <code>coroutine()</code>은 다음과 같이 수정되어야 한다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=k>def</span> <span class=nf>subcoroutine</span><span class=p>():</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=k>def</span> <span class=nf>subcoroutine</span><span class=p>():</span>
     <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;Subcoroutine&#34;</span><span class=p>)</span>
     <span class=n>x</span> <span class=o>=</span> <span class=k>yield</span> <span class=mi>1</span>
     <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;Recv: &#34;</span> <span class=o>+</span> <span class=nb>str</span><span class=p>(</span><span class=n>x</span><span class=p>))</span>
@@ -347,8 +618,25 @@
             <span class=n>_x</span> <span class=o>=</span> <span class=nb>next</span><span class=p>(</span><span class=n>_i</span><span class=p>)</span>
         <span class=k>else</span><span class=p>:</span>
             <span class=n>_x</span> <span class=o>=</span> <span class=n>_i</span><span class=o>.</span><span class=n>send</span><span class=p>(</span><span class=n>_s</span><span class=p>)</span>
-</code></pre></div><p>이를 실제 테스트 해보면 다음과 같다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=o>&gt;&gt;&gt;</span> <span class=kn>from</span> <span class=nn>test</span> <span class=kn>import</span> <span class=o>*</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>이를 실제 테스트 해보면 다음과 같다.</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=o>&gt;&gt;&gt;</span> <span class=kn>from</span> <span class=nn>test</span> <span class=kn>import</span> <span class=o>*</span>
 <span class=o>&gt;&gt;&gt;</span> <span class=n>x</span> <span class=o>=</span> <span class=n>coroutine</span><span class=p>()</span>
 <span class=o>&gt;&gt;&gt;</span> <span class=nb>next</span><span class=p>(</span><span class=n>x</span><span class=p>)</span>
 <span class=n>Subcoroutine</span>
@@ -359,11 +647,26 @@
 <span class=o>&gt;&gt;&gt;</span> <span class=n>x</span><span class=o>.</span><span class=n>send</span><span class=p>(</span><span class=mi>20</span><span class=p>)</span>
 <span class=n>Recv</span><span class=p>:</span> <span class=mi>20</span>
 <span class=ne>StopIteration</span>
-</code></pre></div><p>중간에 _s의 값을 보고 <code>next()</code>와 <code>send()</code>를 구분하는데, 위 코드에서는 그냥 <code>_x = _i.send(_s)</code> 를 호출해도 된다. <code>send(None)</code>은 <code>next()</code>와 동일하다. 하지만 <code>_i</code>가 위처럼 generator가 아니라 iterator라면 반드시 next()를 해주어야 한다(iterator는 <code>__next__()</code>만 구현되고, <code>send()</code>는 없다). 여기에다 <code>throw()</code>, <code>close()</code> 등의 예외 사항을 추가한다면 복잡한 일이다.</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>중간에 _s의 값을 보고 <code>next()</code>와 <code>send()</code>를 구분하는데, 위 코드에서는 그냥 <code>_x = _i.send(_s)</code> 를 호출해도 된다. <code>send(None)</code>은 <code>next()</code>와 동일하다. 하지만 <code>_i</code>가 위처럼 generator가 아니라 iterator라면 반드시 next()를 해주어야 한다(iterator는 <code>__next__()</code>만 구현되고, <code>send()</code>는 없다). 여기에다 <code>throw()</code>, <code>close()</code> 등의 예외 사항을 추가한다면 복잡한 일이다.</p>
 <p>이를 한줄로 지원하는 것이 python 3.3 (<a href=https://www.python.org/dev/peps/pep-0380/ target=_blank rel="noopener noreffer">PEP 380 &ndash; Syntax for Delegating to a Subgenerator</a>)에 추가된 yield from 이다.</p>
 <p>위와 같이 coroutine에서 sub-coroutine을 호출하여 결과적으로 caller &lt;=> sub-coroutine 이 데이타를 주고 받게 하려면 위와 같이 복잡하게 구현을 하지 않고 yield from을 사용하면 된다. 위 PEP 380을 보면 yield from 의 풀어쓴 코드 예가 있는데, 39줄이다. 기본적인 것은 위와 같은 루프에 exception 처리를 추가한 것이다.</p>
 <p>yield from을 이용하면 위 <code>coroutine()</code>은 다음과 같이 바뀐다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=k>def</span> <span class=nf>subcoroutine</span><span class=p>():</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=k>def</span> <span class=nf>subcoroutine</span><span class=p>():</span>
     <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;Subcoroutine&#34;</span><span class=p>)</span>
     <span class=n>x</span> <span class=o>=</span> <span class=k>yield</span> <span class=mi>1</span>
     <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;Recv: &#34;</span> <span class=o>+</span> <span class=nb>str</span><span class=p>(</span><span class=n>x</span><span class=p>))</span>
@@ -372,19 +675,54 @@
 
 <span class=k>def</span> <span class=nf>coroutine</span><span class=p>():</span>
     <span class=k>yield from</span> <span class=n>subcoroutine</span><span class=p>()</span>
-</code></pre></div><p>yield from 오른쪽에 들어갈 수 있는 것은 iterable과 generator이다. 즉, 기존 for .. in 에 사용가능한 모든 iterable은 사용 가능하다.</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>yield from 오른쪽에 들어갈 수 있는 것은 iterable과 generator이다. 즉, 기존 for .. in 에 사용가능한 모든 iterable은 사용 가능하다.</p>
 <p><a href=https://www.python.org/dev/peps/pep-0380/ target=_blank rel="noopener noreffer">PEP 380</a>에 하나 더 추가된 기능이 있는데, generator에서 return 지원이다. Generator의 역사를 보면 iterator에서 부터 확장된 것이라, generator에서는 return을 사용하여 값을 반환 할 수 없고, 종료되면 StopIteration exception이 발생하는 방식이었다. 이를 return으로 값을 반환하도록 기능을 추가하였다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=k>def</span> <span class=nf>test</span><span class=p>():</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=k>def</span> <span class=nf>test</span><span class=p>():</span>
     <span class=k>yield</span> <span class=mi>1</span>
     <span class=k>return</span> <span class=mi>10</span>
-</code></pre></div><p>위와 같은 코드는 실제로 다음과 같다고 보면 된다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=k>def</span> <span class=nf>test</span><span class=p>():</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>위와 같은 코드는 실제로 다음과 같다고 보면 된다.</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=k>def</span> <span class=nf>test</span><span class=p>():</span>
     <span class=k>yield</span> <span class=mi>1</span>
     <span class=n>e</span> <span class=o>=</span> <span class=ne>StopIteration</span><span class=p>()</span>
     <span class=n>e</span><span class=o>.</span><span class=n>value</span> <span class=o>=</span> <span class=mi>10</span>
     <span class=k>raise</span> <span class=n>e</span>
-</code></pre></div><p>위 코드를 시험해 보면 다음과 같이 된다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=o>&gt;&gt;&gt;</span> <span class=k>def</span> <span class=nf>test</span><span class=p>():</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>위 코드를 시험해 보면 다음과 같이 된다.</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=o>&gt;&gt;&gt;</span> <span class=k>def</span> <span class=nf>test</span><span class=p>():</span>
     <span class=k>yield</span> <span class=mi>1</span>
     <span class=k>return</span> <span class=mi>10</span>
     
@@ -393,9 +731,26 @@
 <span class=mi>1</span>
 <span class=o>&gt;&gt;&gt;</span> <span class=nb>next</span><span class=p>(</span><span class=n>x</span><span class=p>)</span>
 <span class=ne>StopIteration</span><span class=p>:</span> <span class=mi>10</span>
-</code></pre></div><p>Exception으로 10 이 같이 리턴되었다.</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>Exception으로 10 이 같이 리턴되었다.</p>
 <p>위와 같이 return을 추가로 지원한 것은 yield from의 기능을 확장하기 위한 것이다. 이와 같이 return이 지원되면 다음과 같이 yield from 에서 직접 값을 받을 수 있다. 이런 구조가 되면 lightweight thread 형태가 된다. 즉 sub-corotine은 필요한 만큼 돌다가 결과가 나오면 그때 반환하는 방식이 된다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=k>def</span> <span class=nf>sum</span><span class=p>(</span><span class=nb>max</span><span class=p>):</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=k>def</span> <span class=nf>sum</span><span class=p>(</span><span class=nb>max</span><span class=p>):</span>
     <span class=n>tot</span> <span class=o>=</span> <span class=mi>0</span>
     <span class=k>for</span> <span class=n>i</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=nb>max</span><span class=p>):</span>
        <span class=n>tot</span> <span class=o>+=</span> <span class=n>i</span>
@@ -406,7 +761,9 @@
 <span class=k>def</span> <span class=nf>coroutine</span><span class=p>():</span>
     <span class=n>x</span> <span class=o>=</span> <span class=k>yield from</span> <span class=nb>sum</span><span class=p>(</span><span class=mi>10</span><span class=p>)</span>
     <span class=nb>print</span><span class=p>(</span><span class=s1>&#39;Total: </span><span class=si>{}</span><span class=s1>&#39;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span><span class=n>x</span><span class=p>))</span>
-</code></pre></div><p>하지만 여기서 부터 혼동이 될 수 있는데, <code>sum()</code> 과 같은 sub-coroutine에서 yield로 주는 값과, return 되는 값은 용도가 다르다는 것이다. <code>yield tot</code>로 전달한 것은 iterator 중간 값을 caller에서 받는다. 하지만 <code>yield from</code>으로 받는 값은 caller 가 아니라 중간의 parent coroutine에서 받는 것이다. 즉, 두가지는 사용하는 용도가 다르다.
+</code></pre></td></tr></table>
+</div>
+</div><p>하지만 여기서 부터 혼동이 될 수 있는데, <code>sum()</code> 과 같은 sub-coroutine에서 yield로 주는 값과, return 되는 값은 용도가 다르다는 것이다. <code>yield tot</code>로 전달한 것은 iterator 중간 값을 caller에서 받는다. 하지만 <code>yield from</code>으로 받는 값은 caller 가 아니라 중간의 parent coroutine에서 받는 것이다. 즉, 두가지는 사용하는 용도가 다르다.
 yield tot 와 같이 coroutine에서 값을 parent로 전달하는 것은 iterator의 확장이라고 볼수 있다. 하지만 보통 coroutine 기반으로 lightweigth thread를 작성하는 경우 이와 같이 중간값 보다는 다른 coroutine과 같이 돌다가 최종 결과를 받기를 원하는 경우이다. 이때 yield from의 return값을 사용하게 된다.</p>
 <p>다음 장에서 나오게 될 asynio의 eventloop로 돌아가는 coroutine에서 yield from의 리턴값을 제대로 사용하게 된다. asyncio는 비동기로 모든 함수들이 실행된다. 특정 이벤트에 따라서 호출되는 것은 일반 callback 함수 일 수 있고, coroutine 일 수 있다. Coroutine은 위와 같이 yield from으로 다른 coroutine을 호출하여 결과를 비동기로 받을 수 있다 (하지만 코드를 보면 yield from 이라는 문장만 있지 생긴것은 sequential하게 되는 셈이고, 예외 처리도 sequential한 코드와 동일한 방식으로 처리가 가능하다).</p>
 <h2 id=중간-정리>중간 정리</h2>
@@ -449,6 +806,8 @@ Please enable JavaScript to view the comments powered by <a href=https://giscus.
 <i class="fas fa-comment fa-fw"></i>
 </a>
 </div><div class=assets><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/topbar/topbar.min.js></script><script type=text/javascript src=/lib/pjax/pjax.min.js></script><script type=text/javascript src=/js/theme.min.js></script></div>
-<div class=pjax-assets><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",lightTheme:"light"}}}</script></div>
+<div class=pjax-assets><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",lightTheme:"light"}},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1}}</script><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/katex/katex.min.css>
+<noscript><link rel=stylesheet href=/lib/katex/katex.min.css></noscript><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/katex/copy-tex.min.css>
+<noscript><link rel=stylesheet href=/lib/katex/copy-tex.min.css></noscript></div>
 </body>
 </html>

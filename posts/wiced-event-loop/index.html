@@ -20,7 +20,7 @@
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
 <link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/posts/wiced-event-loop/><link rel=prev href=https://blog.humminglab.io/posts/wifi-for-iot-product/><link rel=next href=https://blog.humminglab.io/posts/orange-pi-based-factory-image/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/fontawesome-free/all.min.css>
 <noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/animate/animate.min.css>
-<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"WICED eventloop library","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/wiced-event-loop\/"},"genre":"posts","keywords":"OrangePi","wordcount":718,"url":"https:\/\/blog.humminglab.io\/posts\/wiced-event-loop\/","datePublished":"2018-04-17T17:00:00+09:00","dateModified":"2018-04-17T17:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head>
+<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"WICED eventloop library","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/wiced-event-loop\/"},"genre":"posts","keywords":"OrangePi","wordcount":760,"url":"https:\/\/blog.humminglab.io\/posts\/wiced-event-loop\/","datePublished":"2018-04-17T17:00:00+09:00","dateModified":"2018-04-17T17:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head>
 <body header-desktop header-mobile><script type=text/javascript>function setTheme(a){document.body.setAttribute('theme',a)}function saveTheme(a){window.localStorage&&localStorage.setItem('theme',a)}function getMeta(b){const a=document.getElementsByTagName('meta');for(let c=0;c<a.length;c++)if(a[c].getAttribute('name')===b)return a[c];return''}if(window.localStorage&&localStorage.getItem('theme')){let a=localStorage.getItem('theme');a==='light'||a==='dark'||a==='black'?setTheme(a):window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?setTheme('dark'):setTheme('light')}else''==='light'||''==='dark'||''==='black'?(setTheme(''),saveTheme('')):(saveTheme('auto'),window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?setTheme('dark'):setTheme('light'));let metaColors={light:'#f8f8f8',dark:'#252627',black:'#000000'};getMeta('theme-color').content=metaColors[document.body.getAttribute('theme')]</script>
 <div id=back-to-top></div>
 <div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
@@ -63,7 +63,7 @@
 <div class=post-meta-line>
 <span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
 </span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/embedded-linux/><i class="far fa-folder fa-fw"></i>Embedded Linux</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2018-04-17>2018-04-17</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2018-04-17>2018-04-17</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;718 words&nbsp;
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2018-04-17>2018-04-17</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2018-04-17>2018-04-17</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;760 words&nbsp;
 <i class="far fa-clock fa-fw"></i>&nbsp;4 minutes&nbsp;</div>
 </div><div class="details toc" id=toc-static kept>
 <div class="details-summary toc-title">
@@ -87,7 +87,37 @@
 <li>사용자의 인터럽트(버튼, 네트워크 동작)에 따른 빠른 UI 반응성</li>
 </ul>
 <p>이를 task로 구현하기 위하여는 WICED를 예로 들면 다음과 같이 구현되어야 한다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=kt>void</span> <span class=nf>led_task</span><span class=p>(</span><span class=n>wiced_thread_arg_t</span> <span class=n>arg</span><span class=p>)</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=kt>void</span> <span class=nf>led_task</span><span class=p>(</span><span class=n>wiced_thread_arg_t</span> <span class=n>arg</span><span class=p>)</span>
 <span class=p>{</span>
     <span class=p>...</span>
     <span class=k>while</span> <span class=p>(</span><span class=mi>1</span><span class=p>)</span> <span class=p>{</span>
@@ -113,7 +143,9 @@
     <span class=n>wiced_rtos_thread_force_awake</span><span class=p>(</span><span class=n>led_thread</span><span class=p>);</span>
     <span class=n>wiced_rtos_thread_join</span><span class=p>(</span><span class=n>led_thread</span><span class=p>);</span>
 <span class=p>}</span>
-</code></pre></div><p>위 코드는 task 방식의 불편함을 예를 들기 위한 것으로 설명을 위한 주요 부분만 구성한 것이다. <code>led_task()</code>에서는 event 입력이 있으면 delay loop를 돌면서 LED를 점차로 밝게 하는 루틴이다.
+</code></pre></td></tr></table>
+</div>
+</div><p>위 코드는 task 방식의 불편함을 예를 들기 위한 것으로 설명을 위한 주요 부분만 구성한 것이다. <code>led_task()</code>에서는 event 입력이 있으면 delay loop를 돌면서 LED를 점차로 밝게 하는 루틴이다.
 만일 이와 같이 밝게 하는 도중에 사용자가 버튼을 누른 경우 빠르게 반응을 하기 위하여는 동작 중간에 중단 시켜야 한다. <code>wiced_rtos_delay_milliseconds()</code>와 같이 blocking 함수를 중단 시키기 위하여는 OS에서 강제로 리턴시키는 <code>wiced_rtos_thread_force_awake()</code>와 같은 함수를 이용하여 해당 task의 blocking 을 중단 시키고, 위의 예처럼 user_break와 같은 flag를 이용하여 task 실행을 중지 하여야 한다(system call이 retur 값이 있는 경우에는 error 값을 보고 판단도 가능하다). 중지를 시키는 task에서는 동기화가 필요하다면 <code>wiced_rtos_thread_join()</code>을 이용하여 task가 종료되는 것을 기다여야 한다.</p>
 <p>여러 task 가 있는 경우 이들 task의 동기화도 고려하여야 하기 때문에 사용자 효과를 만족할 만하게 내기 위하여는 신경 쓸 부분이 많아진다. 또한 embedded 기기에서는 보통 RAM도 128KiB 이하이기 때문에 생성할 수 있는 task의 개수도 제한이 있다.</p>
 <p>이런 부분을 GUI 프로그램처럼 timer와 event driven의 callback 방식으로 단일 task에서 구현한다면 빠른 반응성을 가지면서 동기화 문제 등 multi tasking시 고려하여야 할 사항들을 고민 하지 않아도 되어 좀더 쉽게 구현이 가능해진다.</p>
@@ -130,7 +162,27 @@
 <li>Nested inner loop 지원</li>
 </ul>
 <p>기본 예는 다음과 같다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=cp>#define EVENT_SENSOR_FINISHED           (1 &lt;&lt; 0)
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=cp>#define EVENT_SENSOR_FINISHED           (1 &lt;&lt; 0)
 </span><span class=cp></span>
 <span class=n>eventloop_t</span> <span class=n>evt</span><span class=p>;</span>
 <span class=n>eventloop_timer_node_t</span> <span class=n>timer_node</span><span class=p>;</span>
@@ -146,7 +198,9 @@
         <span class=n>a_eventloop</span><span class=p>(</span><span class=o>&amp;</span><span class=n>evt</span><span class=p>,</span> <span class=n>WICED_WAIT_FOREVER</span><span class=p>);</span>
     <span class=p>}</span>
 <span class=p>}</span>
-</code></pre></div><p>timer나 event를 위한 handle의 경우에도 미리 staic으로 생성한 구조체를 사용하여 동적인 메모리 할당을 사용하지 않도록 구성되어 있다.</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>timer나 event를 위한 handle의 경우에도 미리 staic으로 생성한 구조체를 사용하여 동적인 메모리 할당을 사용하지 않도록 구성되어 있다.</p>
 <p>예제 코드는 이 event loop를 이용하여 센서나 버튼의 상태를 모니터링하고, MQTT 네트워크 송수신을 구현한 것이다. 코드에서 dns lookup을 제외하고는 모두 nonblocking 방식으로 구현하였다(DNS 처리 루틴도 work thread를 이용하여 background로 처리를 하여야 하나 자주 호출되는 구조는 아니라서 미구현). 예제에 있는 MQTT client 루틴은 <a href=https://thingsboard.io target=_blank rel="noopener noreffer">ThingsBoard</a>와 연동을 위한 코드이다.</p>
 <p>Event driven, callback 구조로 코드에서 주의할 사항은 다음과 같이 두 가지 사항이 있다.</p>
 <ul>
@@ -194,6 +248,8 @@ Please enable JavaScript to view the comments powered by <a href=https://giscus.
 <i class="fas fa-comment fa-fw"></i>
 </a>
 </div><div class=assets><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/topbar/topbar.min.js></script><script type=text/javascript src=/lib/pjax/pjax.min.js></script><script type=text/javascript src=/js/theme.min.js></script></div>
-<div class=pjax-assets><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",lightTheme:"light"}}}</script></div>
+<div class=pjax-assets><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",lightTheme:"light"}},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1}}</script><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/katex/katex.min.css>
+<noscript><link rel=stylesheet href=/lib/katex/katex.min.css></noscript><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/katex/copy-tex.min.css>
+<noscript><link rel=stylesheet href=/lib/katex/copy-tex.min.css></noscript></div>
 </body>
 </html>

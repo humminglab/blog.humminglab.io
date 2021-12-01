@@ -22,7 +22,7 @@ MQTT의 특징 TCP 기반 프로토콜 UDP가 아닌 TCP 기반이라 작은 IOT
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
 <link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/posts/mqtt-protocol/><link rel=next href=https://blog.humminglab.io/posts/coap-protocol/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/fontawesome-free/all.min.css>
 <noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/animate/animate.min.css>
-<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"MQTT Protocol","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/mqtt-protocol\/"},"genre":"posts","keywords":"MQTT","wordcount":1163,"url":"https:\/\/blog.humminglab.io\/posts\/mqtt-protocol\/","datePublished":"2016-10-14T09:00:00+09:00","dateModified":"2016-10-14T09:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head>
+<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"MQTT Protocol","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/mqtt-protocol\/"},"genre":"posts","keywords":"MQTT","wordcount":1166,"url":"https:\/\/blog.humminglab.io\/posts\/mqtt-protocol\/","datePublished":"2016-10-14T09:00:00+09:00","dateModified":"2016-10-14T09:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head>
 <body header-desktop header-mobile><script type=text/javascript>function setTheme(a){document.body.setAttribute('theme',a)}function saveTheme(a){window.localStorage&&localStorage.setItem('theme',a)}function getMeta(b){const a=document.getElementsByTagName('meta');for(let c=0;c<a.length;c++)if(a[c].getAttribute('name')===b)return a[c];return''}if(window.localStorage&&localStorage.getItem('theme')){let a=localStorage.getItem('theme');a==='light'||a==='dark'||a==='black'?setTheme(a):window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?setTheme('dark'):setTheme('light')}else''==='light'||''==='dark'||''==='black'?(setTheme(''),saveTheme('')):(saveTheme('auto'),window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?setTheme('dark'):setTheme('light'));let metaColors={light:'#f8f8f8',dark:'#252627',black:'#000000'};getMeta('theme-color').content=metaColors[document.body.getAttribute('theme')]</script>
 <div id=back-to-top></div>
 <div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
@@ -65,7 +65,7 @@ MQTT의 특징 TCP 기반 프로토콜 UDP가 아닌 TCP 기반이라 작은 IOT
 <div class=post-meta-line>
 <span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
 </span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/iot/><i class="far fa-folder fa-fw"></i>IoT</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2016-10-14>2016-10-14</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2016-10-14>2016-10-14</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;1163 words&nbsp;
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2016-10-14>2016-10-14</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2016-10-14>2016-10-14</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;1166 words&nbsp;
 <i class="far fa-clock fa-fw"></i>&nbsp;6 minutes&nbsp;</div>
 </div><div class="details toc" id=toc-static kept>
 <div class="details-summary toc-title">
@@ -223,10 +223,19 @@ Single level은 아래 처럼 topic 중간에 wildcard를 사용하는 것이다
 <h2 id=시험>시험</h2>
 <p>기본적인 동작 시험은 설정이나 사용이 쉬운 <a href=https://mosquitto.org/ target=_blank rel="noopener noreffer">Mosquitto MQTT broker</a>를 이용하는 것이 좋다.
 Ubuntu 인 경우 아래처럼 mosquitto를 하거나, docker를 이용하여 설치해볼 수 있다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ apt-get install mosquitto
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ apt-get install mosquitto
 or
 $ docker pull ansi/mosquitto
-</code></pre></div><p>Broker를 설치하면 같이 제공하는 mosquitto_sub, mosquitto_pub utility를 이용하여 subscribe, publish 를 시험해 볼 수 있다.</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>Broker를 설치하면 같이 제공하는 mosquitto_sub, mosquitto_pub utility를 이용하여 subscribe, publish 를 시험해 볼 수 있다.</p>
 <h2 id=정리>정리</h2>
 <p>단말이 어느정도 제한된 리소스를 가진 기기이지만, proxy 등의 도움없이 직접 public internet 접속이 가능하고, TCP, TLS 사용이 가능한 경우라면 MQTT를 검토해 볼 수 있을 것이다. TCP 연결 방식이고 모든 연결은 broker를 통하는 방식이라 NAT 상에서도 문제없이 사용가능하다.</p>
 <p>참고문서</p>
@@ -271,6 +280,8 @@ Please enable JavaScript to view the comments powered by <a href=https://giscus.
 <i class="fas fa-comment fa-fw"></i>
 </a>
 </div><div class=assets><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/topbar/topbar.min.js></script><script type=text/javascript src=/lib/pjax/pjax.min.js></script><script type=text/javascript src=/js/theme.min.js></script></div>
-<div class=pjax-assets><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",lightTheme:"light"}}}</script></div>
+<div class=pjax-assets><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",lightTheme:"light"}},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1}}</script><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/katex/katex.min.css>
+<noscript><link rel=stylesheet href=/lib/katex/katex.min.css></noscript><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/katex/copy-tex.min.css>
+<noscript><link rel=stylesheet href=/lib/katex/copy-tex.min.css></noscript></div>
 </body>
 </html>

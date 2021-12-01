@@ -20,7 +20,7 @@ Who is my ISP? 로 확인해 보니 역시나 LG 유플러스 망을 사용하�
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
 <link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/posts/github-through-proxy/><link rel=prev href=https://blog.humminglab.io/posts/how-to-make-sdcard-disk-image/><link rel=next href=https://blog.humminglab.io/posts/python-coroutine-programming-1/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/fontawesome-free/all.min.css>
 <noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/animate/animate.min.css>
-<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"GitHub 연결이 제대로 안될 때 proxy 사용하기","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/github-through-proxy\/"},"genre":"posts","keywords":"Github, Proxy","wordcount":470,"url":"https:\/\/blog.humminglab.io\/posts\/github-through-proxy\/","datePublished":"2017-11-10T16:18:00+09:00","dateModified":"2017-11-10T16:18:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head>
+<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"GitHub 연결이 제대로 안될 때 proxy 사용하기","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/github-through-proxy\/"},"genre":"posts","keywords":"Github, Proxy","wordcount":492,"url":"https:\/\/blog.humminglab.io\/posts\/github-through-proxy\/","datePublished":"2017-11-10T16:18:00+09:00","dateModified":"2017-11-10T16:18:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head>
 <body header-desktop header-mobile><script type=text/javascript>function setTheme(a){document.body.setAttribute('theme',a)}function saveTheme(a){window.localStorage&&localStorage.setItem('theme',a)}function getMeta(b){const a=document.getElementsByTagName('meta');for(let c=0;c<a.length;c++)if(a[c].getAttribute('name')===b)return a[c];return''}if(window.localStorage&&localStorage.getItem('theme')){let a=localStorage.getItem('theme');a==='light'||a==='dark'||a==='black'?setTheme(a):window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?setTheme('dark'):setTheme('light')}else''==='light'||''==='dark'||''==='black'?(setTheme(''),saveTheme('')):(saveTheme('auto'),window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?setTheme('dark'):setTheme('light'));let metaColors={light:'#f8f8f8',dark:'#252627',black:'#000000'};getMeta('theme-color').content=metaColors[document.body.getAttribute('theme')]</script>
 <div id=back-to-top></div>
 <div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
@@ -63,7 +63,7 @@ Who is my ISP? 로 확인해 보니 역시나 LG 유플러스 망을 사용하�
 <div class=post-meta-line>
 <span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
 </span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/development/><i class="far fa-folder fa-fw"></i>Development</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2017-11-10>2017-11-10</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2017-11-10>2017-11-10</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;470 words&nbsp;
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2017-11-10>2017-11-10</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2017-11-10>2017-11-10</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;492 words&nbsp;
 <i class="far fa-clock fa-fw"></i>&nbsp;3 minutes&nbsp;</div>
 </div><div class="details toc" id=toc-static kept>
 <div class="details-summary toc-title">
@@ -93,37 +93,95 @@ Who is my ISP? 로 확인해 보니 역시나 LG 유플러스 망을 사용하�
 <h2 id=github에-https로-연결하기>GitHub에 HTTPS로 연결하기</h2>
 <p>Public repository 이고, 소스를 commit 하지 않는다면 git을 HTTPS로 연결해도 된다.
 이때는 git config에서 제공하는 http.proxy 를 설정할 수 있다. 위 목록 중 141.223.175.230:1080 proxy를 사용한다고 하면 다음과 같이 설정하면 된다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ git config --global http.https://github.com.proxy socks5://141.223.175.230:1080
-</code></pre></div><p>위와 같이 전역적으로 설정하게 되면 ~/.gitconfig 에 아래와 같이 필드가 생성된다.</p>
-<pre tabindex=0><code>[http &quot;https://github.com&quot;]
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ git config --global http.https://github.com.proxy socks5://141.223.175.230:1080
+</code></pre></td></tr></table>
+</div>
+</div><p>위와 같이 전역적으로 설정하게 되면 ~/.gitconfig 에 아래와 같이 필드가 생성된다.</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>[http &#34;https://github.com&#34;]
 	proxy = socks5://141.223.175.230:1080
-</code></pre><p>Proxy를 설정하기 전에 소스를 받아보면 아래와 같은 속도가 나온다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ git clone https://github.com/aws/aws-sdk-cpp.git
+</code></pre></td></tr></table>
+</div>
+</div><p>Proxy를 설정하기 전에 소스를 받아보면 아래와 같은 속도가 나온다.</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ git clone https://github.com/aws/aws-sdk-cpp.git
 Cloning into <span class=s1>&#39;aws-sdk-cpp&#39;</span>...
 remote: Counting objects: 275205, <span class=k>done</span>.
 remote: Compressing objects: 100% <span class=o>(</span>817/817<span class=o>)</span>, <span class=k>done</span>.
 Receiving objects:   0% <span class=o>(</span>393/275205<span class=o>)</span>, 108.01 KiB <span class=p>|</span> 14.00 KiB/s
-</code></pre></div><p>언제 다 받을지 기약이 없다. 이를 proxy로 설정해서 실행해 보면 아래와 같은 속도가 나온다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ git clone https://github.com/aws/aws-sdk-cpp.git
+</code></pre></td></tr></table>
+</div>
+</div><p>언제 다 받을지 기약이 없다. 이를 proxy로 설정해서 실행해 보면 아래와 같은 속도가 나온다.</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ git clone https://github.com/aws/aws-sdk-cpp.git
 Cloning into <span class=s1>&#39;aws-sdk-cpp&#39;</span>...
 remote: Counting objects: 275205, <span class=k>done</span>.
 remote: Compressing objects: 100% <span class=o>(</span>817/817<span class=o>)</span>, <span class=k>done</span>.
 Receiving objects:   6% <span class=o>(</span>16513/275205<span class=o>)</span>, 6.88 MiB <span class=p>|</span> 3.41 MiB/s
-</code></pre></div><p>14KiB/s 에서 3.41MiB/s로 무려 200배 이상 속도가 빨라졌다.</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>14KiB/s 에서 3.41MiB/s로 무려 200배 이상 속도가 빨라졌다.</p>
 <h2 id=github에-ssh로-연결하기>GitHub에 SSH로 연결하기</h2>
 <p>Code를 패스워드 없이 commit하려면 SSH로 연결을 하여야 한다. SSH 설정은 git config 를 사용하지 않고, ssh config 로 설정한다.</p>
 <p>아래와 같이 ~/.ssh/config 파일에 ProxyCommand 로 netcat(nc)를 이용하여 설정하면 된다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ cat ~/.ssh/config
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ cat ~/.ssh/config
 Host github.com
     User git
     ProxyCommand nc -x  141.223.175.230:1080 %h %p
-</code></pre></div><p>마찬가지로 SSH 연결도 사용할 만한 수준이 되었다.</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ git clone git@github.com:aws/aws-sdk-cpp.git
+</code></pre></td></tr></table>
+</div>
+</div><p>마찬가지로 SSH 연결도 사용할 만한 수준이 되었다.</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-sh data-lang=sh>$ git clone git@github.com:aws/aws-sdk-cpp.git
 Cloning into <span class=s1>&#39;aws-sdk-cpp&#39;</span>...
 remote: Counting objects: 275205, <span class=k>done</span>.
 remote: Compressing objects: 100% <span class=o>(</span>817/817<span class=o>)</span>, <span class=k>done</span>.
 Receiving objects: 2.7% <span class=o>(</span>19265/275205<span class=o>)</span>, 8.18 MiB <span class=p>|</span> 812.00 KiB/s
-</code></pre></div><h2 id=정리>정리</h2>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id=정리>정리</h2>
 <p>고정된 proxy가 있다면 좋겠지만, 없다면 proxy 연결이 안될 때마다 다른 proxy를 찾아서 적어 주어야 한다. 그나마 다행인 것은 fetch를 할 때는 추가된 부분만 받기 때문에 저속이어도 그럭저럭 사용할 수 있다.</p>
 <p>이런 고민을 하지 않는 좋은 환경을 갖추는 것이 최선이겠지만&mldr;</p>
 <ul>
@@ -172,6 +230,8 @@ Please enable JavaScript to view the comments powered by <a href=https://giscus.
 <i class="fas fa-comment fa-fw"></i>
 </a>
 </div><div class=assets><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/topbar/topbar.min.js></script><script type=text/javascript src=/lib/pjax/pjax.min.js></script><script type=text/javascript src=/js/theme.min.js></script></div>
-<div class=pjax-assets><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",lightTheme:"light"}}}</script></div>
+<div class=pjax-assets><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",lightTheme:"light"}},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1}}</script><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/katex/katex.min.css>
+<noscript><link rel=stylesheet href=/lib/katex/katex.min.css></noscript><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/katex/copy-tex.min.css>
+<noscript><link rel=stylesheet href=/lib/katex/copy-tex.min.css></noscript></div>
 </body>
 </html>
