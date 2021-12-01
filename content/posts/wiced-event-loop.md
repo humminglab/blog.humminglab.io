@@ -65,14 +65,14 @@ void cancel_led_ramp_up() {
 
 Embedded SDK에 따라 event loop 라이브러리를 기본 제공하는 경우도 있으나 WICED에는 기본으로 제공하지 않아 별도로 구현을 하였다(참고로 [Mbed](https://www.mbed.com/en/)의 경우 [event loop library](https://os.mbed.com/blog/entry/Simplify-your-code-with-mbed-events/)를 제공한다). 소스는 아래 
 
-* github: [https://github.com/humminglab/wiced-eventloop](https://github.com/humminglab/wiced-eventloop)
+- github: [https://github.com/humminglab/wiced-eventloop](https://github.com/humminglab/wiced-eventloop)
 
 common/eventloop.c 에 구현된 event loop는 다음과 같은 특징을 가진다.
+
 - WICED Event Flags를 이용한 event 처리
 - Continuous timer 제공
 - 동적인 메모리 사용을 하지 않음
 - Nested inner loop 지원
-
 
 기본 예는 다음과 같다.
 
@@ -100,6 +100,7 @@ timer나 event를 위한 handle의 경우에도 미리 staic으로 생성한 구
 예제 코드는 이 event loop를 이용하여 센서나 버튼의 상태를 모니터링하고, MQTT 네트워크 송수신을 구현한 것이다. 코드에서 dns lookup을 제외하고는 모두 nonblocking 방식으로 구현하였다(DNS 처리 루틴도 work thread를 이용하여 background로 처리를 하여야 하나 자주 호출되는 구조는 아니라서 미구현). 예제에 있는 MQTT client 루틴은 [ThingsBoard](https://thingsboard.io)와 연동을 위한 코드이다.
 
 Event driven, callback 구조로 코드에서 주의할 사항은 다음과 같이 두 가지 사항이 있다.
+
 - Event loop 함수는 다른 task에서 호출할 경우 데이타가 깨지거나 정상적으로 callback이 호출되지 않을 수 있다.
 - Callback function 이 blocking 된다면 모든 event loop가 blocking된다.
 
