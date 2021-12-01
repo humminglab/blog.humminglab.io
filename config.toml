@@ -55,6 +55,14 @@ name = "HummingLab"
       # DoIt NEW | 0.2.5 whether to use typeit animation for title name
       typeit = false
 
+  [params.page]
+    ruby = true
+    fraction = true
+    fontawesome = true
+    linkToMarkdown = true
+    linkToEdit = false
+    seriesNavigation = true
+
     [params.page.toc]
       enable = true
       keepStatic = false
@@ -65,6 +73,19 @@ name = "HummingLab"
       copy = true
       # the maximum number of lines of displayed code by default
       maxShownLines = 50
+
+    [params.page.math]
+      enable = true
+      # default block delimiter is $$ ... $$ and \\[ ... \\]
+      blockLeftDelimiter = ""
+      blockRightDelimiter = ""
+      # default inline delimiter is $ ... $ and \\( ... \\)
+      inlineLeftDelimiter = ""
+      inlineRightDelimiter = ""
+      # KaTeX extension copy_tex
+      copyTex = true
+      # KaTeX extension mhchem
+      mhchem = true
 
     [params.page.comment]
       enable = true
@@ -122,6 +143,29 @@ name = "HummingLab"
 # Markup related configuration in Hugo
 [markup]
   # Syntax Highlighting (https://gohugo.io/content-management/syntax-highlighting)
-  [markup.highlight]
-    # false is a necessary configuration (https://github.com/dillonzq/LoveIt/issues/158)
+ [markup.highlight]
+    codeFences = true
+    guessSyntax = true
+    lineNos = true
+    lineNumbersInTable = true
+    # false is a necessary configuration
+    # (https://github.com/dillonzq/LoveIt/issues/158)
     noClasses = false
+  # Goldmark is from Hugo 0.60 the default library used for Markdown
+  [markup.goldmark]
+    [markup.goldmark.extensions]
+      definitionList = true
+      footnote = true
+      linkify = true
+      strikethrough = true
+      table = true
+      taskList = true
+      typographer = true
+    [markup.goldmark.renderer]
+      # whether to use HTML tags directly in the document
+      unsafe = true
+  # Table Of Contents settings
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 6
+    
