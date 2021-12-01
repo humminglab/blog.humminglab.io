@@ -40,6 +40,15 @@ theme = "DoIt"
     url = "/categories/"
     title = ""
     weight = 3
+  [[menu.main]]
+    identifier = "HummingLab"
+    pre = ""
+    post = ""
+    name = "HummingLab"
+    url = "https://www.humminglab.io/"
+    title = ""
+    weight = 10
+
 
 # Markup related configuration in Hugo
 [markup]
