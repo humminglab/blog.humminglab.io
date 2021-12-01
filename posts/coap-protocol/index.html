@@ -7,7 +7,7 @@
 <meta property="og:description" content="2015년 Eclipse IOT survey 결과를 보면 가장 많이 사용하는 메시징 프로토콜은 HTTP, MQTT, CoAP 이다.
 HTTP가 주요 프로토콜인 것은 두말할 필요도 없고, MQTT도 IBM에서 1999년에 개발하여 2010년에 무료로 오픈하여 나이로는 15년 이상된 것으로 Facebook Messenger 에서도 사용하는 등 다양한 곳에서 사용 중 이다. CoAP의 경우 2010년에 첫 draft가 나온 것으로 다른 프로토콜에 비하면 신생 프로토콜이라고 볼 수 있으나 점차로 사용하는 곳이 많아지는 것으로 보인다. 일 예로 작은 메모리를 가진 IOT open OS platform 인 mbed, zephyr 에서도 CoAP을 주 통신 프로토콜로 지원하고 있고, WICED 에서도 CoAP 제공하고 있다.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://blog.humminglab.io/posts/coap-protocol/"><meta property="article:section" content="posts">
+<meta property="og:url" content="https://humminglab.github.io/posts/coap-protocol/"><meta property="article:section" content="posts">
 <meta property="article:published_time" content="2016-12-14T20:26:00+09:00">
 <meta property="article:modified_time" content="2016-12-14T20:26:00+09:00">
 <meta name=twitter:card content="summary">
@@ -18,9 +18,9 @@ HTTP가 주요 프로토콜인 것은 두말할 필요도 없고, MQTT도 IBM에
 <meta name=apple-mobile-web-app-title content="All about IoT">
 <meta name=theme-color content="#f8f8f8"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/posts/coap-protocol/><link rel=prev href=https://blog.humminglab.io/posts/mqtt-protocol/><link rel=next href=https://blog.humminglab.io/posts/how-to-make-sdcard-disk-image/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/fontawesome-free/all.min.css>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://humminglab.github.io/posts/coap-protocol/><link rel=prev href=https://humminglab.github.io/posts/mqtt-protocol/><link rel=next href=https://humminglab.github.io/posts/how-to-make-sdcard-disk-image/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/fontawesome-free/all.min.css>
 <noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/animate/animate.min.css>
-<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"CoAP Protocol","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/coap-protocol\/"},"genre":"posts","keywords":"CoAP","wordcount":1377,"url":"https:\/\/blog.humminglab.io\/posts\/coap-protocol\/","datePublished":"2016-12-14T20:26:00+09:00","dateModified":"2016-12-14T20:26:00+09:00","publisher":{"@type":"Organization","name":"Author"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head>
+<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"CoAP Protocol","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/humminglab.github.io\/posts\/coap-protocol\/"},"genre":"posts","keywords":"CoAP","wordcount":1377,"url":"https:\/\/humminglab.github.io\/posts\/coap-protocol\/","datePublished":"2016-12-14T20:26:00+09:00","dateModified":"2016-12-14T20:26:00+09:00","publisher":{"@type":"Organization","name":"Author"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head>
 <body header-desktop header-mobile><script type=text/javascript>function setTheme(a){document.body.setAttribute('theme',a)}function saveTheme(a){window.localStorage&&localStorage.setItem('theme',a)}function getMeta(b){const a=document.getElementsByTagName('meta');for(let c=0;c<a.length;c++)if(a[c].getAttribute('name')===b)return a[c];return''}if(window.localStorage&&localStorage.getItem('theme')){let a=localStorage.getItem('theme');a==='light'||a==='dark'||a==='black'?setTheme(a):window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?setTheme('dark'):setTheme('light')}else''==='light'||''==='dark'||''==='black'?(setTheme(''),saveTheme('')):(saveTheme('auto'),window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?setTheme('dark'):setTheme('light'));let metaColors={light:'#f8f8f8',dark:'#252627',black:'#000000'};getMeta('theme-color').content=metaColors[document.body.getAttribute('theme')]</script>
 <div id=back-to-top></div>
 <div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
@@ -61,7 +61,7 @@ HTTP가 주요 프로토콜인 것은 두말할 필요도 없고, MQTT도 IBM에
 <div class=toc-content id=toc-content-auto></div>
 </div><script>document.getElementsByTagName("main")[0].setAttribute("pageStyle","normal")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX">CoAP Protocol</h1><div class=post-meta>
 <div class=post-meta-line>
-<span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
+<span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://humminglab.github.io/authors/yslee>YSLee</a></span>
 </span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/iot/><i class="far fa-folder fa-fw"></i>IoT</a></span></div>
 <div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2016-12-14>2016-12-14</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2016-12-14>2016-12-14</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;1377 words&nbsp;
 <i class="far fa-clock fa-fw"></i>&nbsp;7 minutes&nbsp;</div>
@@ -85,7 +85,7 @@ HTTP가 주요 프로토콜인 것은 두말할 필요도 없고, MQTT도 IBM에
 <li><a href=#마치며>마치며</a></li>
 </ul>
 </nav></div>
-</div><div class=content id=content><p><a href=http://www.slideshare.net/IanSkerrett/iot-developer-survey-2015/18 target=_blank rel="noopener noreffer">2015년 Eclipse IOT survey 결과</a>를 보면 가장 많이 사용하는 메시징 프로토콜은 HTTP, <a href=https://blog.humminglab.io/posts/mqtt-protocol/ rel>MQTT</a>, CoAP 이다.</p>
+</div><div class=content id=content><p><a href=http://www.slideshare.net/IanSkerrett/iot-developer-survey-2015/18 target=_blank rel="noopener noreffer">2015년 Eclipse IOT survey 결과</a>를 보면 가장 많이 사용하는 메시징 프로토콜은 HTTP, <a href=https://humminglab.github.io/posts/mqtt-protocol/ rel>MQTT</a>, CoAP 이다.</p>
 <p>HTTP가 주요 프로토콜인 것은 두말할 필요도 없고, MQTT도 IBM에서 1999년에 개발하여 2010년에 무료로 오픈하여 나이로는 15년 이상된 것으로 <a href=https://en.wikipedia.org/wiki/Facebook_Messenger target=_blank rel="noopener noreffer">Facebook Messenger</a> 에서도 사용하는 등 다양한 곳에서 사용 중 이다.
 CoAP의 경우 <a href=https://datatracker.ietf.org/doc/draft-ietf-core-coap/history/ target=_blank rel="noopener noreffer">2010년에 첫 draft</a>가 나온 것으로 다른 프로토콜에 비하면 신생 프로토콜이라고 볼 수 있으나 점차로 사용하는 곳이 많아지는 것으로 보인다. 일 예로 작은 메모리를 가진 IOT open OS platform 인 <a href=https://www.mbed.com/en/platform/mbed-client/ target=_blank rel="noopener noreffer">mbed</a>, <a href=https://www.zephyrproject.org/doc/subsystems/networking/networking.html target=_blank rel="noopener noreffer">zephyr</a> 에서도 CoAP을 주 통신 프로토콜로 지원하고 있고, <a href=http://www.cypress.com/internet-things-iot target=_blank rel="noopener noreffer">WICED</a> 에서도 CoAP 제공하고 있다.</p>
 <p>여기에서는 CoAP의 기본적인 특징과 프로토콜의 개요를 정리해 보기로 한다.</p>
@@ -105,7 +105,7 @@ CoAP의 경우 <a href=https://datatracker.ietf.org/doc/draft-ietf-core-coap/his
 <li>쉽게 web(HTTP)에 연동하기 위한 경량화된 RESTful</li>
 <li>CoAP-HTTP gateway에서도 stateless 로도 쉽게 HTTP로 변환하여 전달 가능</li>
 </ul>
-<p><a href=https://blog.humminglab.io/posts/mqtt-protocol/ rel>MQTT</a>와 비교해보면 아래와 같다.</p>
+<p><a href=https://humminglab.github.io/posts/mqtt-protocol/ rel>MQTT</a>와 비교해보면 아래와 같다.</p>
 <table>
 <thead>
 <tr>
