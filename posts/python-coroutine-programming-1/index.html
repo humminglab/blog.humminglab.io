@@ -18,7 +18,7 @@
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
 <link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/posts/python-coroutine-programming-1/><link rel=prev href=https://blog.humminglab.io/posts/github-through-proxy/><link rel=next href=https://blog.humminglab.io/posts/python-coroutine-programming-2/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/fontawesome-free/all.min.css>
 <noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/animate/animate.min.css>
-<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Python 비동기 프로그래밍 제대로 이해하기(1/2) - Asyncio, Coroutine","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/python-coroutine-programming-1\/"},"genre":"posts","keywords":"Python","wordcount":2793,"url":"https:\/\/blog.humminglab.io\/posts\/python-coroutine-programming-1\/","datePublished":"2018-03-26T23:00:00+09:00","dateModified":"2018-03-26T23:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head>
+<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Python 비동기 프로그래밍 제대로 이해하기(1/2) - Asyncio, Coroutine","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/python-coroutine-programming-1\/"},"genre":"posts","keywords":"Python","wordcount":2680,"url":"https:\/\/blog.humminglab.io\/posts\/python-coroutine-programming-1\/","datePublished":"2018-03-26T23:00:00+09:00","dateModified":"2018-03-26T23:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head>
 <body header-desktop header-mobile><script type=text/javascript>function setTheme(a){document.body.setAttribute('theme',a)}function saveTheme(a){window.localStorage&&localStorage.setItem('theme',a)}function getMeta(b){const a=document.getElementsByTagName('meta');for(let c=0;c<a.length;c++)if(a[c].getAttribute('name')===b)return a[c];return''}if(window.localStorage&&localStorage.getItem('theme')){let a=localStorage.getItem('theme');a==='light'||a==='dark'||a==='black'?setTheme(a):window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?setTheme('dark'):setTheme('light')}else''==='light'||''==='dark'||''==='black'?(setTheme(''),saveTheme('')):(saveTheme('auto'),window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?setTheme('dark'):setTheme('light'));let metaColors={light:'#f8f8f8',dark:'#252627',black:'#000000'};getMeta('theme-color').content=metaColors[document.body.getAttribute('theme')]</script>
 <div id=back-to-top></div>
 <div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
@@ -61,8 +61,8 @@
 <div class=post-meta-line>
 <span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
 </span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/python/><i class="far fa-folder fa-fw"></i>Python</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2018-03-26>2018-03-26</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2018-03-26>2018-03-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;2793 words&nbsp;
-<i class="far fa-clock fa-fw"></i>&nbsp;14 minutes&nbsp;</div>
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2018-03-26>2018-03-26</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2018-03-26>2018-03-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;2680 words&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;13 minutes&nbsp;</div>
 </div><div class="details toc" id=toc-static kept>
 <div class="details-summary toc-title">
 <span>Contents</span>
@@ -463,19 +463,7 @@
 </code></pre></td></tr></table>
 </div>
 </div><p>위의 그림을 도식적으로 그려보면 아래와 같이 된다(아래 부터는 표기를 편하게 하기 위하여 generator를 생성하거나 next()를 호출하는 곳을 caller라고 표기한다).</p>
-<div class=mermaid>
-sequenceDiagram
-Participant Caller
-Participant Callee
-Note left of Caller: i=next(x)
-Caller->>Callee: 제어권 넘김
-Note right of Callee: yield 1
-Callee->>Caller: 값 1 반환
-Note left of Caller: i=next(x)
-Caller->>Callee: 제어권 넘김
-Note right of Callee: yield 2
-Callee->>Caller: 값 2 반환
-</div>
+<div class=mermaid id=id-1></div>
 <ul>
 <li><code>next()</code>가 호출되는 시점에서 제어권을 generator로 넘김</li>
 <li>generator내의 코드는 yield를 만날때까지 실행되고, 이때의 값을 호출한 곳을 전달한다.</li>
@@ -518,21 +506,7 @@ Callee->>Caller: 값 2 반환
 <span class=n>task</span><span class=o>.</span><span class=n>send</span><span class=p>(</span><span class=mi>20</span><span class=p>)</span>     <span class=c1># callee 3: 20 출력 후 StopIteration exception 발생</span>
 </code></pre></td></tr></table>
 </div>
-</div><div class=mermaid>
-sequenceDiagram
-Participant Caller
-Participant C as coroutine1
-Note left of Caller: i=next(task)
-Caller->>C: 제어권 넘김
-Note right of C: print('callee 1') x = yield 1
-C->>Caller: 값 1 반환
-Note left of Caller: i=task.send(10)
-Caller->>C: 값 10과 제어권 넘김. Callee는 x로 값 받음
-Note right of C: print('callee 2: %d') x = yield 2
-C->>Caller: 값 2 반환
-Note left of Caller: i=task.send(20)
-Caller->>C: 값 20과 제어권 넘김. Callee는 x로 값 받음
-</div>
+</div><div class=mermaid id=id-2></div>
 <p>Coroutine은 generator와 yield 에서 값을 받을 수 있다는 것을 제외하고는 모든 것이 동일하다. <code>coroutine1()</code>을 실행하면 동일하게 코드가 실행되는 것이 아니라 generator 객체가 리턴된다.
 이를 실행 시키려면 마찬가지로 처음에 <code>next(task)</code> 처럼 실행해 주어야 한다. 이렇게 되면 yield 를 만날때 까지 실행된다. 이때 &lsquo;callee 1&rsquo; 문장이 출력되고, <code>next()</code>로 값 1을 반환한다.
 이후 부터가 generator와 사용방법이 다른 부분이다. 처음 한번 <code>next()</code>를 호출한 이후로는 <code>coroutine.send()</code>를 이용하여 <code>next()</code> 와 유사하게 coroutine의 동작을 재개한다. <code>next()</code>와의 차이점은 값을 coroutine으로 전달 할 수 있다는 것이다. 위 예에서는 10을 coroutine에 전달하여 &lsquo;callee 2: 10&rsquo;이 출력되고 다음 yield를 만나서 다시 2를 리턴한다.</p>
@@ -806,8 +780,9 @@ Please enable JavaScript to view the comments powered by <a href=https://giscus.
 <i class="fas fa-comment fa-fw"></i>
 </a>
 </div><div class=assets><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/topbar/topbar.min.js></script><script type=text/javascript src=/lib/pjax/pjax.min.js></script><script type=text/javascript src=/js/theme.min.js></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','G-Z6SNWCXRNY',{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=G-Z6SNWCXRNY" async></script></div>
-<div class=pjax-assets><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",lightTheme:"light"}},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1}}</script><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/katex/katex.min.css>
+<div class=pjax-assets><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript src=/lib/mermaid/mermaid.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",lightTheme:"light"}},data:{"id-1":"sequenceDiagram\n    Participant Caller\n    Participant Callee\n    Note left of Caller: i=next(x)\n    Caller-\u003e\u003eCallee: 제어권 넘김\n    Note right of Callee: yield 1\n    Callee-\u003e\u003eCaller: 값 1 반환 \n    Note left of Caller: i=next(x)\n    Caller-\u003e\u003eCallee: 제어권 넘김\n    Note right of Callee: yield 2\n    Callee-\u003e\u003eCaller: 값 2 반환 ","id-2":"sequenceDiagram\n    Participant Caller\n    Participant C as coroutine1\n    Note left of Caller: i=next(task)\n    Caller-\u003e\u003eC: 제어권 넘김\n    Note right of C: print('callee 1')  x = yield 1\n    C-\u003e\u003eCaller: 값 1 반환 \n    Note left of Caller: i=task.send(10)\n    Caller-\u003e\u003eC: 값 10과 제어권 넘김. Callee는 x로 값 받음\n    Note right of C: print('callee 2: %d') x = yield 2\n    C-\u003e\u003eCaller: 값 2 반환\n    Note left of Caller: i=task.send(20)\n    Caller-\u003e\u003eC: 값 20과 제어권 넘김. Callee는 x로 값 받음 "},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1},mermaid:!0}</script><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/katex/katex.min.css>
 <noscript><link rel=stylesheet href=/lib/katex/katex.min.css></noscript><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/katex/copy-tex.min.css>
-<noscript><link rel=stylesheet href=/lib/katex/copy-tex.min.css></noscript></div>
+<noscript><link rel=stylesheet href=/lib/katex/copy-tex.min.css></noscript><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/mermaid/mermaid.min.css>
+<noscript><link rel=stylesheet href=/lib/mermaid/mermaid.min.css></noscript></div>
 </body>
 </html>
