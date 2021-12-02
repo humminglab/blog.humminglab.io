@@ -262,8 +262,8 @@ i = next(x)
 
 위의 그림을 도식적으로 그려보면 아래와 같이 된다(아래 부터는 표기를 편하게 하기 위하여 generator를 생성하거나 next()를 호출하는 곳을 caller라고 표기한다).
  
-<div class="mermaid">
-sequenceDiagram
+
+{{< mermaid >}}sequenceDiagram
     Participant Caller
     Participant Callee
     Note left of Caller: i=next(x)
@@ -274,7 +274,7 @@ sequenceDiagram
     Caller->>Callee: 제어권 넘김
     Note right of Callee: yield 2
     Callee->>Caller: 값 2 반환 
-</div>
+{{< /mermaid >}}
 
 
 - `next()`가 호출되는 시점에서 제어권을 generator로 넘김
@@ -306,8 +306,7 @@ i = task.send(10) # callee 2: 10 출력, i는 2가 됨
 task.send(20)     # callee 3: 20 출력 후 StopIteration exception 발생
 ``` 
 
-<div class="mermaid">
-sequenceDiagram
+{{< mermaid >}}sequenceDiagram
     Participant Caller
     Participant C as coroutine1
     Note left of Caller: i=next(task)
@@ -320,7 +319,7 @@ sequenceDiagram
     C->>Caller: 값 2 반환
     Note left of Caller: i=task.send(20)
     Caller->>C: 값 20과 제어권 넘김. Callee는 x로 값 받음 
-</div>
+{{< /mermaid >}}
 
 Coroutine은 generator와 yield 에서 값을 받을 수 있다는 것을 제외하고는 모든 것이 동일하다. `coroutine1()`을 실행하면 동일하게 코드가 실행되는 것이 아니라 generator 객체가 리턴된다.
 이를 실행 시키려면 마찬가지로 처음에 `next(task)` 처럼 실행해 주어야 한다. 이렇게 되면 yield 를 만날때 까지 실행된다. 이때 'callee 1' 문장이 출력되고, `next()`로 값 1을 반환한다. 
