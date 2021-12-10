@@ -1,6 +1,6 @@
 <!doctype html><html lang=en>
 <head>
-<meta name=generator content="Hugo 0.89.4">
+<meta name=generator content="Hugo 0.90.0">
 <meta charset=utf-8>
 <meta name=viewport content="width=device-width,initial-scale=1">
 <meta name=robots content="noodp">
@@ -56,6 +56,14 @@
 <main class=main>
 <div class=container><div class="page home" posts><div class=home-profile></div>
 <article class="single summary" itemscope itemtype=http://schema.org/Article><h1 class=single-title itemprop="name headline">
+<a href=/posts/how-to-oci-wireguard-public-ipv6/>OCI, WireGuard 로 무료 공인 IPv6 주소 사용하기</a>
+</h1><div class=post-meta>
+<span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
+</span>&nbsp;<span class=post-publish>published on <time datetime=2021-12-10>2021-12-10</time></span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/development/><i class="far fa-folder fa-fw"></i>Development</a></span></div><div class=content>IPv6 서비스를 개발하거나 시험하려는 경우 국내에서 기업용 인터넷이 아닌 경우에는 IPv6 주소를 이용하기가 쉽지 않다. IPv4 주소만 제공하는 가정용 인터넷이나 LTE 망에서 Oracle Cloud Infrastruct(OCI) Free Tier 를 사용하여 무료로 공인 IPv6 망을 구성하는 방법을 설명한다.
+시스템 구성" 시스템 구성 다른 방법들 공인 IPv6 를 할당받는 가장 쉬운 방법은 IPv6 TunnelBrokwer 를 이용하는 것이다. 미국 ISP 업체인 Hurricane Electric 에서 제공하는 Tunnel Broker는 아래 주소로 접속하여 가입하면 무료로 IPv6 주소를 할당 받아 사용할 수 있다.</div><div class=post-footer>
+<a href=/posts/how-to-oci-wireguard-public-ipv6/>Read more...</a><div class=post-tags>
+<i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/oci/>OCI</a>,&nbsp;<a href=/tags/wireguard/>WireGuard</a>,&nbsp;<a href=/tags/ipv6/>IPv6</a></div></div>
+</article><article class="single summary" itemscope itemtype=http://schema.org/Article><h1 class=single-title itemprop="name headline">
 <a href=/posts/yocto-project-history/>Yocto Project History</a>
 </h1><div class=post-meta>
 <span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
@@ -130,16 +138,15 @@ Who is my ISP? 로 확인해 보니 역시나 LG 유플러스 망을 사용하�
 HTTP가 주요 프로토콜인 것은 두말할 필요도 없고, MQTT도 IBM에서 1999년에 개발하여 2010년에 무료로 오픈하여 나이로는 15년 이상된 것으로 Facebook Messenger 에서도 사용하는 등 다양한 곳에서 사용 중 이다. CoAP의 경우 2010년에 첫 draft가 나온 것으로 다른 프로토콜에 비하면 신생 프로토콜이라고 볼 수 있으나 점차로 사용하는 곳이 많아지는 것으로 보인다. 일 예로 작은 메모리를 가진 IOT open OS platform 인 mbed, zephyr 에서도 CoAP을 주 통신 프로토콜로 지원하고 있고, WICED 에서도 CoAP 제공하고 있다.</div><div class=post-footer>
 <a href=/posts/coap-protocol/>Read more...</a><div class=post-tags>
 <i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/coap/>CoAP</a></div></div>
-</article><article class="single summary" itemscope itemtype=http://schema.org/Article><h1 class=single-title itemprop="name headline">
-<a href=/posts/mqtt-protocol/>MQTT Protocol</a>
-</h1><div class=post-meta>
-<span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
-</span>&nbsp;<span class=post-publish>published on <time datetime=2016-10-14>2016-10-14</time></span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/iot/><i class="far fa-folder fa-fw"></i>IoT</a></span></div><div class=content>MQTT(Message Queue Telemetry Transport)는 IOT 기기간의 통신을 위한 프로토콜이다. MQTT 이외에도 IOT용으로 CoAP(Constrained Application Protocol), AMQP(Advanced Message Queuing Protocol), XMPP(eXtensible Messaging and Presence Protocol), DDS(Data Distribution Service), Stomp(Simple Text Orientated Messaging Protocol) 등의 다양한 프로토콜이 있고, 각각의 프로토콜은 활용 용도에 따라서 장단점을 가지고 있다.
-여기에서는 MQTT의 특징에 대해서 정리하기로 한다.
-MQTT의 특징 TCP 기반 프로토콜 UDP가 아닌 TCP 기반이라 작은 IOT 기기에서는 사용이 어려울 수 있다. MQTT 프로토콜에서 사용자 인증을 제공한다.</div><div class=post-footer>
-<a href=/posts/mqtt-protocol/>Read more...</a><div class=post-tags>
-<i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/mqtt/>MQTT</a></div></div>
-</article></div></div>
+</article><ul class=pagination><li class="page-item active">
+<span class=page-link>
+<a href=/>1</a>
+</span>
+</li><li class=page-item>
+<span class=page-link>
+<a href=/page/2/>2</a>
+</span>
+</li></ul></div></div>
 </main><footer class=footer>
 <div class=footer-container><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2021</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://www.humminglab.io target=_blank rel="noopener noreferrer">HummingLab</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div>
 </div></footer></div>
