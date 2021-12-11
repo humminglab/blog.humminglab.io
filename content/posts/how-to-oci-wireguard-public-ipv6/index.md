@@ -1,7 +1,7 @@
 ---
 title: "OCI, WireGuard 로 무료 공인 IPv6 주소 사용하기"
 date: "2021-12-10T09:00:00+09:00"
-lastmod: "2021-12-10T09:00:00+09:00"
+lastmod: "2021-12-11T09:00:00+09:00"
 draft: false
 authors: ["YSLee"]
 tags: ["OCI", "WireGuard", "IPv6"]
@@ -354,6 +354,10 @@ $ sudo ip -6 neigh add proxy 2603:cafe:cafe:ca01::2002 dev ens3
 - OCI 설정에서 Ubuntu VM에 `2603:cafe:cafe:ca01::2002` IP를 추가 등록. Uubntu는 `2603:cafe:cafe:ca01::1001`과 2개의 IPv6를 가짐
 
   - **Compute** -> **Instances** -> Instance -> **Attached VNICs** -> vnic -> **IPv6 Address**
+
+- VNIC에서 주소체크를 하지 않도록 수정
+
+  - **Compute** -> **Instances** -> Instance -> **Attached VNICs** -> Edit VNIC -> **Skip source/destination check** 체크 
 
 - Wireguard 중지
 
