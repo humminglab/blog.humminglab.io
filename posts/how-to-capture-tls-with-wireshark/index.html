@@ -10,7 +10,7 @@
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://blog.humminglab.io/posts/how-to-capture-tls-with-wireshark/"><meta property="article:section" content="posts">
 <meta property="article:published_time" content="2021-12-21T16:00:00+09:00">
-<meta property="article:modified_time" content="2021-12-21T16:00:00+09:00">
+<meta property="article:modified_time" content="2021-12-22T10:00:00+09:00">
 <meta name=twitter:card content="summary">
 <meta name=twitter:title content="Wireshark 으로 TLS 캡쳐 및 디코딩 하기">
 <meta name=twitter:description content="프로토콜을 개발하거나 검증하려고 할 때 SSL/TLS 암호화 채널로 전송되는 데이타를 디코딩하여 확인이 필요할 때가 있다. 이 글에서는 시험하려는 프로그램의 수정 없이 또는 최소한의 수정으로 디코딩 하는 방법을 설명한다.
@@ -22,7 +22,7 @@
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
 <link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/posts/how-to-capture-tls-with-wireshark/><link rel=prev href=https://blog.humminglab.io/posts/how-to-oci-wireguard-public-ipv6/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/fontawesome-free/all.min.css>
 <noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/animate/animate.min.css>
-<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Wireshark 으로 TLS 캡쳐 및 디코딩 하기","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/how-to-capture-tls-with-wireshark\/"},"genre":"posts","keywords":"Wireshark, TLS, WebProxy","wordcount":763,"url":"https:\/\/blog.humminglab.io\/posts\/how-to-capture-tls-with-wireshark\/","datePublished":"2021-12-21T16:00:00+09:00","dateModified":"2021-12-21T16:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head>
+<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Wireshark 으로 TLS 캡쳐 및 디코딩 하기","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/how-to-capture-tls-with-wireshark\/"},"genre":"posts","keywords":"Wireshark, TLS, MbedTLS, OpenSSL, WebProxy","wordcount":771,"url":"https:\/\/blog.humminglab.io\/posts\/how-to-capture-tls-with-wireshark\/","datePublished":"2021-12-21T16:00:00+09:00","dateModified":"2021-12-22T10:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head>
 <body header-desktop header-mobile><script type=text/javascript>function setTheme(a){document.body.setAttribute('theme',a)}function saveTheme(a){window.localStorage&&localStorage.setItem('theme',a)}function getMeta(b){const a=document.getElementsByTagName('meta');for(let c=0;c<a.length;c++)if(a[c].getAttribute('name')===b)return a[c];return''}if(window.localStorage&&localStorage.getItem('theme')){let a=localStorage.getItem('theme');a==='light'||a==='dark'||a==='black'?setTheme(a):window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?setTheme('dark'):setTheme('light')}else''==='light'||''==='dark'||''==='black'?(setTheme(''),saveTheme('')):(saveTheme('auto'),window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?setTheme('dark'):setTheme('light'));let metaColors={light:'#f8f8f8',dark:'#252627',black:'#000000'};getMeta('theme-color').content=metaColors[document.body.getAttribute('theme')]</script>
 <div id=back-to-top></div>
 <div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
@@ -65,7 +65,7 @@
 <div class=post-meta-line>
 <span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
 </span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/security/><i class="far fa-folder fa-fw"></i>Security</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-12-21>2021-12-21</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2021-12-21>2021-12-21</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;763 words&nbsp;
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-12-21>2021-12-21</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2021-12-22>2021-12-22</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;771 words&nbsp;
 <i class="far fa-clock fa-fw"></i>&nbsp;4 minutes&nbsp;</div>
 </div><div class="details toc" id=toc-static kept>
 <div class="details-summary toc-title">
@@ -172,10 +172,14 @@ $ <span class=nv>SSLKEYLOGFILE</span><span class=o>=</span>/tmp/tlskey.log open 
 </ul>
 <p>위 patch 는 위와 유사한 방식으로 fputs 를 이용하여 <code>CLIENT_RANDOM</code> 을 출력 시킨다.</p>
 <p>이와 같은 시나리오로 WiFI IoT 모듈의 TLS 패킷 캡쳐는 다음과 같이 할 수 있다.</p>
+<figure><a class=lightgallery href=/posts/how-to-capture-tls-with-wireshark/iot-capture.png title=/posts/how-to-capture-tls-with-wireshark/iot-capture.png data-thumbnail=/posts/how-to-capture-tls-with-wireshark/iot-capture.png data-sub-html="<h2>IoT 캡쳐</h2>">
+<img class=lazyload data-src=iot-capture.png data-srcset="/posts/how-to-capture-tls-with-wireshark/iot-capture.png, iot-capture.png 1.5x, /posts/how-to-capture-tls-with-wireshark/iot-capture.png 2x" data-sizes=auto alt=/posts/how-to-capture-tls-with-wireshark/iot-capture.png height=auto width=400px>
+</a><figcaption class=image-caption>IoT 캡쳐</figcaption>
+</figure>
 <ul>
-<li>IoT 모듈의 디버깅 로그를 USB-UART로 PC와 연결</li>
-<li>콘솔로 로그 출력이 가능한 <a href=https://linux.die.net/man/8/picocom target=_blank rel="noopener noreffer">picocom</a>을 이용</li>
-<li>이를 이용하여 다음과 같이 2개의 프로그램을 실행</li>
+<li>IoT 모듈의 디버깅 로그를 UART로 PC와 연결하여 디버깅 로그 출력</li>
+<li>로그를 <a href=https://linux.die.net/man/8/picocom target=_blank rel="noopener noreffer">picocom</a>와 같이 terminal 프로그램 이용하여 CLIENT_RANDOM만 추출</li>
+<li>아래와 같이 두개의 스크립트를 각각 실행</li>
 </ul>
 <div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
@@ -243,7 +247,7 @@ $ tail -f /tmp/test.log <span class=p>|</span> grep --line-buffered CLIENT_RANDO
 <div class=post-info>
 <div class=post-info-line>
 <div class=post-info-mod>
-<span>Updated on 2021-12-21</span>
+<span>Updated on 2021-12-22</span>
 </div>
 <div class=post-info-license></div>
 </div>
@@ -255,7 +259,7 @@ $ tail -f /tmp/test.log <span class=p>|</span> grep --line-buffered CLIENT_RANDO
 </div>
 </div>
 <div class=post-info-more>
-<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/wireshark/>Wireshark</a>,&nbsp;<a href=/tags/tls/>TLS</a>,&nbsp;<a href=/tags/webproxy/>WebProxy</a></section>
+<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/wireshark/>Wireshark</a>,&nbsp;<a href=/tags/tls/>TLS</a>,&nbsp;<a href=/tags/mbedtls/>MbedTLS</a>,&nbsp;<a href=/tags/openssl/>OpenSSL</a>,&nbsp;<a href=/tags/webproxy/>WebProxy</a></section>
 <section>
 <span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span>
 </section>
