@@ -1,10 +1,10 @@
 ---
 title: "Wireshark 으로 TLS 캡쳐 및 디코딩 하기"
 date: "2021-12-21T16:00:00+09:00"
-lastmod: "2021-12-21T16:00:00+09:00"
+lastmod: "2021-12-22T10:00:00+09:00"
 draft: false
 authors: ["YSLee"]
-tags: ["Wireshark", "TLS", "WebProxy"]
+tags: ["Wireshark", "TLS", "MbedTLS", "OpenSSL", "WebProxy"]
 categories: ["Security"]
 ---
 
@@ -97,9 +97,12 @@ require("sslkeylog").hookAll();
 
 이와 같은 시나리오로 WiFI IoT 모듈의 TLS 패킷 캡쳐는 다음과 같이 할 수 있다.
 
-- IoT 모듈의 디버깅 로그를 USB-UART로 PC와 연결
-- 콘솔로 로그 출력이 가능한 [picocom](https://linux.die.net/man/8/picocom)을 이용
-- 이를 이용하여 다음과 같이 2개의 프로그램을 실행
+{{< image src="iot-capture.png" width="400px" height="auto" caption="IoT 캡쳐">}}
+
+
+- IoT 모듈의 디버깅 로그를 UART로 PC와 연결하여 디버깅 로그 출력
+- 로그를 [picocom](https://linux.die.net/man/8/picocom)와 같이 terminal 프로그램 이용하여 CLIENT_RANDOM만 추출
+- 아래와 같이 두개의 스크립트를 각각 실행
 
 ```shell
 $ picocom -b 115200 /dev/ttyUSB0 | tee /tmp/test.log
