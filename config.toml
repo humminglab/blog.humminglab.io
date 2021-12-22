@@ -107,7 +107,7 @@ name = "HummingLab"
       enable = true
       # Google Analytics
       [params.analytics.google]
-        id = "G-Z6SNWCXRNY"
+        id = "UA-83257319-3"
         # whether to anonymize IP
         anonymizeIP = true
 
