@@ -2,7 +2,7 @@
 title: "Yocto Project 개발하기(1) - Orange Pi 보드 빌드"
 date: "2021-12-30T22:00:00+09:00"
 lastmod: "2021-12-30T22:00:00+09:00"
-draft: true
+draft: false
 authors: ["YSLee"]
 tags: ["Yocto", "Linux", "OrangePi"]
 categories: ["Development"]
