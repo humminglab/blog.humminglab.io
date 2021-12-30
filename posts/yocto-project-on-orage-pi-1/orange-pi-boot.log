@@ -1,0 +1,299 @@
+U-Boot SPL 2021.07-g840658b (Jul 05 2021 - 15:11:28 +0000)
+DRAM: 256 MiB
+Trying to boot from MMC1
+
+
+U-Boot 2021.07-g840658b (Jul 05 2021 - 15:11:28 +0000) Allwinner Technology
+
+CPU:   Allwinner H3 (SUN8I 1680)
+Model: Xunlong Orange Pi Zero
+DRAM:  256 MiB
+MMC:   mmc@1c0f000: 0, mmc@1c10000: 2
+Loading Environment from FAT... Unable to read "uboot.env" from mmc0:1... In:    serial
+Out:   serial
+Err:   serial
+Net:   phy interface0
+eth0: ethernet@1c30000
+starting USB...
+Bus usb@1c1a000: USB EHCI 1.00
+Bus usb@1c1a400: USB OHCI 1.0
+Bus usb@1c1b000: USB EHCI 1.00
+Bus usb@1c1b400: USB OHCI 1.0
+scanning bus usb@1c1a000 for devices... 1 USB Device(s) found
+scanning bus usb@1c1a400 for devices... 1 USB Device(s) found
+scanning bus usb@1c1b000 for devices... 1 USB Device(s) found
+scanning bus usb@1c1b400 for devices... 1 USB Device(s) found
+       scanning usb for storage devices... 0 Storage Device(s) found
+Hit any key to stop autoboot:  0
+switch to partitions #0, OK
+mmc0 is current device
+Scanning mmc 0:1...
+Found U-Boot script /boot.scr
+714 bytes read in 2 ms (348.6 KiB/s)
+## Executing script at 43100000
+20893 bytes read in 3 ms (6.6 MiB/s)
+Failed to load 'zImage'
+Failed to load 'boot/zImage'
+4419976 bytes read in 205 ms (20.6 MiB/s)
+zimage: Bad magic!
+## Booting kernel from Legacy Image at 42000000 ...
+   Image Name:   Linux-5.4.69
+   Image Type:   ARM Linux Kernel Image (uncompressed)
+   Data Size:    4419912 Bytes = 4.2 MiB
+   Load Address: 40008000
+   Entry Point:  40008000
+   Verifying Checksum ... OK
+## Flattened Device Tree blob at 43000000
+   Booting using the fdt blob at 0x43000000
+EHCI failed to shut down host controller.
+   Loading Kernel Image
+   Loading Device Tree to 49ff7000, end 49fff19c ... OK
+
+Starting kernel ...
+
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Linux version 5.4.69 (oe-user@oe-host) (gcc version 11.2.0 (GCC)) #1 SMP Thu Oct 1 11:19:27 UTC 2020
+[    0.000000] CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c5387d
+[    0.000000] CPU: div instructions available: patching division code
+[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+[    0.000000] OF: fdt: Machine model: Xunlong Orange Pi Zero
+[    0.000000] Memory policy: Data cache writealloc
+[    0.000000] psci: probing for conduit method from DT.
+[    0.000000] psci: Using PSCI v0.1 Function IDs from DT
+[    0.000000] percpu: Embedded 15 pages/cpu s31436 r8192 d21812 u61440
+[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 65024
+[    0.000000] Kernel command line: console=ttyS0,115200 console=tty1 root=/dev/mmcblk0p2 rootwait panic=10
+[    0.000000] Dentry cache hash table entries: 32768 (order: 5, 131072 bytes, linear)
+[    0.000000] Inode-cache hash table entries: 16384 (order: 4, 65536 bytes, linear)
+[    0.000000] mem auto-init: stack:off, heap alloc:off, heap free:off
+[    0.000000] Memory: 248620K/262144K available (7168K kernel code, 418K rwdata, 1472K rodata, 1024K init, 251K bss, 13524K reserved, 0K cma-reserved, 0K highmem)
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=4, Nodes=1
+[    0.000000] rcu: Hierarchical RCU implementation.
+[    0.000000] rcu: 	RCU restricting CPUs from NR_CPUS=8 to nr_cpu_ids=4.
+[    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is 10 jiffies.
+[    0.000000] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=4
+[    0.000000] NR_IRQS: 16, nr_irqs: 16, preallocated irqs: 16
+[    0.000000] GIC: Using split EOI/Deactivate mode
+[    0.000000] random: get_random_bytes called from start_kernel+0x2b0/0x464 with crng_init=0
+[    0.000000] clocksource: timer: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 79635851949 ns
+[    0.000000] arch_timer: cp15 timer(s) running at 24.00MHz (phys).
+[    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff max_cycles: 0x588fe9dc0, max_idle_ns: 440795202592 ns
+[    0.000006] sched_clock: 56 bits at 24MHz, resolution 41ns, wraps every 4398046511097ns
+[    0.000016] Switching to timer-based delay loop, resolution 41ns
+[    0.000181] Console: colour dummy device 80x30
+[    0.000451] printk: console [tty1] enabled
+[    0.000495] Calibrating delay loop (skipped), value calculated using timer frequency.. 48.00 BogoMIPS (lpj=240000)
+[    0.000521] pid_max: default: 32768 minimum: 301
+[    0.000647] Mount-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
+[    0.000670] Mountpoint-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)
+[    0.001390] CPU: Testing write buffer coherency: ok
+[    0.001755] /cpus/cpu@0 missing clock-frequency property
+[    0.001788] /cpus/cpu@1 missing clock-frequency property
+[    0.001809] /cpus/cpu@2 missing clock-frequency property
+[    0.001829] /cpus/cpu@3 missing clock-frequency property
+[    0.001846] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
+[    0.002341] Setting up static identity map for 0x40100000 - 0x40100060
+[    0.002463] rcu: Hierarchical SRCU implementation.
+[    0.002926] smp: Bringing up secondary CPUs ...
+[    0.013612] CPU1: thread -1, cpu 1, socket 0, mpidr 80000001
+[    0.024387] CPU2: thread -1, cpu 2, socket 0, mpidr 80000002
+[    0.035075] CPU3: thread -1, cpu 3, socket 0, mpidr 80000003
+[    0.035159] smp: Brought up 1 node, 4 CPUs
+[    0.035211] SMP: Total of 4 processors activated (192.00 BogoMIPS).
+[    0.035223] CPU: All CPU(s) started in HYP mode.
+[    0.035234] CPU: Virtualization extensions available.
+[    0.035690] devtmpfs: initialized
+[    0.039882] VFP support v0.3: implementor 41 architecture 2 part 30 variant 7 rev 5
+[    0.040128] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 19112604462750000 ns
+[    0.040163] futex hash table entries: 1024 (order: 4, 65536 bytes, linear)
+[    0.040413] pinctrl core: initialized pinctrl subsystem
+[    0.041155] NET: Registered protocol family 16
+[    0.041427] DMA: preallocated 256 KiB pool for atomic coherent allocations
+[    0.042312] cpuidle: using governor menu
+[    0.042476] hw-breakpoint: found 5 (+1 reserved) breakpoint and 4 watchpoint registers.
+[    0.042498] hw-breakpoint: maximum watchpoint size is 8 bytes.
+[    0.054235] cryptd: max_cpu_qlen set to 1000
+[    0.056279] SCSI subsystem initialized
+[    0.056723] usbcore: registered new interface driver usbfs
+[    0.056776] usbcore: registered new interface driver hub
+[    0.056837] usbcore: registered new device driver usb
+[    0.056927] pps_core: LinuxPPS API ver. 1 registered
+[    0.056941] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+[    0.056970] PTP clock support registered
+[    0.057869] clocksource: Switched to clocksource arch_sys_counter
+[    0.064593] thermal_sys: Registered thermal governor 'step_wise'
+[    0.064858] NET: Registered protocol family 2
+[    0.065531] tcp_listen_portaddr_hash hash table entries: 512 (order: 0, 6144 bytes, linear)
+[    0.065576] TCP established hash table entries: 2048 (order: 1, 8192 bytes, linear)
+[    0.065614] TCP bind hash table entries: 2048 (order: 2, 16384 bytes, linear)
+[    0.065656] TCP: Hash tables configured (established 2048 bind 2048)
+[    0.065758] UDP hash table entries: 256 (order: 1, 8192 bytes, linear)
+[    0.065805] UDP-Lite hash table entries: 256 (order: 1, 8192 bytes, linear)
+[    0.065974] NET: Registered protocol family 1
+[    0.066451] RPC: Registered named UNIX socket transport module.
+[    0.066477] RPC: Registered udp transport module.
+[    0.066488] RPC: Registered tcp transport module.
+[    0.066499] RPC: Registered tcp NFSv4.1 backchannel transport module.
+[    0.067388] hw perfevents: enabled with armv7_cortex_a7 PMU driver, 5 counters available
+[    0.069092] Initialise system trusted keyrings
+[    0.069264] workingset: timestamp_bits=30 max_order=16 bucket_order=0
+[    0.075764] NFS: Registering the id_resolver key type
+[    0.075815] Key type id_resolver registered
+[    0.075828] Key type id_legacy registered
+[    0.076092] Key type asymmetric registered
+[    0.076110] Asymmetric key parser 'x509' registered
+[    0.076165] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 249)
+[    0.076185] io scheduler mq-deadline registered
+[    0.076197] io scheduler kyber registered
+[    0.076954] sun4i-usb-phy 1c19400.phy: Couldn't request ID GPIO
+[    0.080445] sun8i-h3-pinctrl 1c20800.pinctrl: initialized sunXi PIO driver
+[    0.081843] sun8i-h3-r-pinctrl 1f02c00.pinctrl: initialized sunXi PIO driver
+[    0.126276] Serial: 8250/16550 driver, 8 ports, IRQ sharing disabled
+[    0.127910] sun8i-h3-pinctrl 1c20800.pinctrl: 1c20800.pinctrl supply vcc-pa not found, using dummy regulator
+[    0.128634] printk: console [ttyS0] disabled
+[    0.148826] 1c28000.serial: ttyS0 at MMIO 0x1c28000 (irq = 36, base_baud = 1500000) is a U6_16550A
+[    0.771708] printk: console [ttyS0] enabled
+[    0.777510] libphy: Fixed MDIO Bus: probed
+[    0.781978] dwmac-sun8i 1c30000.ethernet: IRQ eth_wake_irq not found
+[    0.788356] dwmac-sun8i 1c30000.ethernet: IRQ eth_lpi not found
+[    0.794368] dwmac-sun8i 1c30000.ethernet: PTP uses main clock
+[    0.800169] dwmac-sun8i 1c30000.ethernet: No regulator found
+[    0.806061] dwmac-sun8i 1c30000.ethernet: Current syscon value is not the default 148000 (expect 58000)
+[    0.815498] dwmac-sun8i 1c30000.ethernet: No HW DMA feature register supported
+[    0.822735] dwmac-sun8i 1c30000.ethernet: RX Checksum Offload Engine supported
+[    0.829969] dwmac-sun8i 1c30000.ethernet: COE Type 2
+[    0.834934] dwmac-sun8i 1c30000.ethernet: TX Checksum insertion supported
+[    0.841731] dwmac-sun8i 1c30000.ethernet: Normal descriptors
+[    0.847390] dwmac-sun8i 1c30000.ethernet: Chain mode enabled
+[    0.853226] libphy: stmmac: probed
+[    0.857089] dwmac-sun8i 1c30000.ethernet: Found internal PHY node
+[    0.863316] libphy: mdio_mux: probed
+[    0.866912] dwmac-sun8i 1c30000.ethernet: Switch mux to internal PHY
+[    0.873287] dwmac-sun8i 1c30000.ethernet: Powering internal PHY
+[    0.880176] libphy: mdio_mux: probed
+[    0.884094] ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
+[    0.890650] ehci-platform: EHCI generic platform driver
+[    0.896050] ehci-platform 1c1a000.usb: EHCI Host Controller
+[    0.901674] ehci-platform 1c1a000.usb: new USB bus registered, assigned bus number 1
+[    0.909562] ehci-platform 1c1a000.usb: irq 27, io mem 0x01c1a000
+[    0.937871] ehci-platform 1c1a000.usb: USB 2.0 started, EHCI 1.00
+[    0.944654] hub 1-0:1.0: USB hub found
+[    0.948482] hub 1-0:1.0: 1 port detected
+[    0.952997] ohci_hcd: USB 1.1 'Open' Host Controller (OHCI) Driver
+[    0.959208] ohci-platform: OHCI generic platform driver
+[    0.964579] ohci-platform 1c1a400.usb: Generic Platform OHCI controller
+[    0.971236] ohci-platform 1c1a400.usb: new USB bus registered, assigned bus number 2
+[    0.979059] ohci-platform 1c1a400.usb: irq 28, io mem 0x01c1a400
+[    1.052494] hub 2-0:1.0: USB hub found
+[    1.056286] hub 2-0:1.0: 1 port detected
+[    1.063127] usbcore: registered new interface driver usb-storage
+[    1.070010] sun6i-rtc 1f00000.rtc: registered as rtc0
+[    1.075071] sun6i-rtc 1f00000.rtc: RTC enabled
+[    1.079735] i2c /dev entries driver
+[    1.083777] sunxi-wdt 1c20ca0.watchdog: Watchdog enabled (timeout=16 sec, nowayout=0)
+[    1.092124] sun8i-h3-r-pinctrl 1f02c00.pinctrl: 1f02c00.pinctrl supply vcc-pl not found, using dummy regulator
+[    1.102644] sun8i-h3-pinctrl 1c20800.pinctrl: 1c20800.pinctrl supply vcc-pf not found, using dummy regulator
+[    1.112951] sunxi-mmc 1c0f000.mmc: Got CD GPIO
+[    1.142683] sunxi-mmc 1c0f000.mmc: initialized, max. request size: 16384 KB
+[    1.149868] sun8i-h3-pinctrl 1c20800.pinctrl: 1c20800.pinctrl supply vcc-pg not found, using dummy regulator
+[    1.160684] ledtrig-cpu: registered to indicate activity on CPUs
+[    1.167287] usbcore: registered new interface driver usbhid
+[    1.172910] usbhid: USB HID core driver
+[    1.177545] NET: Registered protocol family 10
+[    1.183088] Segment Routing with IPv6
+[    1.186832] sit: IPv6, IPv4 and MPLS over IPv4 tunneling driver
+[    1.193340] NET: Registered protocol family 17
+[    1.197886] Key type dns_resolver registered
+[    1.202221] Registering SWP/SWPB emulation handler
+[    1.208314] registered taskstats version 1
+[    1.212428] Loading compiled-in X.509 certificates
+[    1.218152] sun8i-h3-pinctrl 1c20800.pinctrl: 1c20800.pinctrl supply vcc-pg not found, using dummy regulator
+[    1.229004] ehci-platform 1c1b000.usb: EHCI Host Controller
+[    1.232728] mmc0: host does not support reading read-only switch, assuming write-enable
+[    1.234611] ehci-platform 1c1b000.usb: new USB bus registered, assigned bus number 3
+[    1.248579] mmc0: new high speed SDHC card at address aaaa
+[    1.250479] ehci-platform 1c1b000.usb: irq 29, io mem 0x01c1b000
+[    1.256499] mmcblk0: mmc0:aaaa SS08G 7.40 GiB
+[    1.272466]  mmcblk0: p1 p2
+[    1.287891] ehci-platform 1c1b000.usb: USB 2.0 started, EHCI 1.00
+[    1.294677] hub 3-0:1.0: USB hub found
+[    1.298509] hub 3-0:1.0: 1 port detected
+[    1.303190] ohci-platform 1c1b400.usb: Generic Platform OHCI controller
+[    1.309863] ohci-platform 1c1b400.usb: new USB bus registered, assigned bus number 4
+[    1.317716] ohci-platform 1c1b400.usb: irq 30, io mem 0x01c1b400
+[    1.392508] hub 4-0:1.0: USB hub found
+[    1.396309] hub 4-0:1.0: 1 port detected
+[    1.401893] sunxi-mmc 1c10000.mmc: allocated mmc-pwrseq
+[    1.580451] sunxi-mmc 1c10000.mmc: initialized, max. request size: 16384 KB
+[    1.587539] sun6i-rtc 1f00000.rtc: setting system clock to 1970-01-01T00:00:10 UTC (10)
+[    1.603405] EXT4-fs (mmcblk0p2): INFO: recovery required on readonly filesystem
+[    1.610776] EXT4-fs (mmcblk0p2): write access will be enabled during recovery
+[    1.627459] mmc1: new high speed SDIO card at address 0001
+[    1.649473] random: fast init done
+[    1.707687] EXT4-fs (mmcblk0p2): recovery complete
+[    1.715027] EXT4-fs (mmcblk0p2): mounted filesystem with ordered data mode. Opts: (null)
+[    1.723213] VFS: Mounted root (ext4 filesystem) readonly on device 179:2.
+[    1.734669] devtmpfs: mounted
+[    1.739015] Freeing unused kernel memory: 1024K
+[    1.743719] Run /sbin/init as init process
+[    2.037611] udevd[119]: starting version 3.2.10
+[    2.043337] random: udevd: uninitialized urandom read (16 bytes read)
+[    2.050872] random: udevd: uninitialized urandom read (16 bytes read)
+[    2.057394] random: udevd: uninitialized urandom read (16 bytes read)
+[    2.087607] udevd[120]: starting eudev-3.2.10
+[    2.424710] EXT4-fs (mmcblk0p2): re-mounted. Opts: (null)
+Fri Mar  9 12:34:56 UTC 2018
+INIT: Entering runlevel: 5
+Configuring network interfaces... [    2.867767] dwmac-sun8i 1c30000.ethernet eth0: PHY [0.1:01] driver [Generic PHY]
+[    2.876249] dwmac-sun8i 1c30000.ethernet eth0: No Safety Features support found
+[    2.883593] dwmac-sun8i 1c30000.ethernet eth0: No MAC Management Counters available
+[    2.891265] dwmac-sun8i 1c30000.ethernet eth0: PTP not supported by HW
+[    2.897798] dwmac-sun8i 1c30000.ethernet eth0: configuring for phy/mii link mode
+udhcpc: started, v1.34.1
+udhcpc: broadcasting discover
+[    4.958255] dwmac-sun8i 1c30000.ethernet eth0: Link is Up - 100Mbps/Full - flow control off
+[    4.966650] IPv6: ADDRCONF(NETDEV_CHANGE): eth0: link becomes ready
+udhcpc: broadcasting discover
+udhcpc: broadcasting select for 192.168.9.8, server 192.168.9.1
+udhcpc: lease of 192.168.9.8 obtained from 192.168.9.1, lease time 604800
+/etc/udhcpc.d/50default: Adding DNS 8.8.8.8
+/etc/udhcpc.d/50default: Adding DNS 1.1.1.1
+done.
+Starting syslogd/klogd: done
+
+[   31.837901] vcc3v0: disabling
+[   31.840902] vcc5v0: disabling
+
+Poky (Yocto Project Reference Distro) 3.4.1 orange-pi-zero /dev/ttyS0
+
+orange-pi-zero login: root
+[   71.973608] random: crng init done
+[   71.977041] random: 2 urandom warning(s) missed due to ratelimiting
+
+root@orange-pi-zero:~# mount
+/dev/root on / type ext4 (rw,relatime)
+devtmpfs on /dev type devtmpfs (rw,relatime,size=124308k,nr_inodes=31077,mode=755)
+proc on /proc type proc (rw,relatime)
+sysfs on /sys type sysfs (rw,relatime)
+tmpfs on /run type tmpfs (rw,nosuid,nodev,mode=755)
+tmpfs on /var/volatile type tmpfs (rw,relatime)
+devpts on /dev/pts type devpts (rw,relatime,gid=5,mode=620,ptmxmode=000)
+root@orange-pi-zero:~# ifconfig
+eth0      Link encap:Ethernet  HWaddr 02:42:4F:3B:42:7D
+          inet addr:192.168.9.8  Bcast:192.168.9.255  Mask:255.255.255.0
+          inet6 addr: fe80::42:4fff:fe3b:427d/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:20 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:12 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:5259 (5.1 KiB)  TX bytes:1480 (1.4 KiB)
+          Interrupt:34
+
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
