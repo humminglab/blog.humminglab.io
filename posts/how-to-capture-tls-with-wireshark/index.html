@@ -80,7 +80,7 @@
 <ul>
 <li><a href=#웹-브라우저>웹 브라우저</a></li>
 <li><a href=#nodejs>Node.js</a></li>
-<li><a href=#mbedtls-library>MbedTlS library</a></li>
+<li><a href=#mbedtls-library>MbedTLS library</a></li>
 <li><a href=#openssl-library>OpenSSL library</a></li>
 </ul>
 </li>
@@ -165,7 +165,7 @@ $ <span class=nv>SSLKEYLOGFILE</span><span class=o>=</span>/tmp/tlskey.log open 
 <pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=nx>require</span><span class=p>(</span><span class=s2>&#34;sslkeylog&#34;</span><span class=p>).</span><span class=nx>hookAll</span><span class=p>();</span>
 </code></pre></td></tr></table>
 </div>
-</div><h3 id=mbedtls-library>MbedTlS library</h3>
+</div><h3 id=mbedtls-library>MbedTLS library</h3>
 <p>사용하는 기기가 RTOS 기반 IoT 모듈 이라면 TLS 관련 library를 수정하여야 한다. 모듈이 mbedTLS 를 사용한다면 아래 링크과 같이 patch를 적용한다.</p>
 <ul>
 <li><a href=https://github.com/Lekensteyn/mbedtls/commit/68aea15 target=_blank rel="noopener noreffer">Example code to produce key log file compatible with Wireshark</a></li>
