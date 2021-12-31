@@ -87,7 +87,7 @@ Wireshark의 설정 -> Protocols -> TLS 의 '(Pre)-Master-Secret log fiename' �
 require("sslkeylog").hookAll();
 ```
 
-### MbedTlS library
+### MbedTLS library
 
 사용하는 기기가 RTOS 기반 IoT 모듈 이라면 TLS 관련 library를 수정하여야 한다. 모듈이 mbedTLS 를 사용한다면 아래 링크과 같이 patch를 적용한다.
 
