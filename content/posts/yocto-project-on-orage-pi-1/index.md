@@ -1,7 +1,7 @@
 ---
 title: "Yocto Project 개발하기(1) - Orange Pi 보드 빌드"
 date: "2021-12-30T22:00:00+09:00"
-lastmod: "2021-12-30T22:00:00+09:00"
+lastmod: "2022-01-07T19:00:00+09:00"
 draft: false
 authors: ["YSLee"]
 tags: ["Yocto", "Linux", "OrangePi"]
@@ -11,16 +11,15 @@ series: ["Yocto Project 개발하기"]
 
 이 문서는 [Orange Pi Zero](http://www.orangepi.org/orangepizero/) 보드에서 [Yocto Project](https://www.yoctoproject.org/)를 이용하여 배포본을 만들고, 개별 패키지를 관리하는 방법에 대하여 설명한다.
 
-설명은 다음과 나누어서 설명을 할 에정이다.
+설명은 다음과 같이 나누어서 설명을 할 에정이다.
 
-- Yocto Project 개발하기(1) - Orange Pi 보드 빌드
-- Yocto Project 개발하기(2) - Custom Layer 만들기
+- **Yocto Project 개발하기(1) - Orange Pi 보드 빌드**
+- [Yocto Project 개발하기(2) - Custom Layer 만들기]({{< ref "posts/yocto-project-on-orange-pi-2">}})
 - Yocto Project 개발하기(3) - 개발 시 로컬 패키지 관리하기
 - Yocto Project 개발하기(4) - Yocto SDK 빌드
 - Yocto Project 개발하기(5) - Yocto eSDK 이용한 개발 모델
 
 이 문서에서는 첫번째 과정인 필요한 layer를 추가해서 빌드하여 타겟에 올려서 동작을 확인하는 과정을 설명한다.
-
 
 ## Orange Pi Zero
 
@@ -71,13 +70,12 @@ $ git clone git://git.yoctoproject.org/poky -b honister
 Yoco 내에 Allwinner layer인 meta-sunxi 를 설치한다. 또한 meta-sunxi 가 참조하는 meta-openembedded/meta-oe 도 추가로 설치한다.
 
 ```shell
-$ cd poky 
+$ cd poky
 $ git clone git@github.com:linux-sunxi/meta-sunxi.git -b honister
 $ git clone git://git.openembedded.org/meta-openembedded -b honister
 ```
 
 위와 같이 meta layer는 poky 디렉토리 안에 설치를 한다면 이를 git submodule 등을 이용하여 관리를 하는 것이 좋을 수 있다.
-
 
 ```shell
 $ source ./oe-init-build-env
@@ -142,4 +140,4 @@ Wi-Fi 드라이버는 아직 설치가 안된 상태이다.
 
 기본 동작을 확인하였고 다음은 프로젝트의 custom layer를 만들어 관리하는 방법을 설명한다.
 
-이전에 작성한  글 [Yocto Project History]({{< ref "yocto-project-history" >}}) 도 한번 읽어 보면 전체적으로 Yocto의 발전 과정을 볼 수 있다.
+이전에 작성한 글 [Yocto Project History]({{< ref "yocto-project-history" >}}) 도 한번 읽어 보면 전체적으로 Yocto의 발전 과정을 볼 수 있다.
