@@ -1,7 +1,7 @@
 ---
 title: "Yocto Project 개발하기(2) - Custom Layer 만들기"
 date: "2022-01-07T19:00:00+09:00"
-lastmod: "2022-01-07T19:00:00+09:00"
+lastmod: "2022-01-09T13:00:00+09:00"
 draft: false
 authors: ["YSLee"]
 tags: ["Yocto", "Linux", "OrangePi"]
@@ -9,11 +9,11 @@ categories: ["Development"]
 series: ["Yocto Project 개발하기"]
 ---
 
-[이전 글]({{< ref "posts/yocto-project-on-orage-pi-1">}}) 에서 meta-sunxi 를 추가하여 orage pi 용으로 빌드를 만들었고, 이번 과정은 project 용으로 meta layer를 만들어서 관리하는 방법을 설명한다.
+[이전 글]({{< ref "posts/yocto-project-on-orange-pi-1">}}) 에서 meta-sunxi 를 추가하여 orage pi 용으로 빌드를 만들었고, 이번 과정은 project 용으로 meta layer를 만들어서 관리하는 방법을 설명한다.
 
 실제 개발 과정을 이해하기 좋도록 meta layer 를 만들어 가는 과정을 설명한다.
 
-- [Yocto Project 개발하기(1) - Orange Pi 보드 빌드]({{< ref "posts/yocto-project-on-orage-pi-1">}})
+- [Yocto Project 개발하기(1) - Orange Pi 보드 빌드]({{< ref "posts/yocto-project-on-orange-pi-1">}})
 - **Yocto Project 개발하기(2) - Custom Layer 만들기**
 - Yocto Project 개발하기(3) - 개발 시 로컬 패키지 관리하기
 - Yocto Project 개발하기(4) - Yocto SDK 빌드
