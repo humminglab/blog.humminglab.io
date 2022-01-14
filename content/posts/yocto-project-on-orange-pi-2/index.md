@@ -1,7 +1,7 @@
 ---
 title: "Yocto Project 개발하기(2) - Custom Layer 만들기"
 date: "2022-01-07T19:00:00+09:00"
-lastmod: "2022-01-09T13:00:00+09:00"
+lastmod: "2022-01-149T19:00:00+09:00"
 draft: false
 authors: ["YSLee"]
 tags: ["Yocto", "Linux", "OrangePi"]
@@ -79,12 +79,12 @@ build/conf/bblayer.conf 에 다음과 같이 meta-sc-gateway 를 추가한다.
 
 ```
 BBLAYERS ?= " \
-  /home/yslee/project/telesign/school-charger/poky/meta \
-  /home/yslee/project/telesign/school-charger/poky/meta-poky \
-  /home/yslee/project/telesign/school-charger/poky/meta-yocto-bsp \
-  /home/yslee/project/telesign/school-charger/poky/meta-openembedded/meta-oe \
-  /home/yslee/project/telesign/school-charger/poky/meta-sunxi \
-  /home/yslee/project/telesign/school-charger/poky/meta-sc-gateway \
+  /home/yslee/project/poky/meta \
+  /home/yslee/project/poky/meta-poky \
+  /home/yslee/project/poky/meta-yocto-bsp \
+  /home/yslee/project/poky/meta-openembedded/meta-oe \
+  /home/yslee/project/poky/meta-sunxi \
+  /home/yslee/project/poky/meta-sc-gateway \
   "
 ```
 
