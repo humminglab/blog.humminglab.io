@@ -1,7 +1,7 @@
 ---
 title: "Yocto Project 개발하기(2) - Custom Layer 만들기"
 date: "2022-01-07T19:00:00+09:00"
-lastmod: "2022-01-189T22:00:00+09:00"
+lastmod: "2022-01-18T22:00:00+09:00"
 draft: false
 authors: ["YSLee"]
 tags: ["Yocto", "Linux", "OrangePi"]
