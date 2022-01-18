@@ -15,7 +15,7 @@ series: ["Yocto Project 개발하기"]
 
 - **Yocto Project 개발하기(1) - Orange Pi 보드 빌드**
 - [Yocto Project 개발하기(2) - Custom Layer 만들기]({{< ref "posts/yocto-project-on-orange-pi-2">}})
-- Yocto Project 개발하기(3) - 개발 시 로컬 패키지 관리하기
+- [Yocto Project 개발하기(3) - 개발 시 로컬 패키지 관리하기]({{< ref "posts/yocto-project-on-orange-pi-3">}})
 - Yocto Project 개발하기(4) - Yocto SDK 빌드
 - Yocto Project 개발하기(5) - Yocto eSDK 이용한 개발 모델
 
