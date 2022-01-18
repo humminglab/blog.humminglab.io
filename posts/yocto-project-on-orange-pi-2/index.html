@@ -91,7 +91,7 @@
 <li>Yocto Project 개발하기(5) - Yocto eSDK 이용한 개발 모델</li>
 </ul>
 <h2 id=layer-및-machine-생성>Layer 및 machine 생성</h2>
-<p>프로젝트를 sc-gateway 라고 명하고(이름에 특별한 의미는 없음), 이를 layer로 만든다. 다음과 같이 poky 폴더 안에 meta-sc-gateway를 생성한다.</p>
+<p>프로젝트를 sc-gateway 라고 명하고(이름에 특별한 의미는 없음), 이를 layer로 만든다. 다음과 같이 yocto 폴더 안에 meta-sc-gateway를 생성한다.</p>
 <div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt>1
@@ -192,12 +192,12 @@ IMAGE_ROOTFS_EXTRA_SPACE:append = &#34;${@bb.utils.contains(&#34;DISTRO_FEATURES
 </span></code></pre></td>
 <td class=lntd>
 <pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>BBLAYERS ?= &#34; \
-  /home/yslee/project/poky/meta \
-  /home/yslee/project/poky/meta-poky \
-  /home/yslee/project/poky/meta-yocto-bsp \
-  /home/yslee/project/poky/meta-openembedded/meta-oe \
-  /home/yslee/project/poky/meta-sunxi \
-  /home/yslee/project/poky/meta-sc-gateway \
+  /home/yslee/yocto/poky/meta \
+  /home/yslee/yocto/poky/meta-poky \
+  /home/yslee/yocto/poky/meta-yocto-bsp \
+  /home/yslee/yocto/meta-openembedded/meta-oe \
+  /home/yslee/yocto/meta-sunxi \
+  /home/yslee/yocto/meta-sc-gateway \
   &#34;
 </code></pre></td></tr></table>
 </div>
