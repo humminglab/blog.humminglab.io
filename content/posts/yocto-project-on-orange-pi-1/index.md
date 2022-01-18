@@ -1,7 +1,7 @@
 ---
 title: "Yocto Project 개발하기(1) - Orange Pi 보드 빌드"
 date: "2021-12-30T22:00:00+09:00"
-lastmod: "2022-01-09T13:00:00+09:00"
+lastmod: "2022-01-18T22:00:00+09:00"
 draft: false
 authors: ["YSLee"]
 tags: ["Yocto", "Linux", "OrangePi"]
@@ -64,24 +64,26 @@ $ sudo apt install gawk wget git diffstat unzip texinfo gcc build-essential \
 최신 버전인 Yocto 3.4.1 (honister) 을 다운로드 한다.
 
 ```shell
+$ mkdir ~/yocto
+$ cd ~/yocto
 $ git clone git://git.yoctoproject.org/poky -b honister
 ```
 
 Yoco 내에 Allwinner layer인 meta-sunxi 를 설치한다. 또한 meta-sunxi 가 참조하는 meta-openembedded/meta-oe 도 추가로 설치한다.
 
 ```shell
-$ cd poky
+$ cd ~/yocto
 $ git clone git@github.com:linux-sunxi/meta-sunxi.git -b honister
 $ git clone git://git.openembedded.org/meta-openembedded -b honister
 ```
 
-위와 같이 meta layer는 poky 디렉토리 안에 설치를 한다면 이를 git submodule 등을 이용하여 관리를 하는 것이 좋을 수 있다.
+위와 같이 다운로드 받은 poky와 meta layer는 git submodule 등을 이용하여 관리를 하는 것이 좋을 수 있다.
 
 ```shell
 $ source ./oe-init-build-env
 ```
 
-위를 실행하면 메시지가 나오면서 poky 빌드에 필요한 환경 변수가 적절히 설정되고, 처음 실행이라면 `./build` 디렉토리를 만들고 기본 설정 파일이 다음과 같이 생성된다.
+위를 실행하면 메시지가 나오면서 poky 빌드에 필요한 환경 변수가 적절히 설정되고, 처음 실행이라면 `./build` 디렉토리를 만들고 다음과 같은 기본 설정 파일이 생성된다.
 
 ```shell
 ➜  build git:(honister) ✗ tree
@@ -96,13 +98,15 @@ $ source ./oe-init-build-env
 
 ```
 BBLAYERS ?= " \
-  /home/yslee/project/poky/meta \
-  /home/yslee/project/poky/meta-poky \
-  /home/yslee/project/poky/meta-yocto-bsp \
-  /home/yslee/project/poky/meta-openembedded/meta-oe \
-  /home/yslee/project/poky/meta-sunxi \
+  /home/yslee/yocto/poky/meta \
+  /home/yslee/yocto/poky/meta-poky \
+  /home/yslee/yocto/poky/meta-yocto-bsp \
+  /home/yslee/yocto/meta-openembedded/meta-oe \
+  /home/yslee/yocto/meta-sunxi \
   "
 ```
+
+bblayer.conf를 위와 같이 직접 수정을 해주어도 되고, bitbake-layers 를 이용하여 `bitbake-layers add-layer ../meta-sunxi` 와 같이 추가를 할 수도 있다.
 
 `conf/local.conf`의 default MACHINE 을 orage-pi-zero 로 변경한다. 해당 설정은 `meta-sunxi/conf/machine/orange-pi-zero.conf` 에 위치한다.
 

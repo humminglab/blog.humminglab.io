@@ -1,7 +1,7 @@
 ---
 title: "Yocto Project 개발하기(2) - Custom Layer 만들기"
 date: "2022-01-07T19:00:00+09:00"
-lastmod: "2022-01-149T19:00:00+09:00"
+lastmod: "2022-01-189T22:00:00+09:00"
 draft: false
 authors: ["YSLee"]
 tags: ["Yocto", "Linux", "OrangePi"]
@@ -21,7 +21,7 @@ series: ["Yocto Project 개발하기"]
 
 ## Layer 및 machine 생성
 
-프로젝트를 sc-gateway 라고 명하고(이름에 특별한 의미는 없음), 이를 layer로 만든다. 다음과 같이 poky 폴더 안에 meta-sc-gateway를 생성한다.
+프로젝트를 sc-gateway 라고 명하고(이름에 특별한 의미는 없음), 이를 layer로 만든다. 다음과 같이 yocto 폴더 안에 meta-sc-gateway를 생성한다.
 
 ```shell
 $ mkdir -p meta-sc-gateway/conf/machine
@@ -79,12 +79,12 @@ build/conf/bblayer.conf 에 다음과 같이 meta-sc-gateway 를 추가한다.
 
 ```
 BBLAYERS ?= " \
-  /home/yslee/project/poky/meta \
-  /home/yslee/project/poky/meta-poky \
-  /home/yslee/project/poky/meta-yocto-bsp \
-  /home/yslee/project/poky/meta-openembedded/meta-oe \
-  /home/yslee/project/poky/meta-sunxi \
-  /home/yslee/project/poky/meta-sc-gateway \
+  /home/yslee/yocto/poky/meta \
+  /home/yslee/yocto/poky/meta-poky \
+  /home/yslee/yocto/poky/meta-yocto-bsp \
+  /home/yslee/yocto/meta-openembedded/meta-oe \
+  /home/yslee/yocto/meta-sunxi \
+  /home/yslee/yocto/meta-sc-gateway \
   "
 ```
 
