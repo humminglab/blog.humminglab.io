@@ -2,7 +2,7 @@
 title: "Port Mirroring 기능 지원 저렴한 스위치 - GS108Ev3"
 date: "2022-01-19T10:00:00+09:00"
 lastmod: "2022-01-19T10:00:00+09:00"
-draft: true
+draft: false
 authors: ["YSLee"]
 tags: ["Network", "Wireshark", "Port Mirroring", "Netgear"]
 categories: ["Development"]
