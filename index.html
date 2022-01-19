@@ -56,6 +56,15 @@
 <main class=main>
 <div class=container><div class="page home" posts><div class=home-profile></div>
 <article class="single summary" itemscope itemtype=http://schema.org/Article><h1 class=single-title itemprop="name headline">
+<a href=/posts/port-mirroring-network-switch-gs108ev3/>Port Mirroring 기능 지원 저렴한 스위치 - GS108Ev3</a>
+</h1><div class=post-meta>
+<span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
+</span>&nbsp;<span class=post-publish>published on <time datetime=2022-01-19>2022-01-19</time></span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/development/><i class="far fa-folder fa-fw"></i>Development</a></span></div><div class=content>네트워크 프로토콜을 개발 하다보면 Wireshark 등으로 패킷을 캡쳐하여 분석할 일이 종종 생긴다. Linux 장치라면 tcpdump나 wireshark을 실행해서 직접 패킷 캡쳐가 가능하지만, 그렇지 않은 경우에는 Network TAP 이나 이더넷 스위치의 port mirroring 기능을 사용하여서 패킷을 캡쳐하여야 한다. Amazon 등에서 검색해보면 Network Tap 도 $200~300 정도로 비싼 편이고, 포트 미러링와 유사한 기능도 고급 스위치에서만 지원된다.
+찾다 보니 Netgear GS108Ev3(8포트), GS105Ev2(5포트) 가 가격도 5~8만원 정도로 비싸지 않고, 포트 미러링 기능이 지원되어 소개한다.
+외관은 금속으로 되어 있어 크기에 비하여 무게가 묵직하게 나간다.</div><div class=post-footer>
+<a href=/posts/port-mirroring-network-switch-gs108ev3/>Read more...</a><div class=post-tags>
+<i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/network/>Network</a>,&nbsp;<a href=/tags/wireshark/>Wireshark</a>,&nbsp;<a href=/tags/port-mirroring/>Port Mirroring</a>,&nbsp;<a href=/tags/netgear/>Netgear</a></div></div>
+</article><article class="single summary" itemscope itemtype=http://schema.org/Article><h1 class=single-title itemprop="name headline">
 <a href=/posts/yocto-project-on-orange-pi-3/>Yocto Project 개발하기(3) - 개발 시 로컬 패키지 관리하기</a>
 </h1><div class=post-meta>
 <span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
@@ -133,15 +142,6 @@ Yocto Elements" Yocto Elements 우선은 이를 이해하기 위하여는 Yocto 
 이 문서에서는 가정용 기기의 특징과 이를 task 방식으로 구현하였을 때의 단점을 설명하고, 구현한 event loop library를 설명한다.</div><div class=post-footer>
 <a href=/posts/wiced-event-loop/>Read more...</a><div class=post-tags>
 <i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/orangepi/>OrangePi</a></div></div>
-</article><article class="single summary" itemscope itemtype=http://schema.org/Article><h1 class=single-title itemprop="name headline">
-<a href=/posts/wifi-for-iot-product/>Embedded IoT 플랫폼에서 Wi-Fi 지원</a>
-</h1><div class=post-meta>
-<span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
-</span>&nbsp;<span class=post-publish>published on <time datetime=2018-04-17>2018-04-17</time></span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/iot/><i class="far fa-folder fa-fw"></i>IoT</a></span></div><div class=content>Embedded 형태의 IoT의 센서 노드를 개발하기 위한 플랫폼(HW + SW SDK)은 다양해져서 잠깐만 인터넷 검색을 해보아도 여러 솔루션을 찾아 볼 수 있다. 특히 센서 노드의 특성 상 이들 SDK는 IEEE 802.15.4(Zigbee, Thread), IEEE 802.15.1(Bluetooth, BLE), IEEE 802.11(Wi-Fi)와 같은 wireless internet connectivity가 주요 기능으로 들어간다.
-이 문서에서는 제품에 Wi-Fi 기능을 넣기 위하여 솔루션 선정 시 고려할 사항들을 정리한다.
-Constrained Devices IoT 센서 기기와 같은 경우는 배터리로 구동하거나, 낮은 사양 등 일반 PC 나 android 기기에 비하여 저사양 기기라고 할 수 있다.</div><div class=post-footer>
-<a href=/posts/wifi-for-iot-product/>Read more...</a><div class=post-tags>
-<i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/iot/>IoT</a>,&nbsp;<a href=/tags/wi-fi/>Wi-Fi</a></div></div>
 </article><ul class=pagination><li class="page-item active">
 <span class=page-link>
 <a href=/>1</a>
