@@ -3,19 +3,19 @@
 <meta charset=utf-8>
 <meta name=viewport content="width=device-width,initial-scale=1">
 <meta name=robots content="noodp">
-<title class=pjax-title>All Tags - All about IoT</title><meta name=Description content><meta property="og:title" content="Tags">
+<title class=pjax-title>TLS/암호 알고리즘 쉽게 이해하기 - Series - All about IoT</title><meta name=Description content><meta property="og:title" content="TLS/암호 알고리즘 쉽게 이해하기">
 <meta property="og:description" content>
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://blog.humminglab.io/tags/">
+<meta property="og:url" content="https://blog.humminglab.io/series/tls/%EC%95%94%ED%98%B8-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0/">
 <meta name=twitter:card content="summary">
-<meta name=twitter:title content="Tags">
+<meta name=twitter:title content="TLS/암호 알고리즘 쉽게 이해하기">
 <meta name=twitter:description content>
 <meta name=application-name content="All about IoT">
 <meta name=apple-mobile-web-app-title content="All about IoT">
 <meta name=theme-color content="#f8f8f8"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/tags/><link rel=alternate href=/tags/index.xml type=application/rss+xml title="All about IoT">
-<link rel=feed href=/tags/index.xml type=application/rss+xml title="All about IoT"><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/fontawesome-free/all.min.css>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/series/tls/%EC%95%94%ED%98%B8-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0/><link rel=alternate href=/series/tls/%EC%95%94%ED%98%B8-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0/index.xml type=application/rss+xml title="All about IoT">
+<link rel=feed href=/series/tls/%EC%95%94%ED%98%B8-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0/index.xml type=application/rss+xml title="All about IoT"><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/fontawesome-free/all.min.css>
 <noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/animate/animate.min.css>
 <noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript></head>
 <body header-desktop header-mobile><script type=text/javascript>function setTheme(a){document.body.setAttribute('theme',a)}function saveTheme(a){window.localStorage&&localStorage.setItem('theme',a)}function getMeta(b){const a=document.getElementsByTagName('meta');for(let c=0;c<a.length;c++)if(a[c].getAttribute('name')===b)return a[c];return''}if(window.localStorage&&localStorage.getItem('theme')){let a=localStorage.getItem('theme');a==='light'||a==='dark'||a==='black'?setTheme(a):window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?setTheme('dark'):setTheme('light')}else''==='light'||''==='dark'||''==='black'?(setTheme(''),saveTheme('')):(saveTheme('auto'),window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?setTheme('dark'):setTheme('light'));let metaColors={light:'#f8f8f8',dark:'#252627',black:'#000000'};getMeta('theme-color').content=metaColors[document.body.getAttribute('theme')]</script>
@@ -26,7 +26,7 @@
 <a href=/ title="All about IoT">All about IoT</a>
 </div>
 <div class=menu>
-<div class=menu-inner><a class=menu-item href=/posts/> Posts </a><a class="menu-item active" href=/tags/> Tags </a><a class=menu-item href=/categories/> Categories </a><a class=menu-item href=https://www.humminglab.io/ rel="noopener noreffer" target=_blank> HummingLab </a><span class="menu-item delimiter"></span><a href=# onclick=return!1 class="menu-item theme-switch" title="Switch Theme">
+<div class=menu-inner><a class=menu-item href=/posts/> Posts </a><a class=menu-item href=/tags/> Tags </a><a class=menu-item href=/categories/> Categories </a><a class=menu-item href=https://www.humminglab.io/ rel="noopener noreffer" target=_blank> HummingLab </a><span class="menu-item delimiter"></span><a href=# onclick=return!1 class="menu-item theme-switch" title="Switch Theme">
 <i class="fas fa-adjust fa-fw"></i>
 </a></div>
 </div>
@@ -53,7 +53,10 @@
 <div id=search-dropdown-mobile></div>
 </div>
 <main class=main>
-<div class=container><div class="page archive"><h2 class="single-title animate__animated animate__pulse animate__faster">All Tags</h2><div class=tag-cloud-tags><a href=/tags/orangepi/>OrangePi <sup>5</sup></a><a href=/tags/yocto/>Yocto <sup>5</sup></a><a href=/tags/linux/>Linux <sup>4</sup></a><a href=/tags/openssl/>OpenSSL <sup>2</sup></a><a href=/tags/python/>Python <sup>2</sup></a><a href=/tags/tls/>TLS <sup>2</sup></a><a href=/tags/wireshark/>Wireshark <sup>2</sup></a><a href=/tags/c/>C <sup>1</sup></a><a href=/tags/coap/>CoAP <sup>1</sup></a><a href=/tags/cryptography/>Cryptography <sup>1</sup></a><a href=/tags/github/>Github <sup>1</sup></a><a href=/tags/iot/>IoT <sup>1</sup></a><a href=/tags/ipv6/>IPv6 <sup>1</sup></a><a href=/tags/javascript/>JavaScript <sup>1</sup></a><a href=/tags/mbedtls/>MbedTLS <sup>1</sup></a><a href=/tags/mqtt/>MQTT <sup>1</sup></a><a href=/tags/nearley/>Nearley <sup>1</sup></a><a href=/tags/netgear/>Netgear <sup>1</sup></a><a href=/tags/network/>Network <sup>1</sup></a><a href=/tags/oci/>OCI <sup>1</sup></a><a href=/tags/ostree/>OSTree <sup>1</sup></a><a href=/tags/ota/>OTA <sup>1</sup></a><a href=/tags/parser/>Parser <sup>1</sup></a><a href=/tags/port-mirroring/>Port Mirroring <sup>1</sup></a><a href=/tags/proxy/>Proxy <sup>1</sup></a><a href=/tags/webproxy/>WebProxy <sup>1</sup></a><a href=/tags/wi-fi/>Wi-Fi <sup>1</sup></a><a href=/tags/wireguard/>WireGuard <sup>1</sup></a></div></div></div>
+<div class=container><div class="page archive"><h2 class="single-title animate__animated animate__pulse animate__faster">Series - TLS/암호 알고리즘 쉽게 이해하기</h2><article class=archive-item>
+<a href=/posts/tls-cryptography-1-overview/ class=archive-item-link>TLS/암호 알고리즘 쉽게 이해하기(1) - 개요</a>
+<span class=archive-item-date>2022-02-09</span>
+</article></div></div>
 </main><footer class=footer>
 <div class=footer-container><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://www.humminglab.io target=_blank rel="noopener noreferrer">HummingLab</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div>
 </div></footer></div>

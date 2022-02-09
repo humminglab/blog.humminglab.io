@@ -1,6 +1,6 @@
 <!doctype html><html lang=en>
 <head>
-<meta name=generator content="Hugo 0.92.0">
+<meta name=generator content="Hugo 0.92.1">
 <meta charset=utf-8>
 <meta name=viewport content="width=device-width,initial-scale=1">
 <meta name=robots content="noodp">
@@ -56,6 +56,14 @@
 <main class=main>
 <div class=container><div class="page home" posts><div class=home-profile></div>
 <article class="single summary" itemscope itemtype=http://schema.org/Article><h1 class=single-title itemprop="name headline">
+<a href=/posts/tls-cryptography-1-overview/>TLS/암호 알고리즘 쉽게 이해하기(1) - 개요</a>
+</h1><div class=post-meta>
+<span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
+</span>&nbsp;<span class=post-publish>published on <time datetime=2022-02-09>2022-02-09</time></span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/security/><i class="far fa-folder fa-fw"></i>Security</a></span>&nbsp;<span class=post-category>and</span>&nbsp;<span class=post-series>series <a href=/series/tls/%EC%95%94%ED%98%B8-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0/><i class="far fa-list-alt fa-fw"></i>TLS/암호 알고리즘 쉽게 이해하기</a></span></div><div class=content>HTTPS의 SSL/TLS를 이해하는 것은 생각만큼 쉽지 않다. React, kubernetes 같이 오픈 생태계에서 핫 한 분야들은 다양한 시각으로 설명한 자료들이 많아 여러 방법으로 이해할 수도 있겠지만, 수십여년간 수학자, 암호학자들에게서 다듬어진 암호학에 대해서는 말랑말랑한 자료를 찾기가 쉽지는 않다. 좋은 자료라고 찾아 보아도 읽다 보면 이내 수많은 용어들과 수학 이론에 막혀 버리곤 한다. 그렇다고 제대로된 이해없이 SSL/TLS 나 암호화 알고리즘을 사용하게 되면 작은 실수로 인하여 보안에 심각한 문제를 만들 수도 있다.
+여기에서는 일반 개발자를 위한 관점으로 암호 알고리즘과 TLS/SSL을 정리해 보기로 한다.</div><div class=post-footer>
+<a href=/posts/tls-cryptography-1-overview/>Read more...</a><div class=post-tags>
+<i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/cryptography/>Cryptography</a>,&nbsp;<a href=/tags/tls/>TLS</a>,&nbsp;<a href=/tags/openssl/>OpenSSL</a></div></div>
+</article><article class="single summary" itemscope itemtype=http://schema.org/Article><h1 class=single-title itemprop="name headline">
 <a href=/posts/yocto-ostree-meta-updater-1/>Yocto에 OSTree upgrade 적용(1) - 이미지 생성</a>
 </h1><div class=post-meta>
 <span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
@@ -134,14 +142,6 @@ Yocto Project 개발하기(1) - Orange Pi 보드 빌드 Yocto Project 개발하�
 Yocto Elements" Yocto Elements 우선은 이를 이해하기 위하여는 Yocto Project가 발전한 변천사를 보는 것이 좋다.</div><div class=post-footer>
 <a href=/posts/yocto-project-history/>Read more...</a><div class=post-tags>
 <i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/yocto/>Yocto</a></div></div>
-</article><article class="single summary" itemscope itemtype=http://schema.org/Article><h1 class=single-title itemprop="name headline">
-<a href=/posts/orange-pi-based-factory-image/>Orange Pi 보드용 이미지 수작업으로 만들기</a>
-</h1><div class=post-meta>
-<span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
-</span>&nbsp;<span class=post-publish>published on <time datetime=2018-05-30>2018-05-30</time></span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/embedded-linux/><i class="far fa-folder fa-fw"></i>Embedded Linux</a></span></div><div class=content>Orange Pi 는 Allwinner(SUNXI) 의 application chip으로 만들어진 single board computer이다. Raspberry Pi 와 비슷하다고 볼 수 있는데, 이것과 비교하여 주요 장단점은 다음과 같다.
-장점 Cortex A8 single core부터 octa core 까지 라인업 Mali400 GPU 내장 무엇보다도 가격이 저렴. 아래에서 사용하는 Orange Pi R1의 경우 소비자가가 $9.99. 단점 CPU 사양이 제대로 공개가 안됨. 그나마 H3 정도까지는 인터넷 커뮤니티에 어느정도 공개 됨 발열이 심함. Orange Pi R1의 경우도 별도로 방열판을 붙어야 안정적임 이 문서에서는 Orange Pi R1을 제품에 적용하기 위하여 보드 이미지 설정을 하는 과정을 정리한 것이다.</div><div class=post-footer>
-<a href=/posts/orange-pi-based-factory-image/>Read more...</a><div class=post-tags>
-<i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/orangepi/>OrangePi</a></div></div>
 </article><ul class=pagination><li class="page-item active">
 <span class=page-link>
 <a href=/>1</a>
