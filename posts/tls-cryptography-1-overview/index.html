@@ -9,7 +9,7 @@
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://blog.humminglab.io/posts/tls-cryptography-1-overview/"><meta property="article:section" content="posts">
 <meta property="article:published_time" content="2022-02-09T09:00:00+09:00">
-<meta property="article:modified_time" content="2022-02-09T09:00:00+09:00">
+<meta property="article:modified_time" content="2022-02-10T09:00:00+09:00">
 <meta name=twitter:card content="summary">
 <meta name=twitter:title content="TLS/암호 알고리즘 쉽게 이해하기(1) - 개요">
 <meta name=twitter:description content="HTTPS의 SSL/TLS를 이해하는 것은 생각만큼 쉽지 않다. React, kubernetes 같이 오픈 생태계에서 핫 한 분야들은 다양한 시각으로 설명한 자료들이 많아 여러 방법으로 이해할 수도 있겠지만, 수십여년간 수학자, 암호학자들에게서 다듬어진 암호학에 대해서는 말랑말랑한 자료를 찾기가 쉽지는 않다. 좋은 자료라고 찾아 보아도 읽다 보면 이내 수많은 용어들과 수학 이론에 막혀 버리곤 한다. 그렇다고 제대로된 이해없이 SSL/TLS 나 암호화 알고리즘을 사용하게 되면 작은 실수로 인하여 보안에 심각한 문제를 만들 수도 있다.
@@ -20,7 +20,7 @@
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
 <link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/posts/tls-cryptography-1-overview/><link rel=prev href=https://blog.humminglab.io/posts/yocto-ostree-meta-updater-1/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/fontawesome-free/all.min.css>
 <noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/animate/animate.min.css>
-<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"TLS/암호 알고리즘 쉽게 이해하기(1) - 개요","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/tls-cryptography-1-overview\/"},"genre":"posts","keywords":"Cryptography, TLS, OpenSSL","wordcount":735,"url":"https:\/\/blog.humminglab.io\/posts\/tls-cryptography-1-overview\/","datePublished":"2022-02-09T09:00:00+09:00","dateModified":"2022-02-09T09:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head>
+<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"TLS/암호 알고리즘 쉽게 이해하기(1) - 개요","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/tls-cryptography-1-overview\/"},"genre":"posts","keywords":"Cryptography, TLS, OpenSSL","wordcount":735,"url":"https:\/\/blog.humminglab.io\/posts\/tls-cryptography-1-overview\/","datePublished":"2022-02-09T09:00:00+09:00","dateModified":"2022-02-10T09:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head>
 <body header-desktop header-mobile><script type=text/javascript>function setTheme(a){document.body.setAttribute('theme',a)}function saveTheme(a){window.localStorage&&localStorage.setItem('theme',a)}function getMeta(b){const a=document.getElementsByTagName('meta');for(let c=0;c<a.length;c++)if(a[c].getAttribute('name')===b)return a[c];return''}if(window.localStorage&&localStorage.getItem('theme')){let a=localStorage.getItem('theme');a==='light'||a==='dark'||a==='black'?setTheme(a):window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?setTheme('dark'):setTheme('light')}else''==='light'||''==='dark'||''==='black'?(setTheme(''),saveTheme('')):(saveTheme('auto'),window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?setTheme('dark'):setTheme('light'));let metaColors={light:'#f8f8f8',dark:'#252627',black:'#000000'};getMeta('theme-color').content=metaColors[document.body.getAttribute('theme')]</script>
 <div id=back-to-top></div>
 <div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
@@ -63,7 +63,7 @@
 <div class=post-meta-line>
 <span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
 </span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/security/><i class="far fa-folder fa-fw"></i>Security</a></span>&nbsp;<span class=post-category>and</span>&nbsp;<span class=post-series>series <a href=/series/tls/%EC%95%94%ED%98%B8-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0/><i class="far fa-list-alt fa-fw"></i>TLS/암호 알고리즘 쉽게 이해하기</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2022-02-09>2022-02-09</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2022-02-09>2022-02-09</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;735 words&nbsp;
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2022-02-09>2022-02-09</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2022-02-10>2022-02-10</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;735 words&nbsp;
 <i class="far fa-clock fa-fw"></i>&nbsp;4 minutes&nbsp;</div>
 </div>
 <div class="details toc" id=toc-static kept>
@@ -91,11 +91,11 @@
 <p>SSL(Secure Sockets Layer)와 TLS(Transport Security Layer)는 SSL/TLS 라고 같이 표기하는데, 이는 버전업 되면서 SSL → TLS로 이름이 변경된 것이다. 다만 TLS 로 이름이 바뀌면서 서로 호환이 되지 않기 때문에 SSL/TLS 로 표기한다. 실제 사용 버전은 다음과 같다.</p>
 <ul>
 <li>SSL 2.0 (1995)</li>
-<li>SSL 3.0 (1996)</li>
-<li>TLS 1.0 (1999)</li>
-<li>TLS 1.1 (2006)</li>
-<li>TLS 1.2 (2008)</li>
-<li>TLS 1.3 (2018)</li>
+<li><a href=https://datatracker.ietf.org/doc/html/draft-ietf-tls-ssl-version3-00 target=_blank rel="noopener noreffer">SSL 3.0 (1996)</a></li>
+<li><a href=https://datatracker.ietf.org/doc/html/rfc2246 target=_blank rel="noopener noreffer">TLS 1.0 (1999)</a></li>
+<li><a href=https://datatracker.ietf.org/doc/html/rfc4346 target=_blank rel="noopener noreffer">TLS 1.1 (2006)</a></li>
+<li><a href=https://datatracker.ietf.org/doc/html/rfc5246 target=_blank rel="noopener noreffer">TLS 1.2 (2008)</a></li>
+<li><a href=https://datatracker.ietf.org/doc/html/rfc8446 target=_blank rel="noopener noreffer">TLS 1.3 (2018)</a></li>
 </ul>
 <p>TLS는 버전업이 되는 이유가 이전의 보안 문제를 해결하거나 강화를 하는 것으로, 버전업이 된다면 이전 버전은 보통 취약점으로 인하여 사용 중단을 권고한다.</p>
 <p>2021년 기준으로 보면 다음과 같다.</p>
@@ -267,7 +267,7 @@
 <div class=post-info>
 <div class=post-info-line>
 <div class=post-info-mod>
-<span>Updated on 2022-02-09</span>
+<span>Updated on 2022-02-10</span>
 </div>
 <div class=post-info-license></div>
 </div>
