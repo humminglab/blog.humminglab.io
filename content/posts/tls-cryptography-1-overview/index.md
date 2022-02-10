@@ -1,7 +1,7 @@
 ---
 title: "TLS/암호 알고리즘 쉽게 이해하기(1) - 개요"
 date: "2022-02-09T09:00:00+09:00"
-lastmod: "2022-02-09T09:00:00+09:00"
+lastmod: "2022-02-10T09:00:00+09:00"
 draft: false
 authors: ["YSLee"]
 tags: ["Cryptography", "TLS", "OpenSSL"]
@@ -24,11 +24,11 @@ HTTPS의 SSL/TLS를 이해하는 것은 생각만큼 쉽지 않다. React, kuber
 SSL(Secure Sockets Layer)와 TLS(Transport Security Layer)는 SSL/TLS 라고 같이 표기하는데, 이는 버전업 되면서 SSL → TLS로 이름이 변경된 것이다. 다만 TLS 로 이름이 바뀌면서 서로 호환이 되지 않기 때문에 SSL/TLS 로 표기한다. 실제 사용 버전은 다음과 같다.
 
 - SSL 2.0 (1995)
-- SSL 3.0 (1996)
-- TLS 1.0 (1999)
-- TLS 1.1 (2006)
-- TLS 1.2 (2008)
-- TLS 1.3 (2018)
+- [SSL 3.0 (1996)](https://datatracker.ietf.org/doc/html/draft-ietf-tls-ssl-version3-00)
+- [TLS 1.0 (1999)](https://datatracker.ietf.org/doc/html/rfc2246)
+- [TLS 1.1 (2006)](https://datatracker.ietf.org/doc/html/rfc4346)
+- [TLS 1.2 (2008)](https://datatracker.ietf.org/doc/html/rfc5246)
+- [TLS 1.3 (2018)](https://datatracker.ietf.org/doc/html/rfc8446)
 
 TLS는 버전업이 되는 이유가 이전의 보안 문제를 해결하거나 강화를 하는 것으로, 버전업이 된다면 이전 버전은 보통 취약점으로 인하여 사용 중단을 권고한다.
 
