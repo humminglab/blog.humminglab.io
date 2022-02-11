@@ -56,6 +56,14 @@
 <main class=main>
 <div class=container><div class="page home" posts><div class=home-profile></div>
 <article class="single summary" itemscope itemtype=http://schema.org/Article><h1 class=single-title itemprop="name headline">
+<a href=/posts/tls-cryptography-2-random/>TLS/암호 알고리즘 쉽게 이해하기(2) - Random</a>
+</h1><div class=post-meta>
+<span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
+</span>&nbsp;<span class=post-publish>published on <time datetime=0001-01-01>0001-01-01</time></span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/security/><i class="far fa-folder fa-fw"></i>Security</a></span>&nbsp;<span class=post-category>and</span>&nbsp;<span class=post-series>series <a href=/series/tls/%EC%95%94%ED%98%B8-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0/><i class="far fa-list-alt fa-fw"></i>TLS/암호 알고리즘 쉽게 이해하기</a></span></div><div class=content>암호 알고리즘에서 난수는 중요한 요소이다. 예를 들어 암호 키 생성 시에도 난수로 만드는데, 생성된 난수가 편향성을 가지게 되면 암호 알고리즘이 아무리 좋아도 취약해 질 수 밖에 없다.
+한 예로 오래전 일이지만, 2008년 Debian linux OpenSSL 0.9.8 의 잘못된 patch로 seed를 current process ID 로만 사용하여 결과적으로 65,536개의 값 중 하나로 난수가 생성되어 brute force 공격으로 키를 찾을 수 있는 문제가 발생한 적도 있고, 이외에도 CWE(Commn Weakness Enumeration) 에서 random 으로 검색해보면 문제가 되었던 여러 케이스들을 찾아 볼 수 있다.</div><div class=post-footer>
+<a href=/posts/tls-cryptography-2-random/>Read more...</a><div class=post-tags>
+<i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/cryptography/>Cryptography</a>,&nbsp;<a href=/tags/tls/>TLS</a>,&nbsp;<a href=/tags/openssl/>OpenSSL</a></div></div>
+</article><article class="single summary" itemscope itemtype=http://schema.org/Article><h1 class=single-title itemprop="name headline">
 <a href=/posts/tls-cryptography-1-overview/>TLS/암호 알고리즘 쉽게 이해하기(1) - 개요</a>
 </h1><div class=post-meta>
 <span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
@@ -133,15 +141,6 @@ Yocto Project 개발하기(1) - Orange Pi 보드 빌드 Yocto Project 개발하�
 시스템 구성" 시스템 구성 다른 방법들 공인 IPv6 를 할당받는 가장 쉬운 방법은 IPv6 TunnelBrokwer 를 이용하는 것이다. 미국 ISP 업체인 Hurricane Electric 에서 제공하는 Tunnel Broker는 아래 주소로 접속하여 가입하면 무료로 IPv6 주소를 할당 받아 사용할 수 있다.</div><div class=post-footer>
 <a href=/posts/how-to-oci-wireguard-public-ipv6/>Read more...</a><div class=post-tags>
 <i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/oci/>OCI</a>,&nbsp;<a href=/tags/wireguard/>WireGuard</a>,&nbsp;<a href=/tags/ipv6/>IPv6</a></div></div>
-</article><article class="single summary" itemscope itemtype=http://schema.org/Article><h1 class=single-title itemprop="name headline">
-<a href=/posts/yocto-project-history/>Yocto Project History</a>
-</h1><div class=post-meta>
-<span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
-</span>&nbsp;<span class=post-publish>published on <time datetime=2019-01-06>2019-01-06</time></span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/embedded-linux/><i class="far fa-folder fa-fw"></i>Embedded Linux</a></span></div><div class=content>Yocto Project를 보면 OpenEmbedded, bitbake, poky 와 같은 용어들이 나온다. Bitbake는 Yocto Project의 make 툴이라고 이해하면 되는데, 다른 용어는 어떤 의미 인지 모호할 수 있다. OpenEmbedded와 Yocto Project와의 관계는 어떤 것인지, Poky는 범위가 어떤 것인지 메뉴얼을 보아도 정확히 감을 잡기가 어렵다.
-개념적으로 잘 정리된 관계는 Yocto Project Overview and Concepts Manual, 2.1 What is the Yocto Proejct?"에 있는 아래 그림이다.
-Yocto Elements" Yocto Elements 우선은 이를 이해하기 위하여는 Yocto Project가 발전한 변천사를 보는 것이 좋다.</div><div class=post-footer>
-<a href=/posts/yocto-project-history/>Read more...</a><div class=post-tags>
-<i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/yocto/>Yocto</a></div></div>
 </article><ul class=pagination><li class="page-item active">
 <span class=page-link>
 <a href=/>1</a>
