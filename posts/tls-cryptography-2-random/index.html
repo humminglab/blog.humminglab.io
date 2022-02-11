@@ -8,6 +8,7 @@
 한 예로 오래전 일이지만, 2008년 Debian linux OpenSSL 0.9.8 의 잘못된 patch로 seed를 current process ID 로만 사용하여 결과적으로 65,536개의 값 중 하나로 난수가 생성되어 brute force 공격으로 키를 찾을 수 있는 문제가 발생한 적도 있고, 이외에도 CWE(Commn Weakness Enumeration) 에서 random 으로 검색해보면 문제가 되었던 여러 케이스들을 찾아 볼 수 있다.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://blog.humminglab.io/posts/tls-cryptography-2-random/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2022-02-11T09:00:00+09:00">
 <meta property="article:modified_time" content="2022-02-11T09:00:00+09:00">
 <meta name=twitter:card content="summary">
 <meta name=twitter:title content="TLS/암호 알고리즘 쉽게 이해하기(2) - Random">
@@ -62,7 +63,7 @@
 <div class=post-meta-line>
 <span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
 </span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/security/><i class="far fa-folder fa-fw"></i>Security</a></span>&nbsp;<span class=post-category>and</span>&nbsp;<span class=post-series>series <a href=/series/tls/%EC%95%94%ED%98%B8-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0/><i class="far fa-list-alt fa-fw"></i>TLS/암호 알고리즘 쉽게 이해하기</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=0001-01-01>0001-01-01</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2022-02-11>2022-02-11</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;1286 words&nbsp;
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2022-02-11>2022-02-11</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2022-02-11>2022-02-11</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;1286 words&nbsp;
 <i class="far fa-clock fa-fw"></i>&nbsp;7 minutes&nbsp;</div>
 </div>
 <div class="details toc" id=toc-static kept>
