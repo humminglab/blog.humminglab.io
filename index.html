@@ -1,6 +1,6 @@
 <!doctype html><html lang=en>
 <head>
-<meta name=generator content="Hugo 0.92.1">
+<meta name=generator content="Hugo 0.92.2">
 <meta charset=utf-8>
 <meta name=viewport content="width=device-width,initial-scale=1">
 <meta name=robots content="noodp">
@@ -56,6 +56,16 @@
 <main class=main>
 <div class=container><div class="page home" posts><div class=home-profile></div>
 <article class="single summary" itemscope itemtype=http://schema.org/Article><h1 class=single-title itemprop="name headline">
+<a href=/posts/yocto-ostree-meta-updater-2/>Yocto에 OSTree upgrade 적용(2) - 부팅 절차</a>
+</h1><div class=post-meta>
+<span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
+</span>&nbsp;<span class=post-publish>published on <time datetime=2022-02-14>2022-02-14</time></span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/development/><i class="far fa-folder fa-fw"></i>Development</a></span></div><div class=content>이전글 Yocto에 OSTree upgrade 적용(1) - 이미지 생성 에서는 Yocto 빌드 과정을 통한 target 에 write 할 이미지를 만드는 과정까지 설명 하였다.
+이번글에서는 부팅 이미지를 이용하여 부팅 절차를 설명한다.
+디스크 이미지 파일 최종적으로 디스크에 쓰는 이미지를 Yocto 의 wic 툴을 이용하여 확인해 보면 다음과 같이 두개의 partition 으로 구성된다.
+Partiton 1(fat16): DOS FAT16 의 부팅 디스크로 u-boot 과 부팅에 필요한 설정 파일이 있다. 파일 중 boot.scr 파일이 있는데, 이 파일로 u-boot 의 script를 대체하여 OSTree 이미지가 로드되도록 한다.</div><div class=post-footer>
+<a href=/posts/yocto-ostree-meta-updater-2/>Read more...</a><div class=post-tags>
+<i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/yocto/>Yocto</a>,&nbsp;<a href=/tags/ostree/>OSTree</a>,&nbsp;<a href=/tags/ota/>OTA</a></div></div>
+</article><article class="single summary" itemscope itemtype=http://schema.org/Article><h1 class=single-title itemprop="name headline">
 <a href=/posts/tls-cryptography-2-random/>TLS/암호 알고리즘 쉽게 이해하기(2) - Random</a>
 </h1><div class=post-meta>
 <span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
@@ -133,14 +143,6 @@ Yocto Project 개발하기(1) - Orange Pi 보드 빌드 Yocto Project 개발하�
 서버 인증서를 받아서 검증하기 필요하면 클라이언트 인증서를 받아서 검증하기 암호화 방식을 이용하여 대칭키 교환 대칭키를 이용한 암호화된 데이타 송수신 패킷을 분석하기에 필요한 사항은 결국은 위 세번째 과정에서 교환한 대칭키(Master Secret)를 얻는 것이다.</div><div class=post-footer>
 <a href=/posts/how-to-capture-tls-with-wireshark/>Read more...</a><div class=post-tags>
 <i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/wireshark/>Wireshark</a>,&nbsp;<a href=/tags/tls/>TLS</a>,&nbsp;<a href=/tags/mbedtls/>MbedTLS</a>,&nbsp;<a href=/tags/openssl/>OpenSSL</a>,&nbsp;<a href=/tags/webproxy/>WebProxy</a></div></div>
-</article><article class="single summary" itemscope itemtype=http://schema.org/Article><h1 class=single-title itemprop="name headline">
-<a href=/posts/how-to-oci-wireguard-public-ipv6/>OCI, WireGuard 로 무료 공인 IPv6 주소 사용하기</a>
-</h1><div class=post-meta>
-<span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
-</span>&nbsp;<span class=post-publish>published on <time datetime=2021-12-10>2021-12-10</time></span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/development/><i class="far fa-folder fa-fw"></i>Development</a></span></div><div class=content>IPv6 서비스를 개발하거나 시험하려는 경우 국내에서 기업용 인터넷이 아닌 경우에는 IPv6 주소를 이용하기가 쉽지 않다. IPv4 주소만 제공하는 가정용 인터넷이나 LTE 망에서 Oracle Cloud Infrastruct(OCI) Free Tier 를 사용하여 무료로 공인 IPv6 망을 구성하는 방법을 설명한다.
-시스템 구성" 시스템 구성 다른 방법들 공인 IPv6 를 할당받는 가장 쉬운 방법은 IPv6 TunnelBrokwer 를 이용하는 것이다. 미국 ISP 업체인 Hurricane Electric 에서 제공하는 Tunnel Broker는 아래 주소로 접속하여 가입하면 무료로 IPv6 주소를 할당 받아 사용할 수 있다.</div><div class=post-footer>
-<a href=/posts/how-to-oci-wireguard-public-ipv6/>Read more...</a><div class=post-tags>
-<i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/oci/>OCI</a>,&nbsp;<a href=/tags/wireguard/>WireGuard</a>,&nbsp;<a href=/tags/ipv6/>IPv6</a></div></div>
 </article><ul class=pagination><li class="page-item active">
 <span class=page-link>
 <a href=/>1</a>
@@ -148,6 +150,10 @@ Yocto Project 개발하기(1) - Orange Pi 보드 빌드 Yocto Project 개발하�
 </li><li class=page-item>
 <span class=page-link>
 <a href=/page/2/>2</a>
+</span>
+</li><li class=page-item>
+<span class=page-link>
+<a href=/page/3/>3</a>
 </span>
 </li></ul></div></div>
 </main><footer class=footer>
