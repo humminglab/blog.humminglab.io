@@ -11,7 +11,7 @@
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://blog.humminglab.io/posts/yocto-ostree-meta-updater-2/"><meta property="article:section" content="posts">
 <meta property="article:published_time" content="2022-02-14T09:00:00+09:00">
-<meta property="article:modified_time" content="2022-02-14T09:00:00+09:00">
+<meta property="article:modified_time" content="2022-02-16T22:00:00+09:00">
 <meta name=twitter:card content="summary">
 <meta name=twitter:title content="Yocto에 OSTree upgrade 적용(2) - 부팅 절차">
 <meta name=twitter:description content="이전글 Yocto에 OSTree upgrade 적용(1) - 이미지 생성 에서는 Yocto 빌드 과정을 통한 target 에 write 할 이미지를 만드는 과정까지 설명 하였다.
@@ -24,7 +24,7 @@
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
 <link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/posts/yocto-ostree-meta-updater-2/><link rel=prev href=https://blog.humminglab.io/posts/tls-cryptography-2-random/><link rel=next href=https://blog.humminglab.io/posts/yocto-ostree-meta-updater-3/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/fontawesome-free/all.min.css>
 <noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/animate/animate.min.css>
-<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Yocto에 OSTree upgrade 적용(2) - 부팅 절차","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/yocto-ostree-meta-updater-2\/"},"genre":"posts","keywords":"Yocto, OSTree, OTA","wordcount":1383,"url":"https:\/\/blog.humminglab.io\/posts\/yocto-ostree-meta-updater-2\/","datePublished":"2022-02-14T09:00:00+09:00","dateModified":"2022-02-14T09:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head>
+<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Yocto에 OSTree upgrade 적용(2) - 부팅 절차","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/yocto-ostree-meta-updater-2\/"},"genre":"posts","keywords":"Yocto, OSTree, OTA","wordcount":1393,"url":"https:\/\/blog.humminglab.io\/posts\/yocto-ostree-meta-updater-2\/","datePublished":"2022-02-14T09:00:00+09:00","dateModified":"2022-02-16T22:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head>
 <body header-desktop header-mobile><script type=text/javascript>function setTheme(a){document.body.setAttribute('theme',a)}function saveTheme(a){window.localStorage&&localStorage.setItem('theme',a)}function getMeta(b){const a=document.getElementsByTagName('meta');for(let c=0;c<a.length;c++)if(a[c].getAttribute('name')===b)return a[c];return''}if(window.localStorage&&localStorage.getItem('theme')){let a=localStorage.getItem('theme');a==='light'||a==='dark'||a==='black'?setTheme(a):window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?setTheme('dark'):setTheme('light')}else''==='light'||''==='dark'||''==='black'?(setTheme(''),saveTheme('')):(saveTheme('auto'),window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?setTheme('dark'):setTheme('light'));let metaColors={light:'#f8f8f8',dark:'#252627',black:'#000000'};getMeta('theme-color').content=metaColors[document.body.getAttribute('theme')]</script>
 <div id=back-to-top></div>
 <div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
@@ -67,7 +67,7 @@
 <div class=post-meta-line>
 <span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
 </span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/development/><i class="far fa-folder fa-fw"></i>Development</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2022-02-14>2022-02-14</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2022-02-14>2022-02-14</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;1383 words&nbsp;
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2022-02-14>2022-02-14</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2022-02-16>2022-02-16</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;1393 words&nbsp;
 <i class="far fa-clock fa-fw"></i>&nbsp;7 minutes&nbsp;</div>
 </div><div class="details toc" id=toc-static kept>
 <div class="details-summary toc-title">
@@ -546,13 +546,13 @@ run bootcmd
 <p>위와 같이 변경한 후 빌드를 하면 OSTRee가 적용된 이미지를 생성할 수 있다.</p>
 <h2 id=정리>정리</h2>
 <p>이번 과정은 OSTree 의 부팅과정과 이를 다른 타겟에 적용하는 방법을 알아보았다.
-다음으로는 ostree를 이용하여 업그레이드, 롤백하는 과정을 알아보기로 한다.</p>
+다음 <a href=https://blog.humminglab.io/posts/yocto-ostree-meta-updater-3/ rel>Yocto에 OSTree upgrade 적용(3) - 업그레이드/롤백 및 OSTree 리뷰</a> 에서는 ostree를 이용하여 업그레이드, 롤백하는 과정을 알아보기로 한다.</p>
 </div>
 <div class=post-footer id=post-footer>
 <div class=post-info>
 <div class=post-info-line>
 <div class=post-info-mod>
-<span>Updated on 2022-02-14</span>
+<span>Updated on 2022-02-16</span>
 </div>
 <div class=post-info-license></div>
 </div>
