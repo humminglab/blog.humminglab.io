@@ -1,7 +1,7 @@
 ---
 title: "Yocto에 OSTree upgrade 적용(2) - 부팅 절차"
 date: "2022-02-14T09:00:00+09:00"
-lastmod: "2022-02-14T09:00:00+09:00"
+lastmod: "2022-02-16T22:00:00+09:00"
 draft: false
 authors: ["YSLee"]
 tags: ["Yocto", "OSTree", "OTA"]
@@ -271,4 +271,4 @@ part /     --source otaimage --ondisk mmcblk0 --fstype=ext4 --align 2048
 ## 정리
 
 이번 과정은 OSTree 의 부팅과정과 이를 다른 타겟에 적용하는 방법을 알아보았다.
-다음으로는 ostree를 이용하여 업그레이드, 롤백하는 과정을 알아보기로 한다.
+다음 [Yocto에 OSTree upgrade 적용(3) - 업그레이드/롤백 및 OSTree 리뷰]({{< ref "posts/yocto-ostree-meta-updater-3" >}}) 에서는 ostree를 이용하여 업그레이드, 롤백하는 과정을 알아보기로 한다.
