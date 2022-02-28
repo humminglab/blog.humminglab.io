@@ -22,270 +22,108 @@
 <meta name=apple-mobile-web-app-title content="All about IoT">
 <meta name=theme-color content="#f8f8f8"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/posts/tls-cryptography-3-block-cipher/><link rel=prev href=https://blog.humminglab.io/posts/yocto-ostree-meta-updater-3/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/fontawesome-free/all.min.css>
-<noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/animate/animate.min.css>
-<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"TLS/암호 알고리즘 쉽게 이해하기(3) - Block Cipher","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/tls-cryptography-3-block-cipher\/"},"genre":"posts","keywords":"Cryptography, TLS, OpenSSL, AES, DES, 3DES","wordcount":742,"url":"https:\/\/blog.humminglab.io\/posts\/tls-cryptography-3-block-cipher\/","datePublished":"2022-02-21T20:00:00+09:00","dateModified":"2022-02-21T20:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head>
-<body header-desktop header-mobile><script type=text/javascript>function setTheme(a){document.body.setAttribute('theme',a)}function saveTheme(a){window.localStorage&&localStorage.setItem('theme',a)}function getMeta(b){const a=document.getElementsByTagName('meta');for(let c=0;c<a.length;c++)if(a[c].getAttribute('name')===b)return a[c];return''}if(window.localStorage&&localStorage.getItem('theme')){let a=localStorage.getItem('theme');a==='light'||a==='dark'||a==='black'?setTheme(a):window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?setTheme('dark'):setTheme('light')}else''==='light'||''==='dark'||''==='black'?(setTheme(''),saveTheme('')):(saveTheme('auto'),window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?setTheme('dark'):setTheme('light'));let metaColors={light:'#f8f8f8',dark:'#252627',black:'#000000'};getMeta('theme-color').content=metaColors[document.body.getAttribute('theme')]</script>
-<div id=back-to-top></div>
-<div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/posts/tls-cryptography-3-block-cipher/><link rel=prev href=https://blog.humminglab.io/posts/yocto-ostree-meta-updater-3/><link rel=next href=https://blog.humminglab.io/posts/tls-cryptography-4-block-cipher-mode/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/fontawesome-free/all.min.css>
+<noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/animate/animate.min.css>
+<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"TLS/암호 알고리즘 쉽게 이해하기(3) - Block Cipher","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/tls-cryptography-3-block-cipher\/"},"genre":"posts","keywords":"Cryptography, TLS, OpenSSL, AES, DES, 3DES","wordcount":742,"url":"https:\/\/blog.humminglab.io\/posts\/tls-cryptography-3-block-cipher\/","datePublished":"2022-02-21T20:00:00+09:00","dateModified":"2022-02-21T20:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head><body header-desktop header-mobile><script type=text/javascript>function setTheme(e){document.body.setAttribute("theme",e)}function saveTheme(e){window.localStorage&&localStorage.setItem("theme",e)}function getMeta(t){const e=document.getElementsByTagName("meta");for(let n=0;n<e.length;n++)if(e[n].getAttribute("name")===t)return e[n];return''}if(window.localStorage&&localStorage.getItem("theme")){let e=localStorage.getItem("theme");e==="light"||e==="dark"||e==="black"?setTheme(e):window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?setTheme("dark"):setTheme("light")}else''==="light"||''==="dark"||''==="black"?(setTheme(''),saveTheme('')):(saveTheme("auto"),window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?setTheme("dark"):setTheme("light"));let metaColors={light:"#f8f8f8",dark:"#252627",black:"#000000"};getMeta("theme-color").content=metaColors[document.body.getAttribute("theme")]</script>
+<div id=back-to-top></div><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
 <div class=header-wrapper>
 <div class=header-title>
 <a href=/ title="All about IoT">All about IoT</a>
-</div>
-<div class=menu>
+</div><div class=menu>
 <div class=menu-inner><a class=menu-item href=/posts/> Posts </a><a class=menu-item href=/tags/> Tags </a><a class=menu-item href=/categories/> Categories </a><a class=menu-item href=https://www.humminglab.io/ rel="noopener noreffer" target=_blank> HummingLab </a><span class="menu-item delimiter"></span><a href=# onclick=return!1 class="menu-item theme-switch" title="Switch Theme">
 <i class="fas fa-adjust fa-fw"></i>
-</a></div>
-</div>
-</div>
-</header><header class=mobile id=header-mobile>
+</a></div></div></div></header><header class=mobile id=header-mobile>
 <div class=header-container>
 <div class=header-wrapper>
 <div class=header-title>
 <a href=/ title="All about IoT">All about IoT</a>
-</div>
-<div class=menu-toggle id=menu-toggle-mobile>
+</div><div class=menu-toggle id=menu-toggle-mobile>
 <span></span><span></span><span></span>
-</div>
-</div>
-<div class=menu id=menu-mobile><a class=menu-item href=/posts/ title>Posts</a><a class=menu-item href=/tags/ title>Tags</a><a class=menu-item href=/categories/ title>Categories</a><a class=menu-item href=https://www.humminglab.io/ title rel="noopener noreffer" target=_blank>HummingLab</a><a href=# onclick=return!1 class="menu-item theme-switch" title="Switch Theme">
+</div></div><div class=menu id=menu-mobile><a class=menu-item href=/posts/ title>Posts</a><a class=menu-item href=/tags/ title>Tags</a><a class=menu-item href=/categories/ title>Categories</a><a class=menu-item href=https://www.humminglab.io/ title rel="noopener noreffer" target=_blank>HummingLab</a><a href=# onclick=return!1 class="menu-item theme-switch" title="Switch Theme">
 <i class="fas fa-adjust fa-fw"></i>
-</a></div>
-</div>
-</header>
-<div class="search-dropdown desktop">
-<div id=search-dropdown-desktop></div>
-</div>
-<div class="search-dropdown mobile">
-<div id=search-dropdown-mobile></div>
-</div>
-<main class=main>
+</a></div></div></header><div class="search-dropdown desktop">
+<div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile">
+<div id=search-dropdown-mobile></div></div><main class=main>
 <div class=container><div class=toc id=toc-auto>
-<h2 class=toc-title>Contents</h2>
-<div class="toc-content always-active" id=toc-content-auto></div>
-</div><script>document.getElementsByTagName("main")[0].setAttribute("pageStyle","normal")</script><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC","true")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX">TLS/암호 알고리즘 쉽게 이해하기(3) - Block Cipher</h1><div class=post-meta>
+<h2 class=toc-title>Contents</h2><div class="toc-content always-active" id=toc-content-auto></div></div><script>document.getElementsByTagName("main")[0].setAttribute("pageStyle","normal")</script><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC","true")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX">TLS/암호 알고리즘 쉽게 이해하기(3) - Block Cipher</h1><div class=post-meta>
 <div class=post-meta-line>
 <span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
-</span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/security/><i class="far fa-folder fa-fw"></i>Security</a></span>&nbsp;<span class=post-category>and</span>&nbsp;<span class=post-series>series <a href=/series/tls/%EC%95%94%ED%98%B8-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0/><i class="far fa-list-alt fa-fw"></i>TLS/암호 알고리즘 쉽게 이해하기</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2022-02-21>2022-02-21</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2022-02-21>2022-02-21</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;742 words&nbsp;
-<i class="far fa-clock fa-fw"></i>&nbsp;4 minutes&nbsp;</div>
-</div>
-<div class="details toc" id=toc-static kept>
+</span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/security/><i class="far fa-folder fa-fw"></i>Security</a></span>&nbsp;<span class=post-category>and</span>&nbsp;<span class=post-series>series <a href=/series/tls/%EC%95%94%ED%98%B8-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0/><i class="far fa-list-alt fa-fw"></i>TLS/암호 알고리즘 쉽게 이해하기</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2022-02-21>2022-02-21</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2022-02-21>2022-02-21</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;742 words&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;4 minutes&nbsp;</div></div><div class="details toc" id=toc-static kept>
 <div class="details-summary toc-title">
 <span>Contents</span>
 <span><i class="details-icon fas fa-angle-right"></i></span>
-</div>
-<div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents>
+</div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents>
 <ul>
-<li><a href=#블럭-암호-개요>블럭 암호 개요</a></li>
-<li><a href=#des-data-encryption-standard-fips-pub-46>DES (Data Encryption Standard, FIPS PUB 46)</a></li>
-<li><a href=#3des>3DES</a></li>
-<li><a href=#aes-advanced-encryption-standard-fips-pub-197>AES (Advanced Encryption Standard, FIPS PUB 197)</a></li>
-<li><a href=#암호화-키-길이>암호화 키 길이</a></li>
-<li><a href=#패딩>패딩</a></li>
-<li><a href=#마무리>마무리</a></li>
-</ul>
-</nav></div>
-</div><div class=content id=content><p>암호 알고리즘은 암호화/복호화 작업을 동일한 키 하나로 사용하는지, 아니면 암호화하는 키(공개키)와 복호화 하는 키(개인키)를 따로 사용하는지에 따라 각각 대칭키(Symmetric Key), 비대칭키(Asymmetric Key) 방식으로 나뉜다.</p>
-<div class=mermaid id=id-1></div>
-<p>대칭키는 암호화 할때 일정 블럭 크기(예를 들어 128bits)를 한번에 암호화 할지, 아니면 비트/바이트 단위로 암호화 하는지에 따라서 블럭 암호(Block Cipher), 스트림 암호(Stream Cipher) 로 구분한다.</p>
-<p>여기에서는 블럭 암호 방식에 대해서 설명한다.</p>
-<h2 id=블럭-암호-개요>블럭 암호 개요</h2>
-<p>비대칭키 방식은 역변환을 하려면 수십년, 수백년 이상 소요되어 실제적으로 역변환이 불가능한 수학적 이론을 바탕으로 구현되어 있지만,
-대칭키인 블럭암호는 이리저리 뒤섞거나(전치), 연산이나 코드북을 이용해서 다른 값으로 변경(치환) 하는 작업을 복잡하게 반복하여 만들어낸 암호화 방법이다.</p>
-<p>블럭 암호의 대표적인 <a href=https://en.wikipedia.org/wiki/Data_Encryption_Standard target=_blank rel="noopener noreffer">DES</a>, <a href=https://en.wikipedia.org/wiki/Advanced_Encryption_Standard target=_blank rel="noopener noreffer">AES</a> 방식은 위키피디아의 그림(아래 참고)과 같이 복잡한 연산을 수십번의 반복(라운드)을 통해 구현된다.</p>
-<table>
+<li><a href=#BlockCipher>블럭 암호 개요</a></li><li><a href=#DES>DES (Data Encryption Standard, FIPS PUB 46)</a></li><li><a href=#3des>3DES</a></li><li><a href=#AES>AES (Advanced Encryption Standard, FIPS PUB 197)</a></li><li><a href=#KeyLength>암호화 키 길이</a></li><li><a href=#Padding>패딩</a></li><li><a href=#마무리>마무리</a></li></ul></nav></div></div><div class=content id=content><p>암호 알고리즘은 암호화/복호화 작업을 동일한 키 하나로 사용하는지, 아니면 암호화하는 키(공개키)와 복호화 하는 키(개인키)를 따로 사용하는지에 따라 각각 대칭키(Symmetric Key), 비대칭키(Asymmetric Key) 방식으로 나뉜다.</p><div class=mermaid id=id-1></div><p>대칭키는 암호화 할때 일정 블럭 크기(예를 들어 128bits)를 한번에 암호화 할지, 아니면 비트/바이트 단위로 암호화 하는지에 따라서 블럭 암호(Block Cipher), 스트림 암호(Stream Cipher) 로 구분한다.</p><p>여기에서는 블럭 암호 방식에 대해서 설명한다.</p><h2 id=BlockCipher>블럭 암호 개요</h2><p>비대칭키 방식은 역변환을 하려면 수십년, 수백년 이상 소요되어 실제적으로 역변환이 불가능한 수학적 이론을 바탕으로 구현되어 있지만,
+대칭키인 블럭암호는 이리저리 뒤섞거나(전치), 연산이나 코드북을 이용해서 다른 값으로 변경(치환) 하는 작업을 복잡하게 반복하여 만들어낸 암호화 방법이다.</p><p>블럭 암호의 대표적인 <a href=https://en.wikipedia.org/wiki/Data_Encryption_Standard target=_blank rel="noopener noreffer">DES</a>, <a href=https://en.wikipedia.org/wiki/Advanced_Encryption_Standard target=_blank rel="noopener noreffer">AES</a> 방식은 위키피디아의 그림(아래 참고)과 같이 복잡한 연산을 수십번의 반복(라운드)을 통해 구현된다.</p><table>
 <thead>
 <tr>
 <th><figure><a class=lightgallery href=https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/DES-main-network.png/500px-DES-main-network.png title=https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/DES-main-network.png/500px-DES-main-network.png data-thumbnail=https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/DES-main-network.png/500px-DES-main-network.png data-sub-html="<h2>DES의 반복적인 라운드 구조</h2>">
 <img class=lazyload data-src=https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/DES-main-network.png/500px-DES-main-network.png data-srcset="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/DES-main-network.png/500px-DES-main-network.png, https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/DES-main-network.png/500px-DES-main-network.png 1.5x, https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/DES-main-network.png/500px-DES-main-network.png 2x" data-sizes=auto alt=https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/DES-main-network.png/500px-DES-main-network.png height=auto width=200px>
-</a><figcaption class=image-caption>DES의 반복적인 라운드 구조</figcaption>
-</figure></th>
-<th><figure><a class=lightgallery href=https://upload.wikimedia.org/wikipedia/commons/5/50/AES_%28Rijndael%29_Round_Function.png title=https://upload.wikimedia.org/wikipedia/commons/5/50/AES_%28Rijndael%29_Round_Function.png data-thumbnail=https://upload.wikimedia.org/wikipedia/commons/5/50/AES_%28Rijndael%29_Round_Function.png data-sub-html="<h2>AES 라운드 함수의 구성</h2>">
+</a><figcaption class=image-caption>DES의 반복적인 라운드 구조</figcaption></figure></th><th><figure><a class=lightgallery href=https://upload.wikimedia.org/wikipedia/commons/5/50/AES_%28Rijndael%29_Round_Function.png title=https://upload.wikimedia.org/wikipedia/commons/5/50/AES_%28Rijndael%29_Round_Function.png data-thumbnail=https://upload.wikimedia.org/wikipedia/commons/5/50/AES_%28Rijndael%29_Round_Function.png data-sub-html="<h2>AES 라운드 함수의 구성</h2>">
 <img class=lazyload data-src=https://upload.wikimedia.org/wikipedia/commons/5/50/AES_%28Rijndael%29_Round_Function.png data-srcset="https://upload.wikimedia.org/wikipedia/commons/5/50/AES_%28Rijndael%29_Round_Function.png, https://upload.wikimedia.org/wikipedia/commons/5/50/AES_%28Rijndael%29_Round_Function.png 1.5x, https://upload.wikimedia.org/wikipedia/commons/5/50/AES_%28Rijndael%29_Round_Function.png 2x" data-sizes=auto alt=https://upload.wikimedia.org/wikipedia/commons/5/50/AES_%28Rijndael%29_Round_Function.png height=auto width=300px>
-</a><figcaption class=image-caption>AES 라운드 함수의 구성</figcaption>
-</figure></th>
-</tr>
-</thead>
-</table>
-<p>입력 키와 암호문 관계를 모호하게 하는 혼동(Confusion)과 평문 입력의 작은 변경이 암호문의 변경과 관련성을 없애는 확산(Diffusion)을 통하는 방식으로,
-수학자, 암호학자들에 의하여 이 암호화를 풀어내는 것이 불가능에 가깝다고 평가된 것들이다.</p>
-<p>암호화 모듈을 개발하지 않는다면 블록암호화 방법의 내부를 굳이 이해하려고 노력할 필요는 없다. 다만 각 암호 마다의 특징만 알고 있으면 사용에는 큰 문제가 없다.</p>
-<table>
+</a><figcaption class=image-caption>AES 라운드 함수의 구성</figcaption></figure></th></tr></thead></table><p>입력 키와 암호문 관계를 모호하게 하는 혼동(Confusion)과 평문 입력의 작은 변경이 암호문의 변경과 관련성을 없애는 확산(Diffusion)을 통하는 방식으로,
+수학자, 암호학자들에 의하여 이 암호화를 풀어내는 것이 불가능에 가깝다고 평가된 것들이다.</p><p>암호화 모듈을 개발하지 않는다면 블록암호화 방법의 내부를 굳이 이해하려고 노력할 필요는 없다. 다만 각 암호 마다의 특징만 알고 있으면 사용에는 큰 문제가 없다.</p><table>
 <thead>
 <tr>
-<th style=text-align:left>구분</th>
-<th style=text-align:left>DES</th>
-<th style=text-align:left>3DES</th>
-<th style=text-align:left>AES</th>
-</tr>
-</thead>
-<tbody>
+<th style=text-align:left>구분</th><th style=text-align:left>DES</th><th style=text-align:left>3DES</th><th style=text-align:left>AES</th></tr></thead><tbody>
 <tr>
-<td style=text-align:left>Key sizes(bit)</td>
-<td style=text-align:left>56</td>
-<td style=text-align:left>168</td>
-<td style=text-align:left>128 / 192 / 256</td>
-</tr>
-<tr>
-<td style=text-align:left>Block sizes(bit)</td>
-<td style=text-align:left>64</td>
-<td style=text-align:left>64</td>
-<td style=text-align:left>128</td>
-</tr>
-<tr>
-<td style=text-align:left>구조</td>
-<td style=text-align:left>Feistel network</td>
-<td style=text-align:left>Feistel network</td>
-<td style=text-align:left>Substitution–permutation network</td>
-</tr>
-<tr>
-<td style=text-align:left>라운드 횟수</td>
-<td style=text-align:left>16</td>
-<td style=text-align:left>48</td>
-<td style=text-align:left>10 / 12 / 14</td>
-</tr>
-<tr>
-<td style=text-align:left>공개년도</td>
-<td style=text-align:left>1977</td>
-<td style=text-align:left>1981</td>
-<td style=text-align:left>1998</td>
-</tr>
-</tbody>
-</table>
-<h2 id=des-data-encryption-standard-fips-pub-46>DES (Data Encryption Standard, FIPS PUB 46)</h2>
-<p>DES는 상당히 오래전에 만들어진 것으로 56bit의 짧은 키 길이로 현재는 더 이상 안전하지 않은 방식이다. 키 길이를 64bit로 표기된 경우도 있는데, 이는 parity bit 로 8bit가 추가된 것으로 유효한 키는 56bit 이다.</p>
-<p>지금은 DES를 무차별 대입 공격(Brute-Force Attack)으로 특정 장비로 수 십시간 내에 풀 수 있어, 짧은 시간의 안전성을 보장하는 경우가 아니라면 사용하지 않는 것이 좋다.
-<a href=https://datatracker.ietf.org/doc/html/rfc5246#appendix-B target=_blank rel="noopener noreffer">TLS 1.2 (2008)</a> 부터 DES 가 공식적으로 제외되었다.</p>
-<h2 id=3des>3DES</h2>
-<p>3DES는 DES의 짧은 키 길이를 보완하기 위하여 각각의 다른키로 3번 DES 를 한 것이라고 보면 된다. 암호화 블럭 크기는 DES와 동일하게 64bit 이다.</p>
-<p>2016년 <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-2183" target=_blank rel="noopener noreffer">CVE-2016-2183</a>, <a href=https://sweet32.info/ target=_blank rel="noopener noreffer">Sweet32</a> attack 으로 64bit 블럭 크기를 사용하는 암호화 방식의 취약점이 공개되어, 대부분의 서버에서 사용이 중단되었고,
-<a href=https://datatracker.ietf.org/doc/html/rfc8446 target=_blank rel="noopener noreffer">TLS 1.3 (2018)</a>에서 공식으로 제외되었다.</p>
-<h2 id=aes-advanced-encryption-standard-fips-pub-197>AES (Advanced Encryption Standard, FIPS PUB 197)</h2>
-<p>결과적으로 공식적으로 사용하는 블럭 암호화 중 유일하게 사용가능한 것은 AES 이다.</p>
-<p>미국에서 폐쇄적으로 만든 DES에 비하여, AES는 미국 NIST(National Institute of Standards and Technology)에서 개방적으로 표준화를 진행한 것이다.
-여러 국가의 연구자들이 제출한 알고리즘 중 <a href=https://csrc.nist.gov/csrc/media/projects/cryptographic-standards-and-guidelines/documents/aes-development/rijndael-ammended.pdf target=_blank rel="noopener noreffer">Rijndael</a>이 최종적으로 선정되었다.</p>
-<p>표준 제정 시 요구 사항 중 하나로 향후 양자 컴퓨팅 공격을 대비한 암호화 키 128, 192, 256 bit 길이 지원이다.
-AES는 이를 지원하기 위하여 내부적으로 키 길이에 따라 라운드 횟수가 추가된다.</p>
-<h2 id=암호화-키-길이>암호화 키 길이</h2>
-<p>양자 컴퓨팅 공격이 가능한 미래까지도 기밀성을 고려한 데이터라면 256bit 를 사용하는 것이 좋다.
+<td style=text-align:left>Key sizes(bit)</td><td style=text-align:left>56</td><td style=text-align:left>168</td><td style=text-align:left>128 / 192 / 256</td></tr><tr>
+<td style=text-align:left>Block sizes(bit)</td><td style=text-align:left>64</td><td style=text-align:left>64</td><td style=text-align:left>128</td></tr><tr>
+<td style=text-align:left>구조</td><td style=text-align:left>Feistel network</td><td style=text-align:left>Feistel network</td><td style=text-align:left>Substitution–permutation network</td></tr><tr>
+<td style=text-align:left>라운드 횟수</td><td style=text-align:left>16</td><td style=text-align:left>48</td><td style=text-align:left>10 / 12 / 14</td></tr><tr>
+<td style=text-align:left>공개년도</td><td style=text-align:left>1977</td><td style=text-align:left>1981</td><td style=text-align:left>1998</td></tr></tbody></table><h2 id=DES>DES (Data Encryption Standard, FIPS PUB 46)</h2><p>DES는 상당히 오래전에 만들어진 것으로 56bit의 짧은 키 길이로 현재는 더 이상 안전하지 않은 방식이다. 키 길이를 64bit로 표기된 경우도 있는데, 이는 parity bit 로 8bit가 추가된 것으로 유효한 키는 56bit 이다.</p><p>지금은 DES를 무차별 대입 공격(Brute-Force Attack)으로 특정 장비로 수 십시간 내에 풀 수 있어, 짧은 시간의 안전성을 보장하는 경우가 아니라면 사용하지 않는 것이 좋다.
+<a href=https://datatracker.ietf.org/doc/html/rfc5246#appendix-B target=_blank rel="noopener noreffer">TLS 1.2 (2008)</a> 부터 DES 가 공식적으로 제외되었다.</p><h2 id=3des>3DES</h2><p>3DES는 DES의 짧은 키 길이를 보완하기 위하여 각각의 다른키로 3번 DES 를 한 것이라고 보면 된다. 암호화 블럭 크기는 DES와 동일하게 64bit 이다.</p><p>2016년 <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2016-2183" target=_blank rel="noopener noreffer">CVE-2016-2183</a>, <a href=https://sweet32.info/ target=_blank rel="noopener noreffer">Sweet32</a> attack 으로 64bit 블럭 크기를 사용하는 암호화 방식의 취약점이 공개되어, 대부분의 서버에서 사용이 중단되었고,
+<a href=https://datatracker.ietf.org/doc/html/rfc8446 target=_blank rel="noopener noreffer">TLS 1.3 (2018)</a>에서 공식으로 제외되었다.</p><h2 id=AES>AES (Advanced Encryption Standard, FIPS PUB 197)</h2><p>결과적으로 공식적으로 사용하는 블럭 암호화 중 유일하게 사용가능한 것은 AES 이다.</p><p>미국에서 폐쇄적으로 만든 DES에 비하여, AES는 미국 NIST(National Institute of Standards and Technology)에서 개방적으로 표준화를 진행한 것이다.
+여러 국가의 연구자들이 제출한 알고리즘 중 <a href=https://csrc.nist.gov/csrc/media/projects/cryptographic-standards-and-guidelines/documents/aes-development/rijndael-ammended.pdf target=_blank rel="noopener noreffer">Rijndael</a>이 최종적으로 선정되었다.</p><p>표준 제정 시 요구 사항 중 하나로 향후 양자 컴퓨팅 공격을 대비한 암호화 키 128, 192, 256 bit 길이 지원이다.
+AES는 이를 지원하기 위하여 내부적으로 키 길이에 따라 라운드 횟수가 추가된다.</p><h2 id=KeyLength>암호화 키 길이</h2><p>양자 컴퓨팅 공격이 가능한 미래까지도 기밀성을 고려한 데이터라면 256bit 를 사용하는 것이 좋다.
 예를 들면 스토리지에 저장되는 파일과 같은 경우는 AES 256 사용을 검토할 수 있다.
-일반적인 통신 프로토콜의 세션 암호화와 같은 경우에는 128 bit를 사용하여도 적절할 것이다.</p>
-<p>참고로 알고리즘에 따른 암호화 키 길이 비교는 아래와 같다.
-AES 128bit는 비대칭키인 RSA 3072bit와 유사한 암호 강도라고 보면 된다.</p>
-<p>이 의미는 AES 128bit 인 경우 이를 Bruteforce 공격으로 키를 찾으려면 $2^{128}$ 의 시도를 해보아야 한다는 의미이다(각 1번의 시도에 걸리는 시간은 고려치 않고 횟수만으로 가정한 것이다).
-인수분해를 이용하는 RSA 비대칭키 방식은 키를 3072bit를 이용하지만 이를 bruteforce 공격으로 찾는다면 이도 $2^{128}$ 가량의 시도를 해보면 찾을 수 있다는 의미이다.</p>
-<p>2021년 기준으로 일반적인 보안 표준에서는 AES 128bit, RSA 2048bit 이상의 사용을 권장하고 있다.</p>
-<table>
+일반적인 통신 프로토콜의 세션 암호화와 같은 경우에는 128 bit를 사용하여도 적절할 것이다.</p><p>참고로 알고리즘에 따른 암호화 키 길이 비교는 아래와 같다.
+AES 128bit는 비대칭키인 RSA 3072bit와 유사한 암호 강도라고 보면 된다.</p><p>이 의미는 AES 128bit 인 경우 이를 Bruteforce 공격으로 키를 찾으려면 $2^{128}$ 의 시도를 해보아야 한다는 의미이다(각 1번의 시도에 걸리는 시간은 고려치 않고 횟수만으로 가정한 것이다).
+인수분해를 이용하는 RSA 비대칭키 방식은 키를 3072bit를 이용하지만 이를 bruteforce 공격으로 찾는다면 이도 $2^{128}$ 가량의 시도를 해보면 찾을 수 있다는 의미이다.</p><p>2021년 기준으로 일반적인 보안 표준에서는 AES 128bit, RSA 2048bit 이상의 사용을 권장하고 있다.</p><table>
 <thead>
 <tr>
-<th>계열</th>
-<th>암호시스템</th>
-<th>80bit</th>
-<th>128bit</th>
-<th>192bit</th>
-<th>256bit</th>
-</tr>
-</thead>
-<tbody>
+<th>계열</th><th>암호시스템</th><th>80bit</th><th>128bit</th><th>192bit</th><th>256bit</th></tr></thead><tbody>
 <tr>
-<td>인수분해</td>
-<td>RSA</td>
-<td>1024</td>
-<td>3072</td>
-<td>7680</td>
-<td>15360</td>
-</tr>
-<tr>
-<td>이산대수</td>
-<td>DHKE, DSA, Elgamal</td>
-<td>1024</td>
-<td>3072</td>
-<td>7680</td>
-<td>15360</td>
-</tr>
-<tr>
-<td>타원곡선</td>
-<td>ECDH, ECDSA</td>
-<td>160</td>
-<td>256</td>
-<td>384</td>
-<td>512</td>
-</tr>
-<tr>
-<td>대칭암호</td>
-<td>AES</td>
-<td>80</td>
-<td>128</td>
-<td>192</td>
-<td>256</td>
-</tr>
-</tbody>
-</table>
-<h2 id=패딩>패딩</h2>
-<p>블럭 암호화를 하는 경우 암호화 하려는 데이타가 AES block size인 128bit(16bytes)로 딱 맞지 않는 경우라면 어떻게 해야 할까?
-단순히 뒤의 공간을 0으로 패딩을 하게 되면 아래 두 데이타는 암호화를 수행하면 동일한 결과를 가지게 되어 구분을 할 수 없게 된다.</p>
-<div class=highlight><div class=chroma>
+<td>인수분해</td><td>RSA</td><td>1024</td><td>3072</td><td>7680</td><td>15360</td></tr><tr>
+<td>이산대수</td><td>DHKE, DSA, Elgamal</td><td>1024</td><td>3072</td><td>7680</td><td>15360</td></tr><tr>
+<td>타원곡선</td><td>ECDH, ECDSA</td><td>160</td><td>256</td><td>384</td><td>512</td></tr><tr>
+<td>대칭암호</td><td>AES</td><td>80</td><td>128</td><td>192</td><td>256</td></tr></tbody></table><h2 id=Padding>패딩</h2><p>블럭 암호화를 하는 경우 암호화 하려는 데이타가 AES block size인 128bit(16bytes)로 딱 맞지 않는 경우라면 어떻게 해야 할까?
+단순히 뒤의 공간을 0으로 패딩을 하게 되면 아래 두 데이타는 암호화를 수행하면 동일한 결과를 가지게 되어 구분을 할 수 없게 된다.</p><div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-C data-lang=C><span class=kt>uint8_t</span> <span class=n>data1</span><span class=p>[</span><span class=mi>1</span><span class=p>]</span> <span class=o>=</span> <span class=p>{</span> <span class=mh>0x55</span> <span class=p>};</span>
-<span class=kt>uint8_t</span> <span class=n>data2</span><span class=p>[</span><span class=mi>16</span><span class=p>]</span> <span class=o>=</span> <span class=p>{</span> <span class=mh>0x55</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span>
-                      <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span> <span class=p>};</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>이 부분은 <a href=https://datatracker.ietf.org/doc/html/rfc2315 target=_blank rel="noopener noreffer">RFC 2315</a> PKCS#7 에 정의된 패딩방법을 사용한다.
-PKCS는 RSA 암호를 만든 <a href=https://www.rsa.com/ target=_blank rel="noopener noreffer">RSA 회사</a>에서 정의한 암호화 표준으로 <a href="https://web.archive.org/web/20061209135809/http://www.rsasecurity.com/rsalabs/node.asp?id=2124" target=_blank rel="noopener noreffer">Public-Key Cryptography Standards(PKCS)</a> #1 ~ #15 까지 있다.</p>
-<p>이 방법은 남는 공간을 남은 개수 만큼의 값으로 채워주는 방식이다.
+</span></code></pre></td><td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-C data-lang=C><span class=line><span class=cl><span class=kt>uint8_t</span> <span class=n>data1</span><span class=p>[</span><span class=mi>1</span><span class=p>]</span> <span class=o>=</span> <span class=p>{</span> <span class=mh>0x55</span> <span class=p>};</span>
+</span></span><span class=line><span class=cl><span class=kt>uint8_t</span> <span class=n>data2</span><span class=p>[</span><span class=mi>16</span><span class=p>]</span> <span class=o>=</span> <span class=p>{</span> <span class=mh>0x55</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                      <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span><span class=p>,</span> <span class=mh>0x00</span> <span class=p>};</span>
+</span></span></code></pre></td></tr></table></div></div><p>이 부분은 <a href=https://datatracker.ietf.org/doc/html/rfc2315 target=_blank rel="noopener noreffer">RFC 2315</a> PKCS#7 에 정의된 패딩방법을 사용한다.
+PKCS는 RSA 암호를 만든 <a href=https://www.rsa.com/ target=_blank rel="noopener noreffer">RSA 회사</a>에서 정의한 암호화 표준으로 <a href="https://web.archive.org/web/20061209135809/http://www.rsasecurity.com/rsalabs/node.asp?id=2124" target=_blank rel="noopener noreffer">Public-Key Cryptography Standards(PKCS)</a> #1 ~ #15 까지 있다.</p><p>이 방법은 남는 공간을 남은 개수 만큼의 값으로 채워주는 방식이다.
 예를 들어 15bytes의 데이타는 마지막 1바이트가 0x01 로 채워지고, 14bytes 데이타는 마지막 2바이트가 0x02로 채워진다.
-만일 블럭의 끝이 16bytes로 나누어 떨어진다면, 하나의 블럭을 더 추가하여 모두 0x10 으로 패딩하여 구분한다.</p>
-<p>위와 같이 하면 padding 으로 데이타의 끝 부분을 알 수 있게 된다.</p>
-<p>참고로, 암호화에서는 PKCS #7 에 정의한 패딩방식 이외에도 다른 방식들도 사용한다.
-관련 방식들은 <a href=https://en.wikipedia.org/wiki/Padding_%28cryptography%29 target=_blank rel="noopener noreffer">Wikipedia Padding</a>에서 찾아볼 수 있다.</p>
-<h2 id=마무리>마무리</h2>
-<p>이상으로 블럭 암호 방법의 특징에 대해서 정리하고, 다음 글인 블럭암호의 운용 모드에서 실제 사용 방법도 같이 설명한다.</p>
-</div>
-<div class=post-footer id=post-footer>
+만일 블럭의 끝이 16bytes로 나누어 떨어진다면, 하나의 블럭을 더 추가하여 모두 0x10 으로 패딩하여 구분한다.</p><p>위와 같이 하면 padding 으로 데이타의 끝 부분을 알 수 있게 된다.</p><p>참고로, 암호화에서는 PKCS #7 에 정의한 패딩방식 이외에도 다른 방식들도 사용한다.
+관련 방식들은 <a href=https://en.wikipedia.org/wiki/Padding_%28cryptography%29 target=_blank rel="noopener noreffer">Wikipedia Padding</a>에서 찾아볼 수 있다.</p><h2 id=마무리>마무리</h2><p>이상으로 블럭 암호 방법의 특징에 대해서 정리하고, 다음 글인 블럭암호의 운용 모드에서 실제 사용 방법도 같이 설명한다.</p></div><div class=post-footer id=post-footer>
 <div class=post-info>
 <div class=post-info-line>
 <div class=post-info-mod>
 <span>Updated on 2022-02-21</span>
-</div>
-<div class=post-info-license></div>
-</div>
-<div class=post-info-line>
-<div class=post-info-md></div>
-<div class=post-info-share>
+</div><div class=post-info-license></div></div><div class=post-info-line>
+<div class=post-info-md></div><div class=post-info-share>
 <span></span>
-</div>
-</div>
-</div>
-<div class=post-info-more>
-<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/cryptography/>Cryptography</a>,&nbsp;<a href=/tags/tls/>TLS</a>,&nbsp;<a href=/tags/openssl/>OpenSSL</a>,&nbsp;<a href=/tags/aes/>AES</a>,&nbsp;<a href=/tags/des/>DES</a>,&nbsp;<a href=/tags/3des/>3DES</a></section>
-<section>
+</div></div></div><div class=post-info-more>
+<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/cryptography/>Cryptography</a>,&nbsp;<a href=/tags/tls/>TLS</a>,&nbsp;<a href=/tags/openssl/>OpenSSL</a>,&nbsp;<a href=/tags/aes/>AES</a>,&nbsp;<a href=/tags/des/>DES</a>,&nbsp;<a href=/tags/3des/>3DES</a></section><section>
 <span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span>
-</section>
-</div>
-<div class=post-nav><a href=/posts/yocto-ostree-meta-updater-3/ class=prev rel=prev title="Yocto에 OSTree upgrade 적용(3) - 업그레이드/롤백 및 OSTree 리뷰"><i class="fas fa-angle-left fa-fw"></i>Yocto에 OSTree upgrade 적용(3) - 업그레이드/롤백 및 OSTree 리뷰</a></div>
-</div>
-<div id=comments><div id=giscus></div><noscript>
+</section></div><div class=post-nav><a href=/posts/yocto-ostree-meta-updater-3/ class=prev rel=prev title="Yocto에 OSTree upgrade 적용(3) - 업그레이드/롤백 및 OSTree 리뷰"><i class="fas fa-angle-left fa-fw"></i>Yocto에 OSTree upgrade 적용(3) - 업그레이드/롤백 및 OSTree 리뷰</a>
+<a href=/posts/tls-cryptography-4-block-cipher-mode/ class=next rel=next title="TLS/암호 알고리즘 쉽게 이해하기(4) - Block Cipher Mode">TLS/암호 알고리즘 쉽게 이해하기(4) - Block Cipher Mode<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=giscus></div><noscript>
 Please enable JavaScript to view the comments powered by <a href=https://giscus.app/>giscus</a>.
-</noscript></div></article></div>
-</main><footer class=footer>
-<div class=footer-container><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://www.humminglab.io target=_blank rel="noopener noreferrer">HummingLab</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div>
-</div></footer></div>
-<div id=fixed-buttons><a href=#back-to-top id=back-to-top-button class=fixed-button title="Back to Top">
+</noscript></div></article></div></main><footer class=footer>
+<div class=footer-container><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://www.humminglab.io target=_blank rel="noopener noreferrer">HummingLab</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=#back-to-top id=back-to-top-button class=fixed-button title="Back to Top">
 <i class="fas fa-arrow-up fa-fw"></i>
 </a><a href=# id=view-comments class=fixed-button title="View Comments">
 <i class="fas fa-comment fa-fw"></i>
 </a>
-</div><div class=assets><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/topbar/topbar.min.js></script><script type=text/javascript src=/lib/pjax/pjax.min.js></script><script type=text/javascript src=/js/theme.min.js></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','UA-83257319-3',{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=UA-83257319-3" async></script></div>
-<div class=pjax-assets><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript src=/lib/mermaid/mermaid.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",lightTheme:"light"}},data:{"id-1":"graph TD;\n\nsubgraph Symmetric Key\nA1([평문]) --\u003e B1[암호화 모듈] --\u003e C1([암호문])\nK1([키]) --\u003e B1\n\nC2([암호문]) --\u003e B2[복호화 모듈] --\u003e A2([평문])\nK1 --\u003e B2\nend\n\nsubgraph Asymmetric Key\nA3([평문]) --\u003e B3[암호화 모듈] --\u003e C3([암호문])\nK2([공개키]) --\u003e B3\n\nC4([암호문]) --\u003e B4[복호화 모듈] --\u003e A4([평문])\nK3([개인키]) --\u003e B4\nend\n\nstyle B1 fill:#FFF9C4\nstyle B2 fill:#FFF9C4\nstyle B3 fill:#FFF9C4\nstyle B4 fill:#FFF9C4"},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1},mermaid:!0}</script><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/katex/katex.min.css>
-<noscript><link rel=stylesheet href=/lib/katex/katex.min.css></noscript><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/katex/copy-tex.min.css>
-<noscript><link rel=stylesheet href=/lib/katex/copy-tex.min.css></noscript><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/mermaid/mermaid.min.css>
-<noscript><link rel=stylesheet href=/lib/mermaid/mermaid.min.css></noscript></div>
-</body>
-</html>
+</div><div class=assets><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/topbar/topbar.min.js></script><script type=text/javascript src=/lib/pjax/pjax.min.js></script><script type=text/javascript src=/js/theme.min.js></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","UA-83257319-3",{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=UA-83257319-3" async></script></div><div class=pjax-assets><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript src=/lib/mermaid/mermaid.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",lightTheme:"light"}},data:{"id-1":"graph TD;\n\nsubgraph Symmetric Key\nA1([평문]) --\u003e B1[암호화 모듈] --\u003e C1([암호문])\nK1([키]) --\u003e B1\n\nC2([암호문]) --\u003e B2[복호화 모듈] --\u003e A2([평문])\nK1 --\u003e B2\nend\n\nsubgraph Asymmetric Key\nA3([평문]) --\u003e B3[암호화 모듈] --\u003e C3([암호문])\nK2([공개키]) --\u003e B3\n\nC4([암호문]) --\u003e B4[복호화 모듈] --\u003e A4([평문])\nK3([개인키]) --\u003e B4\nend\n\nstyle B1 fill:#FFF9C4\nstyle B2 fill:#FFF9C4\nstyle B3 fill:#FFF9C4\nstyle B4 fill:#FFF9C4"},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1},mermaid:!0}</script><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/katex/katex.min.css>
+<noscript><link rel=stylesheet href=/lib/katex/katex.min.css></noscript><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/katex/copy-tex.min.css>
+<noscript><link rel=stylesheet href=/lib/katex/copy-tex.min.css></noscript><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/mermaid/mermaid.min.css>
+<noscript><link rel=stylesheet href=/lib/mermaid/mermaid.min.css></noscript></div></body></html>

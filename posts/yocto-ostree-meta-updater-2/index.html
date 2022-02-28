@@ -22,95 +22,54 @@
 <meta name=apple-mobile-web-app-title content="All about IoT">
 <meta name=theme-color content="#f8f8f8"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/posts/yocto-ostree-meta-updater-2/><link rel=prev href=https://blog.humminglab.io/posts/tls-cryptography-2-random/><link rel=next href=https://blog.humminglab.io/posts/yocto-ostree-meta-updater-3/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/fontawesome-free/all.min.css>
-<noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/animate/animate.min.css>
-<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Yocto에 OSTree upgrade 적용(2) - 부팅 절차","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/yocto-ostree-meta-updater-2\/"},"genre":"posts","keywords":"Yocto, OSTree, OTA","wordcount":1393,"url":"https:\/\/blog.humminglab.io\/posts\/yocto-ostree-meta-updater-2\/","datePublished":"2022-02-14T09:00:00+09:00","dateModified":"2022-02-16T22:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head>
-<body header-desktop header-mobile><script type=text/javascript>function setTheme(a){document.body.setAttribute('theme',a)}function saveTheme(a){window.localStorage&&localStorage.setItem('theme',a)}function getMeta(b){const a=document.getElementsByTagName('meta');for(let c=0;c<a.length;c++)if(a[c].getAttribute('name')===b)return a[c];return''}if(window.localStorage&&localStorage.getItem('theme')){let a=localStorage.getItem('theme');a==='light'||a==='dark'||a==='black'?setTheme(a):window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?setTheme('dark'):setTheme('light')}else''==='light'||''==='dark'||''==='black'?(setTheme(''),saveTheme('')):(saveTheme('auto'),window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?setTheme('dark'):setTheme('light'));let metaColors={light:'#f8f8f8',dark:'#252627',black:'#000000'};getMeta('theme-color').content=metaColors[document.body.getAttribute('theme')]</script>
-<div id=back-to-top></div>
-<div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/posts/yocto-ostree-meta-updater-2/><link rel=prev href=https://blog.humminglab.io/posts/tls-cryptography-2-random/><link rel=next href=https://blog.humminglab.io/posts/yocto-ostree-meta-updater-3/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/fontawesome-free/all.min.css>
+<noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/animate/animate.min.css>
+<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Yocto에 OSTree upgrade 적용(2) - 부팅 절차","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/yocto-ostree-meta-updater-2\/"},"genre":"posts","keywords":"Yocto, OSTree, OTA","wordcount":1393,"url":"https:\/\/blog.humminglab.io\/posts\/yocto-ostree-meta-updater-2\/","datePublished":"2022-02-14T09:00:00+09:00","dateModified":"2022-02-16T22:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head><body header-desktop header-mobile><script type=text/javascript>function setTheme(e){document.body.setAttribute("theme",e)}function saveTheme(e){window.localStorage&&localStorage.setItem("theme",e)}function getMeta(t){const e=document.getElementsByTagName("meta");for(let n=0;n<e.length;n++)if(e[n].getAttribute("name")===t)return e[n];return''}if(window.localStorage&&localStorage.getItem("theme")){let e=localStorage.getItem("theme");e==="light"||e==="dark"||e==="black"?setTheme(e):window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?setTheme("dark"):setTheme("light")}else''==="light"||''==="dark"||''==="black"?(setTheme(''),saveTheme('')):(saveTheme("auto"),window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?setTheme("dark"):setTheme("light"));let metaColors={light:"#f8f8f8",dark:"#252627",black:"#000000"};getMeta("theme-color").content=metaColors[document.body.getAttribute("theme")]</script>
+<div id=back-to-top></div><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
 <div class=header-wrapper>
 <div class=header-title>
 <a href=/ title="All about IoT">All about IoT</a>
-</div>
-<div class=menu>
+</div><div class=menu>
 <div class=menu-inner><a class=menu-item href=/posts/> Posts </a><a class=menu-item href=/tags/> Tags </a><a class=menu-item href=/categories/> Categories </a><a class=menu-item href=https://www.humminglab.io/ rel="noopener noreffer" target=_blank> HummingLab </a><span class="menu-item delimiter"></span><a href=# onclick=return!1 class="menu-item theme-switch" title="Switch Theme">
 <i class="fas fa-adjust fa-fw"></i>
-</a></div>
-</div>
-</div>
-</header><header class=mobile id=header-mobile>
+</a></div></div></div></header><header class=mobile id=header-mobile>
 <div class=header-container>
 <div class=header-wrapper>
 <div class=header-title>
 <a href=/ title="All about IoT">All about IoT</a>
-</div>
-<div class=menu-toggle id=menu-toggle-mobile>
+</div><div class=menu-toggle id=menu-toggle-mobile>
 <span></span><span></span><span></span>
-</div>
-</div>
-<div class=menu id=menu-mobile><a class=menu-item href=/posts/ title>Posts</a><a class=menu-item href=/tags/ title>Tags</a><a class=menu-item href=/categories/ title>Categories</a><a class=menu-item href=https://www.humminglab.io/ title rel="noopener noreffer" target=_blank>HummingLab</a><a href=# onclick=return!1 class="menu-item theme-switch" title="Switch Theme">
+</div></div><div class=menu id=menu-mobile><a class=menu-item href=/posts/ title>Posts</a><a class=menu-item href=/tags/ title>Tags</a><a class=menu-item href=/categories/ title>Categories</a><a class=menu-item href=https://www.humminglab.io/ title rel="noopener noreffer" target=_blank>HummingLab</a><a href=# onclick=return!1 class="menu-item theme-switch" title="Switch Theme">
 <i class="fas fa-adjust fa-fw"></i>
-</a></div>
-</div>
-</header>
-<div class="search-dropdown desktop">
-<div id=search-dropdown-desktop></div>
-</div>
-<div class="search-dropdown mobile">
-<div id=search-dropdown-mobile></div>
-</div>
-<main class=main>
+</a></div></div></header><div class="search-dropdown desktop">
+<div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile">
+<div id=search-dropdown-mobile></div></div><main class=main>
 <div class=container><div class=toc id=toc-auto>
-<h2 class=toc-title>Contents</h2>
-<div class="toc-content always-active" id=toc-content-auto></div>
-</div><script>document.getElementsByTagName("main")[0].setAttribute("pageStyle","normal")</script><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC","true")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Yocto에 OSTree upgrade 적용(2) - 부팅 절차</h1><div class=post-meta>
+<h2 class=toc-title>Contents</h2><div class="toc-content always-active" id=toc-content-auto></div></div><script>document.getElementsByTagName("main")[0].setAttribute("pageStyle","normal")</script><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC","true")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Yocto에 OSTree upgrade 적용(2) - 부팅 절차</h1><div class=post-meta>
 <div class=post-meta-line>
 <span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
-</span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/development/><i class="far fa-folder fa-fw"></i>Development</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2022-02-14>2022-02-14</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2022-02-16>2022-02-16</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;1393 words&nbsp;
-<i class="far fa-clock fa-fw"></i>&nbsp;7 minutes&nbsp;</div>
-</div><div class="details toc" id=toc-static kept>
+</span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/development/><i class="far fa-folder fa-fw"></i>Development</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2022-02-14>2022-02-14</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2022-02-16>2022-02-16</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;1393 words&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;7 minutes&nbsp;</div></div><div class="details toc" id=toc-static kept>
 <div class="details-summary toc-title">
 <span>Contents</span>
 <span><i class="details-icon fas fa-angle-right"></i></span>
-</div>
-<div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents>
+</div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents>
 <ul>
-<li><a href=#디스크-이미지-파일>디스크 이미지 파일</a></li>
-<li><a href=#u-boot-에서-커널-부팅-처리>U-Boot 에서 커널 부팅 처리</a></li>
-<li><a href=#initramfs의-동작>Initramfs의 동작</a></li>
-<li><a href=#target-에-yocto-적용하기>Target 에 Yocto 적용하기</a></li>
-<li><a href=#정리>정리</a></li>
-</ul>
-</nav></div>
-</div><div class=content id=content><p>이전글 <a href=https://blog.humminglab.io/posts/yocto-ostree-meta-updater-1/ rel>Yocto에 OSTree upgrade 적용(1) - 이미지 생성</a> 에서는 Yocto 빌드 과정을 통한 target 에 write 할 이미지를 만드는 과정까지 설명 하였다.</p>
-<p>이번글에서는 부팅 이미지를 이용하여 부팅 절차를 설명한다.</p>
-<h2 id=디스크-이미지-파일>디스크 이미지 파일</h2>
-<p>최종적으로 디스크에 쓰는 이미지를 Yocto 의 wic 툴을 이용하여 확인해 보면 다음과 같이 두개의 partition 으로 구성된다.</p>
-<ul>
+<li><a href=#디스크-이미지-파일>디스크 이미지 파일</a></li><li><a href=#u-boot-에서-커널-부팅-처리>U-Boot 에서 커널 부팅 처리</a></li><li><a href=#initramfs의-동작>Initramfs의 동작</a></li><li><a href=#target-에-yocto-적용하기>Target 에 Yocto 적용하기</a></li><li><a href=#정리>정리</a></li></ul></nav></div></div><div class=content id=content><p>이전글 <a href=https://blog.humminglab.io/posts/yocto-ostree-meta-updater-1/ rel>Yocto에 OSTree upgrade 적용(1) - 이미지 생성</a> 에서는 Yocto 빌드 과정을 통한 target 에 write 할 이미지를 만드는 과정까지 설명 하였다.</p><p>이번글에서는 부팅 이미지를 이용하여 부팅 절차를 설명한다.</p><h2 id=디스크-이미지-파일>디스크 이미지 파일</h2><p>최종적으로 디스크에 쓰는 이미지를 Yocto 의 wic 툴을 이용하여 확인해 보면 다음과 같이 두개의 partition 으로 구성된다.</p><ul>
 <li>Partiton 1(fat16): DOS FAT16 의 부팅 디스크로 u-boot 과 부팅에 필요한 설정 파일이 있다.
 <ul>
-<li>파일 중 boot.scr 파일이 있는데, 이 파일로 u-boot 의 script를 대체하여 OSTree 이미지가 로드되도록 한다.</li>
-</ul>
-</li>
-<li>Partition 2(ext4): OSTree용 이미지</li>
-</ul>
-<div class=highlight><div class=chroma>
+<li>파일 중 boot.scr 파일이 있는데, 이 파일로 u-boot 의 script를 대체하여 OSTree 이미지가 로드되도록 한다.</li></ul></li><li>Partition 2(ext4): OSTree용 이미지</li></ul><div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ wic ls  sc-gateway-image-sc-gateway.wic
-Num     Start        End          Size      Fstype
- <span class=m>1</span>       <span class=m>2097152</span>     <span class=m>44040191</span>     <span class=m>41943040</span>  fat16
- <span class=m>2</span>      <span class=m>44040192</span>    <span class=m>132120575</span>     <span class=m>88080384</span>  ext4
-</code></pre></td></tr></table>
-</div>
-</div><p>이 중 EXT4 partition은 이전 글에 설명한 것과 같이 아래와 같은 디렉토리를 가진다.</p>
-<div class=highlight><div class=chroma>
+</span></code></pre></td><td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ wic ls  sc-gateway-image-sc-gateway.wic
+</span></span><span class=line><span class=cl>Num     Start        End          Size      Fstype
+</span></span><span class=line><span class=cl> <span class=m>1</span>       <span class=m>2097152</span>     <span class=m>44040191</span>     <span class=m>41943040</span>  fat16
+</span></span><span class=line><span class=cl> <span class=m>2</span>      <span class=m>44040192</span>    <span class=m>132120575</span>     <span class=m>88080384</span>  ext4
+</span></span></code></pre></td></tr></table></div></div><p>이 중 EXT4 partition은 이전 글에 설명한 것과 같이 아래와 같은 디렉토리를 가진다.</p><div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
@@ -159,86 +118,68 @@ Num     Start        End          Size      Fstype
 </span><span class=lnt>45
 </span><span class=lnt>46
 </span><span class=lnt>47
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>.
-├── boot
-│   ├── boot -&gt; .
-│   ├── loader -&gt; loader.1
-│   ├── loader.1
-│   └── ostree
-│       └── poky-1f8...f7d
-└── ostree
-    ├── boot.1 -&gt; boot.1.1
-    ├── boot.1.1
-    │   └── poky
-    │       └── 1f8...f7d
-    │           └── 0 -&gt; ../../../deploy/poky/deploy/931...f51.0
-    ├── deploy
-    │   └── poky
-    │       ├── deploy
-    │       │   └── 931...f51.0
-    │       │       ├── bin -&gt; usr/bin
-    │       │       ├── boot
-    │       │       ├── dev
-    │       │       ├── etc
-    │       │       ├── home -&gt; var/rootdirs/home
-    │       │       ├── lib -&gt; usr/lib
-    │       │       ├── media -&gt; var/rootdirs/media
-    │       │       ├── mnt -&gt; var/rootdirs/mnt
-    │       │       ├── opt -&gt; var/rootdirs/opt
-    │       │       ├── ostree -&gt; sysroot/ostree
-    │       │       ├── proc
-    │       │       ├── run
-    │       │       ├── sbin -&gt; usr/sbin
-    │       │       ├── srv -&gt; var/rootdirs/srv
-    │       │       ├── sys
-    │       │       ├── sysroot
-    │       │       ├── tmp
-    │       │       ├── usr
-    │       │       └── var
-    │       └── var
-    │           ├── lib
-    │           ├── local
-    │           ├── log
-    │           ├── rootdirs
-    │           │   └── home
-    │           │       └── root
-    │           ├── sota
-    │           │   └── import
-    │           └── tmp
-    └── repo
-</code></pre></td></tr></table>
-</div>
-</div><p>Bootloader에 관련된 파일들은 첫번째 FAT16 partition에 있고, 위의 디렉토리 구조 중 boot 디렉토리에는 kernel booting에 관련된 파일들이 있다.</p>
-<p>특징적인 파일은 다음과 같다.</p>
-<ul>
-<li>/boot/loader/uEnv.txt: kernel 위치와 bootargs 옵션을 정의한다. 파일 내용은 다음과 같다.</li>
-</ul>
-<div class=highlight><div class=chroma>
+</span></code></pre></td><td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>.
+</span></span><span class=line><span class=cl>├── boot
+</span></span><span class=line><span class=cl>│   ├── boot -&gt; .
+</span></span><span class=line><span class=cl>│   ├── loader -&gt; loader.1
+</span></span><span class=line><span class=cl>│   ├── loader.1
+</span></span><span class=line><span class=cl>│   └── ostree
+</span></span><span class=line><span class=cl>│       └── poky-1f8...f7d
+</span></span><span class=line><span class=cl>└── ostree
+</span></span><span class=line><span class=cl>    ├── boot.1 -&gt; boot.1.1
+</span></span><span class=line><span class=cl>    ├── boot.1.1
+</span></span><span class=line><span class=cl>    │   └── poky
+</span></span><span class=line><span class=cl>    │       └── 1f8...f7d
+</span></span><span class=line><span class=cl>    │           └── 0 -&gt; ../../../deploy/poky/deploy/931...f51.0
+</span></span><span class=line><span class=cl>    ├── deploy
+</span></span><span class=line><span class=cl>    │   └── poky
+</span></span><span class=line><span class=cl>    │       ├── deploy
+</span></span><span class=line><span class=cl>    │       │   └── 931...f51.0
+</span></span><span class=line><span class=cl>    │       │       ├── bin -&gt; usr/bin
+</span></span><span class=line><span class=cl>    │       │       ├── boot
+</span></span><span class=line><span class=cl>    │       │       ├── dev
+</span></span><span class=line><span class=cl>    │       │       ├── etc
+</span></span><span class=line><span class=cl>    │       │       ├── home -&gt; var/rootdirs/home
+</span></span><span class=line><span class=cl>    │       │       ├── lib -&gt; usr/lib
+</span></span><span class=line><span class=cl>    │       │       ├── media -&gt; var/rootdirs/media
+</span></span><span class=line><span class=cl>    │       │       ├── mnt -&gt; var/rootdirs/mnt
+</span></span><span class=line><span class=cl>    │       │       ├── opt -&gt; var/rootdirs/opt
+</span></span><span class=line><span class=cl>    │       │       ├── ostree -&gt; sysroot/ostree
+</span></span><span class=line><span class=cl>    │       │       ├── proc
+</span></span><span class=line><span class=cl>    │       │       ├── run
+</span></span><span class=line><span class=cl>    │       │       ├── sbin -&gt; usr/sbin
+</span></span><span class=line><span class=cl>    │       │       ├── srv -&gt; var/rootdirs/srv
+</span></span><span class=line><span class=cl>    │       │       ├── sys
+</span></span><span class=line><span class=cl>    │       │       ├── sysroot
+</span></span><span class=line><span class=cl>    │       │       ├── tmp
+</span></span><span class=line><span class=cl>    │       │       ├── usr
+</span></span><span class=line><span class=cl>    │       │       └── var
+</span></span><span class=line><span class=cl>    │       └── var
+</span></span><span class=line><span class=cl>    │           ├── lib
+</span></span><span class=line><span class=cl>    │           ├── local
+</span></span><span class=line><span class=cl>    │           ├── log
+</span></span><span class=line><span class=cl>    │           ├── rootdirs
+</span></span><span class=line><span class=cl>    │           │   └── home
+</span></span><span class=line><span class=cl>    │           │       └── root
+</span></span><span class=line><span class=cl>    │           ├── sota
+</span></span><span class=line><span class=cl>    │           │   └── import
+</span></span><span class=line><span class=cl>    │           └── tmp
+</span></span><span class=line><span class=cl>    └── repo
+</span></span></code></pre></td></tr></table></div></div><p>Bootloader에 관련된 파일들은 첫번째 FAT16 partition에 있고, 위의 디렉토리 구조 중 boot 디렉토리에는 kernel booting에 관련된 파일들이 있다.</p><p>특징적인 파일은 다음과 같다.</p><ul>
+<li>/boot/loader/uEnv.txt: kernel 위치와 bootargs 옵션을 정의한다. 파일 내용은 다음과 같다.</li></ul><div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>kernel_image=/boot/ostree/poky-1f8...f7d/vmlinuz-5.4.69
-ramdisk_image=/boot/ostree/poky-1f8...f7d/initramfs-5.4.69.img
-bootargs=ostree=/ostree/boot.1/poky/1f8...f7d/0
-</code></pre></td></tr></table>
-</div>
-</div><ul>
-<li>kernel, initramfs는 위 파일에 있는 /boot/ostree/poky-1f8&mldr;f7d/ 안에 있다.</li>
-</ul>
-<h2 id=u-boot-에서-커널-부팅-처리>U-Boot 에서 커널 부팅 처리</h2>
-<p>U-Boot는 <a href=https://www.denx.de/wiki/DULG/CommandLineParsing target=_blank rel="noopener noreffer">Hush Shell</a> 이라는 shell script를 지원한다.
-이를 이용하여 기본적인 부팅 정책이 설정되어 있는데, 보통은 다음과 같은 정책을 가진다.</p>
-<ul>
-<li>Block device의 bootable partition 에서 <code>boot.scr</code> 을 찾는다. 이 파일은 U-Boot의 mkimage를 이용하여 패킹한 U-Boot용 script 파일이다. 이 파일이 있으면 이를 로드 후 script 를 실행한다.</li>
-<li>만일 <code>boot.scr</code>이 없으면 미리 지정된 kernel booting 절차를 수행한다.</li>
-</ul>
-<p>Yocto OSTree 이미지에서는 이 boot.scr을 다음과 같이 설정하여 OSTree에 맞도록 부팅을 수행한다.</p>
-<div class=highlight><div class=chroma>
+</span></code></pre></td><td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>kernel_image=/boot/ostree/poky-1f8...f7d/vmlinuz-5.4.69
+</span></span><span class=line><span class=cl>ramdisk_image=/boot/ostree/poky-1f8...f7d/initramfs-5.4.69.img
+</span></span><span class=line><span class=cl>bootargs=ostree=/ostree/boot.1/poky/1f8...f7d/0
+</span></span></code></pre></td></tr></table></div></div><ul>
+<li>kernel, initramfs는 위 파일에 있는 /boot/ostree/poky-1f8&mldr;f7d/ 안에 있다.</li></ul><h2 id=u-boot-에서-커널-부팅-처리>U-Boot 에서 커널 부팅 처리</h2><p>U-Boot는 <a href=https://www.denx.de/wiki/DULG/CommandLineParsing target=_blank rel="noopener noreffer">Hush Shell</a> 이라는 shell script를 지원한다.
+이를 이용하여 기본적인 부팅 정책이 설정되어 있는데, 보통은 다음과 같은 정책을 가진다.</p><ul>
+<li>Block device의 bootable partition 에서 <code>boot.scr</code> 을 찾는다. 이 파일은 U-Boot의 mkimage를 이용하여 패킹한 U-Boot용 script 파일이다. 이 파일이 있으면 이를 로드 후 script 를 실행한다.</li><li>만일 <code>boot.scr</code>이 없으면 미리 지정된 kernel booting 절차를 수행한다.</li></ul><p>Yocto OSTree 이미지에서는 이 boot.scr을 다음과 같이 설정하여 OSTree에 맞도록 부팅을 수행한다.</p><div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
@@ -262,112 +203,54 @@ bootargs=ostree=/ostree/boot.1/poky/1f8...f7d/0
 </span><span class=lnt>20
 </span><span class=lnt>21
 </span><span class=lnt>22
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>setenv loadaddr ${kernel_addr_r}
-setenv bootcmd_resetvars &#39;setenv kernel_image; setenv bootargs; setenv kernel_image2; setenv bootargs2&#39;
-setenv bootcmd_otenv &#39;run bootcmd_resetvars; load mmc 0:2 $loadaddr /boot/loader/uEnv.txt; env import -t ${loadaddr} ${filesize}&#39;
-setenv bootcmd_rollbackenv &#39;setenv kernel_image ${kernel_image2}; setenv bootargs ${bootargs2}&#39;
-
-setenv bootcmd_args &#39;setenv bootargs &#34;${bootargs} ${bootargs_fdt} ostree_root=/dev/mmcblk0p2 root=/dev/ram0 rw rootwait rootdelay=2 ramdisk_size=8192 panic=1&#34;&#39;
-
-setenv bootcmd_getroot &#39;setexpr ostree_root gsub &#34;^.*ostree=([^ ]*).*$&#34; &#34;\\\\1&#34; &#34;${bootargs}&#34;;&#39;
-
-setenv bootcmd_load &#39;load mmc 0:2 ${ramdisk_addr_r} &#34;/boot&#34;${kernel_image}&#39;
-setenv bootcmd_run &#39;bootm &#34;${ramdisk_addr_r}&#34;&#39;
-
-setenv bootcmd_create_envfile &#39;if test ! -e mmc 0:1 uboot.env; then saveenv; fi;&#39;
-
-setenv bootlimit 3
-
-setenv bootcmd &#39;if test &#34;${rollback}&#34; = &#34;1&#34;; then run altbootcmd; else run bootcmd_create_envfile; run bootcmd_otenv; run bootcmd_args; run bootcmd_load; run bootcmd_run; if ! &#34;${upgrade_available}&#34; = &#34;1&#34;; then setenv upgrade_available 1; saveenv; fi; reset; fi&#39;
-
-setenv bootcmd_set_rollback &#39;if test ! &#34;${rollback}&#34; = &#34;1&#34;; then setenv rollback 1; setenv upgrade_available 0; saveenv; fi&#39;
-setenv altbootcmd &#39;run bootcmd_create_envfile; run bootcmd_otenv; run bootcmd_set_rollback; if test -n &#34;${kernel_image2}&#34;; then run bootcmd_rollbackenv; fi; run bootcmd_args; run bootcmd_load; run bootcmd_run; reset&#39;
-
-run bootcmd
-</code></pre></td></tr></table>
-</div>
-</div><p>위 script를 간단하게 정리하면 다음과 같다.</p>
-<ul>
+</span></code></pre></td><td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>setenv loadaddr ${kernel_addr_r}
+</span></span><span class=line><span class=cl>setenv bootcmd_resetvars &#39;setenv kernel_image; setenv bootargs; setenv kernel_image2; setenv bootargs2&#39;
+</span></span><span class=line><span class=cl>setenv bootcmd_otenv &#39;run bootcmd_resetvars; load mmc 0:2 $loadaddr /boot/loader/uEnv.txt; env import -t ${loadaddr} ${filesize}&#39;
+</span></span><span class=line><span class=cl>setenv bootcmd_rollbackenv &#39;setenv kernel_image ${kernel_image2}; setenv bootargs ${bootargs2}&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>setenv bootcmd_args &#39;setenv bootargs &#34;${bootargs} ${bootargs_fdt} ostree_root=/dev/mmcblk0p2 root=/dev/ram0 rw rootwait rootdelay=2 ramdisk_size=8192 panic=1&#34;&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>setenv bootcmd_getroot &#39;setexpr ostree_root gsub &#34;^.*ostree=([^ ]*).*$&#34; &#34;\\\\1&#34; &#34;${bootargs}&#34;;&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>setenv bootcmd_load &#39;load mmc 0:2 ${ramdisk_addr_r} &#34;/boot&#34;${kernel_image}&#39;
+</span></span><span class=line><span class=cl>setenv bootcmd_run &#39;bootm &#34;${ramdisk_addr_r}&#34;&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>setenv bootcmd_create_envfile &#39;if test ! -e mmc 0:1 uboot.env; then saveenv; fi;&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>setenv bootlimit 3
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>setenv bootcmd &#39;if test &#34;${rollback}&#34; = &#34;1&#34;; then run altbootcmd; else run bootcmd_create_envfile; run bootcmd_otenv; run bootcmd_args; run bootcmd_load; run bootcmd_run; if ! &#34;${upgrade_available}&#34; = &#34;1&#34;; then setenv upgrade_available 1; saveenv; fi; reset; fi&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>setenv bootcmd_set_rollback &#39;if test ! &#34;${rollback}&#34; = &#34;1&#34;; then setenv rollback 1; setenv upgrade_available 0; saveenv; fi&#39;
+</span></span><span class=line><span class=cl>setenv altbootcmd &#39;run bootcmd_create_envfile; run bootcmd_otenv; run bootcmd_set_rollback; if test -n &#34;${kernel_image2}&#34;; then run bootcmd_rollbackenv; fi; run bootcmd_args; run bootcmd_load; run bootcmd_run; reset&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>run bootcmd
+</span></span></code></pre></td></tr></table></div></div><p>위 script를 간단하게 정리하면 다음과 같다.</p><ul>
 <li>EXT4 Partition의 /boot/loader/uEnv.txt 를 읽음. 이곳에는 위에 설명한 것과 같이 <code>kernel_image</code>, <code>ramdisk_image</code>, <code>bootargs</code> 값이 있음
 <ul>
-<li>ramdisk_image 변수는 U-Boot에서는 사용하지 않고, kernel_image만 사용한다. 여기에서 가리키는 kernel는 <a href=https://www.thegoodpenguin.co.uk/blog/u-boot-fit-image-overview/ target=_blank rel="noopener noreffer">U-Boot FIT Image</a>로 kernel, DTB, initramfs 파일이 패킹되어 있다.</li>
-</ul>
-</li>
-<li>아래와 같이 bootargs 에 <code>ostree</code>, <code>ostreee_root</code> 를 설정하고 ramdisk를 rootfs로 initramfs 로 부팅한다.</li>
-</ul>
-<div class=highlight><div class=chroma>
+<li>ramdisk_image 변수는 U-Boot에서는 사용하지 않고, kernel_image만 사용한다. 여기에서 가리키는 kernel는 <a href=https://www.thegoodpenguin.co.uk/blog/u-boot-fit-image-overview/ target=_blank rel="noopener noreffer">U-Boot FIT Image</a>로 kernel, DTB, initramfs 파일이 패킹되어 있다.</li></ul></li><li>아래와 같이 bootargs 에 <code>ostree</code>, <code>ostreee_root</code> 를 설정하고 ramdisk를 rootfs로 initramfs 로 부팅한다.</li></ul><div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>setenv bootargs &#34;${bootargs} ${bootargs_fdt} ostree_root=/dev/mmcblk0p2 root=/dev/ram0 rw rootwait rootdelay=2 ramdisk_size=8192 panic=1&#34;&#39;
-</code></pre></td></tr></table>
-</div>
-</div><h2 id=initramfs의-동작>Initramfs의 동작</h2>
-<p>Initramfs로 부팅이 되면 init script에서는 다음과 같은 동작을 수행한다.</p>
-<ul>
+</span></code></pre></td><td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>setenv bootargs &#34;${bootargs} ${bootargs_fdt} ostree_root=/dev/mmcblk0p2 root=/dev/ram0 rw rootwait rootdelay=2 ramdisk_size=8192 panic=1&#34;&#39;
+</span></span></code></pre></td></tr></table></div></div><h2 id=initramfs의-동작>Initramfs의 동작</h2><p>Initramfs로 부팅이 되면 init script에서는 다음과 같은 동작을 수행한다.</p><ul>
 <li>
-<p>환경 변수로 다음과 같이 설정</p>
-<ul>
-<li><code>ostree_root</code>: /dev/mmcblk0p2 로 EXT4 partition</li>
-<li><code>ostree</code>: /ostree/boot.1/poky/1f8&mldr;f7d/0 로 OSTree image가 deploy된 디렉토리</li>
-</ul>
-</li>
-<li>
-<p><code>ostreee_root</code> 를 /sysroot 디렉토리에 마운트</p>
-</li>
-<li>
-<p>/sysroot/<code>${ostree}</code>/usr를 read-only 가 되도록 bind remount 수행</p>
-</li>
-<li>
-<p>/sysroot/<code>${ostree}</code>/deploy/poky/var를 /sysroot/<code>${ostree}</code>/var 에 마운트 (/var 는 업그레이드에도 바뀌지 않도록 별도의 폴더를 사용)</p>
-</li>
-<li>
-<p>초기 디스크 이미지를 참조할 수 있도록 /sysroot를 /sysroot/<code>${ostree}</code>/sysroot 로 bind mount</p>
-</li>
-<li>
-<p>/sysroot/<code>${ostree}</code> 를 /sysroot 로 mount (Deploy 된 OSTree 이미지)</p>
-</li>
-</ul>
-<p>이렇게 되면 /sysroot 는 <code>ostree</code>가 가리키는 /ostree/boot.1/poky/1f8&mldr;f7d/0 가 되고, 고정된 /var 도 이 안에 마운트 되고, 전체 EXT4 파티션도 symbolic link를 통해서 /sysroot/sysroot 로 된다.</p>
-<p>이 상태에서 <a href=https://man7.org/linux/man-pages/man8/switch_root.8.html target=_blank rel="noopener noreffer">switch_root</a> 명령으로 /sysroot 를 루트로 전환하여 정상적인 init script가 실행되도록 한다.</p>
-<p>이 과정을 거치면 정상적인 부팅이 된다.</p>
-<p>디스크 내의 디렉토리가 최종적으로 어떻게 마운트 되었는지를 정리해보면 다음과 같다.</p>
-<table>
+<p>환경 변수로 다음과 같이 설정</p><ul>
+<li><code>ostree_root</code>: /dev/mmcblk0p2 로 EXT4 partition</li><li><code>ostree</code>: /ostree/boot.1/poky/1f8&mldr;f7d/0 로 OSTree image가 deploy된 디렉토리</li></ul></li><li>
+<p><code>ostreee_root</code> 를 /sysroot 디렉토리에 마운트</p></li><li>
+<p>/sysroot/<code>${ostree}</code>/usr를 read-only 가 되도록 bind remount 수행</p></li><li>
+<p>/sysroot/<code>${ostree}</code>/deploy/poky/var를 /sysroot/<code>${ostree}</code>/var 에 마운트 (/var 는 업그레이드에도 바뀌지 않도록 별도의 폴더를 사용)</p></li><li>
+<p>초기 디스크 이미지를 참조할 수 있도록 /sysroot를 /sysroot/<code>${ostree}</code>/sysroot 로 bind mount</p></li><li>
+<p>/sysroot/<code>${ostree}</code> 를 /sysroot 로 mount (Deploy 된 OSTree 이미지)</p></li></ul><p>이렇게 되면 /sysroot 는 <code>ostree</code>가 가리키는 /ostree/boot.1/poky/1f8&mldr;f7d/0 가 되고, 고정된 /var 도 이 안에 마운트 되고, 전체 EXT4 파티션도 symbolic link를 통해서 /sysroot/sysroot 로 된다.</p><p>이 상태에서 <a href=https://man7.org/linux/man-pages/man8/switch_root.8.html target=_blank rel="noopener noreffer">switch_root</a> 명령으로 /sysroot 를 루트로 전환하여 정상적인 init script가 실행되도록 한다.</p><p>이 과정을 거치면 정상적인 부팅이 된다.</p><p>디스크 내의 디렉토리가 최종적으로 어떻게 마운트 되었는지를 정리해보면 다음과 같다.</p><table>
 <thead>
 <tr>
-<th style=text-align:left>디스크이미지</th>
-<th style=text-align:left>최종 실행된 시스템</th>
-<th style=text-align:left>설명</th>
-</tr>
-</thead>
-<tbody>
+<th style=text-align:left>디스크이미지</th><th style=text-align:left>최종 실행된 시스템</th><th style=text-align:left>설명</th></tr></thead><tbody>
 <tr>
-<td style=text-align:left>/</td>
-<td style=text-align:left>/sysroot</td>
-<td style=text-align:left>전체 디스크 이미지</td>
-</tr>
-<tr>
-<td style=text-align:left>/ostree/deploy/poky/var</td>
-<td style=text-align:left>/var</td>
-<td style=text-align:left>Upgrade 에도 영향을 받지 않는 /var 디렉토리</td>
-</tr>
-<tr>
-<td style=text-align:left>/ostree/boot.1/poky/1f8&mldr;f7d/0</td>
-<td style=text-align:left>/</td>
-<td style=text-align:left>Deploy된 OSTree 이미지</td>
-</tr>
-<tr>
-<td style=text-align:left>/ostree/repo</td>
-<td style=text-align:left>/sysroot/ostree/repo</td>
-<td style=text-align:left>OSTree local repository</td>
-</tr>
-</tbody>
-</table>
-<p>bind mount 관계를 shell 로 확인해 보면 다음과 같다.</p>
-<div class=highlight><div class=chroma>
+<td style=text-align:left>/</td><td style=text-align:left>/sysroot</td><td style=text-align:left>전체 디스크 이미지</td></tr><tr>
+<td style=text-align:left>/ostree/deploy/poky/var</td><td style=text-align:left>/var</td><td style=text-align:left>Upgrade 에도 영향을 받지 않는 /var 디렉토리</td></tr><tr>
+<td style=text-align:left>/ostree/boot.1/poky/1f8&mldr;f7d/0</td><td style=text-align:left>/</td><td style=text-align:left>Deploy된 OSTree 이미지</td></tr><tr>
+<td style=text-align:left>/ostree/repo</td><td style=text-align:left>/sysroot/ostree/repo</td><td style=text-align:left>OSTree local repository</td></tr></tbody></table><p>bind mount 관계를 shell 로 확인해 보면 다음과 같다.</p><div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
@@ -381,63 +264,39 @@ run bootcmd
 </span><span class=lnt>10
 </span><span class=lnt>11
 </span><span class=lnt>12
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ cat /proc/self/mountinfo
-<span class=m>21</span> <span class=m>22</span> 179:2 / /sysroot rw,relatime - ext4 /dev/mmcblk0p2 rw
-<span class=m>22</span>  <span class=m>1</span> 179:2 /ostree/deploy/poky/deploy/931...f51.0 / rw,relatime - ext4 /dev/mmcblk0p2 rw
-<span class=m>23</span> <span class=m>22</span> 179:2 /ostree/deploy/poky/var /var rw,relatime - ext4 /dev/mmcblk0p2 rw
-<span class=m>24</span> <span class=m>22</span> 179:2 /boot /boot rw,relatime - ext4 /dev/mmcblk0p2 rw
-<span class=m>25</span> <span class=m>22</span> 179:2 /ostree/deploy/poky/deploy/931...f51.0/usr /usr ro,relatime - ext4 /dev/mmcblk0p2 rw
-<span class=m>26</span> <span class=m>22</span> 0:5   / /proc rw,relatime - proc proc rw
-<span class=m>27</span> <span class=m>22</span> 0:14  / /sys rw,relatime - sysfs sysfs rw
-<span class=m>28</span> <span class=m>22</span> 0:6   / /dev rw,relatime - devtmpfs devtmpfs rw,size<span class=o>=</span>123408k,nr_inodes<span class=o>=</span>30852,mode<span class=o>=</span><span class=m>755</span>
-<span class=m>29</span> <span class=m>28</span> 0:18  / /dev/pts rw,relatime - devpts devpts rw,gid<span class=o>=</span>5,mode<span class=o>=</span>620,ptmxmode<span class=o>=</span><span class=m>666</span>
-<span class=m>30</span> <span class=m>22</span> 0:19  / /run rw,nosuid,nodev - tmpfs tmpfs rw,mode<span class=o>=</span><span class=m>755</span>
-<span class=m>31</span> <span class=m>23</span> 0:20  / /var/volatile rw,relatime - tmpfs tmpfs rw
-</code></pre></td></tr></table>
-</div>
-</div><p>참고로 /etc 를 생성한 소스는 /usr/etc 에 있다. 이를 3-way merge를 통하여 OTA 시 신규 /etc를 만든다.</p>
-<h2 id=target-에-yocto-적용하기>Target 에 Yocto 적용하기</h2>
-<p>meta-updater layer에서 Raspberry Pi 와 같이 기존 제공하는 보드가 아닌, 개발하고 있는 제품에 적용하기 위한 절차를 정리하면 다음과 같다.</p>
-<ul>
-<li>layer.conf 에 meta-updater(sota) 의존성 추가</li>
-</ul>
-<div class=highlight><div class=chroma>
+</span></code></pre></td><td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ cat /proc/self/mountinfo
+</span></span><span class=line><span class=cl><span class=m>21</span> <span class=m>22</span> 179:2 / /sysroot rw,relatime - ext4 /dev/mmcblk0p2 rw
+</span></span><span class=line><span class=cl><span class=m>22</span>  <span class=m>1</span> 179:2 /ostree/deploy/poky/deploy/931...f51.0 / rw,relatime - ext4 /dev/mmcblk0p2 rw
+</span></span><span class=line><span class=cl><span class=m>23</span> <span class=m>22</span> 179:2 /ostree/deploy/poky/var /var rw,relatime - ext4 /dev/mmcblk0p2 rw
+</span></span><span class=line><span class=cl><span class=m>24</span> <span class=m>22</span> 179:2 /boot /boot rw,relatime - ext4 /dev/mmcblk0p2 rw
+</span></span><span class=line><span class=cl><span class=m>25</span> <span class=m>22</span> 179:2 /ostree/deploy/poky/deploy/931...f51.0/usr /usr ro,relatime - ext4 /dev/mmcblk0p2 rw
+</span></span><span class=line><span class=cl><span class=m>26</span> <span class=m>22</span> 0:5   / /proc rw,relatime - proc proc rw
+</span></span><span class=line><span class=cl><span class=m>27</span> <span class=m>22</span> 0:14  / /sys rw,relatime - sysfs sysfs rw
+</span></span><span class=line><span class=cl><span class=m>28</span> <span class=m>22</span> 0:6   / /dev rw,relatime - devtmpfs devtmpfs rw,size<span class=o>=</span>123408k,nr_inodes<span class=o>=</span>30852,mode<span class=o>=</span><span class=m>755</span>
+</span></span><span class=line><span class=cl><span class=m>29</span> <span class=m>28</span> 0:18  / /dev/pts rw,relatime - devpts devpts rw,gid<span class=o>=</span>5,mode<span class=o>=</span>620,ptmxmode<span class=o>=</span><span class=m>666</span>
+</span></span><span class=line><span class=cl><span class=m>30</span> <span class=m>22</span> 0:19  / /run rw,nosuid,nodev - tmpfs tmpfs rw,mode<span class=o>=</span><span class=m>755</span>
+</span></span><span class=line><span class=cl><span class=m>31</span> <span class=m>23</span> 0:20  / /var/volatile rw,relatime - tmpfs tmpfs rw
+</span></span></code></pre></td></tr></table></div></div><p>참고로 /etc 를 생성한 소스는 /usr/etc 에 있다. 이를 3-way merge를 통하여 OTA 시 신규 /etc를 만든다.</p><h2 id=target-에-yocto-적용하기>Target 에 Yocto 적용하기</h2><p>meta-updater layer에서 Raspberry Pi 와 같이 기존 제공하는 보드가 아닌, 개발하고 있는 제품에 적용하기 위한 절차를 정리하면 다음과 같다.</p><ul>
+<li>layer.conf 에 meta-updater(sota) 의존성 추가</li></ul><div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>LAYERDEPENDS_sc-gateway += &#34;sota&#34;
-</code></pre></td></tr></table>
-</div>
-</div><ul>
-<li>bblayers.conf 에 <code>BBLAYERS</code> 에 meta-updater 추가</li>
-<li>local.conf 에 <code>DISTRO</code> 를 poky에서 poky-sota로 변경</li>
-</ul>
-<div class=highlight><div class=chroma>
+</span></code></pre></td><td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>LAYERDEPENDS_sc-gateway += &#34;sota&#34;
+</span></span></code></pre></td></tr></table></div></div><ul>
+<li>bblayers.conf 에 <code>BBLAYERS</code> 에 meta-updater 추가</li><li>local.conf 에 <code>DISTRO</code> 를 poky에서 poky-sota로 변경</li></ul><div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>DISTRO ?= &#34;poky-sota&#34;
-</code></pre></td></tr></table>
-</div>
-</div><ul>
-<li>machine conf (conf/machine/sc-gateway.conf)에 <code>SOTA_MACHINE</code> 추가</li>
-</ul>
-<div class=highlight><div class=chroma>
+</span></code></pre></td><td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>DISTRO ?= &#34;poky-sota&#34;
+</span></span></code></pre></td></tr></table></div></div><ul>
+<li>machine conf (conf/machine/sc-gateway.conf)에 <code>SOTA_MACHINE</code> 추가</li></ul><div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>SOTA_MACHINE:sc-gateway = &#34;sc-gateway&#34;
-</code></pre></td></tr></table>
-</div>
-</div><ul>
-<li>classes/sota_sc-gateway.bbclass 와 같이 <code>SOTA_MACHINE</code> 에 맞는 bbclass 추가 및 적절히 수정. WKS_FILES 로 wks script 변경</li>
-</ul>
-<div class=highlight><div class=chroma>
+</span></code></pre></td><td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>SOTA_MACHINE:sc-gateway = &#34;sc-gateway&#34;
+</span></span></code></pre></td></tr></table></div></div><ul>
+<li>classes/sota_sc-gateway.bbclass 와 같이 <code>SOTA_MACHINE</code> 에 맞는 bbclass 추가 및 적절히 수정. WKS_FILES 로 wks script 변경</li></ul><div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
@@ -447,51 +306,35 @@ run bootcmd
 </span><span class=lnt>6
 </span><span class=lnt>7
 </span><span class=lnt>8
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>KERNEL_CLASSES:append:sota = &#34; kernel-fitimage&#34;
-KERNEL_IMAGETYPE:sota = &#34;fitImage&#34;
-INITRAMFS_FSTYPES = &#34;cpio.gz&#34;
-OSTREE_KERNEL = &#34;${KERNEL_IMAGETYPE}-${INITRAMFS_IMAGE}-${MACHINE}-${KERNEL_FIT_LINK_NAME}&#34;
-
-OSTREE_BOOTLOADER ?= &#34;u-boot&#34;
-
-WKS_FILES:sc-gateway ?= &#34;sc-gateway-sdcard-image.wks.in&#34;
-</code></pre></td></tr></table>
-</div>
-</div><ul>
-<li>wic/sc-gateway-sdcard-image.wks.in 으로 root parition을 otaimge로 변경</li>
-</ul>
-<div class=highlight><div class=chroma>
+</span></code></pre></td><td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>KERNEL_CLASSES:append:sota = &#34; kernel-fitimage&#34;
+</span></span><span class=line><span class=cl>KERNEL_IMAGETYPE:sota = &#34;fitImage&#34;
+</span></span><span class=line><span class=cl>INITRAMFS_FSTYPES = &#34;cpio.gz&#34;
+</span></span><span class=line><span class=cl>OSTREE_KERNEL = &#34;${KERNEL_IMAGETYPE}-${INITRAMFS_IMAGE}-${MACHINE}-${KERNEL_FIT_LINK_NAME}&#34;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>OSTREE_BOOTLOADER ?= &#34;u-boot&#34;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>WKS_FILES:sc-gateway ?= &#34;sc-gateway-sdcard-image.wks.in&#34;
+</span></span></code></pre></td></tr></table></div></div><ul>
+<li>wic/sc-gateway-sdcard-image.wks.in 으로 root parition을 otaimge로 변경</li></ul><div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>part u-boot --source rawcopy --sourceparams=&#34;file=${SPL_BINARY}&#34; --ondisk mmcblk0 --no-table --align 8
-part /boot --source bootimg-partition --ondisk mmcblk0 --fstype=vfat --label boot --active --align 2048 --fixed-size ${SUNXI_BOOT_SPACE}
-part /     --source otaimage --ondisk mmcblk0 --fstype=ext4 --align 2048
-</code></pre></td></tr></table>
-</div>
-</div><ul>
+</span></code></pre></td><td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>part u-boot --source rawcopy --sourceparams=&#34;file=${SPL_BINARY}&#34; --ondisk mmcblk0 --no-table --align 8
+</span></span><span class=line><span class=cl>part /boot --source bootimg-partition --ondisk mmcblk0 --fstype=vfat --label boot --active --align 2048 --fixed-size ${SUNXI_BOOT_SPACE}
+</span></span><span class=line><span class=cl>part /     --source otaimage --ondisk mmcblk0 --fstype=ext4 --align 2048
+</span></span></code></pre></td></tr></table></div></div><ul>
 <li>
-<p>u-boot 을 변경하여 boot.scr을 대체</p>
-<ul>
-<li>u-boot_%.bbappend</li>
-</ul>
-<div class=highlight><div class=chroma>
+<p>u-boot 을 변경하여 boot.scr을 대체</p><ul>
+<li>u-boot_%.bbappend</li></ul><div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>FILESEXTRAPATHS:prepend:sc-gateway := &#34;${THISDIR}/files:&#34;
-</code></pre></td></tr></table>
-</div>
-</div><ul>
-<li>u-boot/boot.cmd</li>
-</ul>
-<div class=highlight><div class=chroma>
+</span></code></pre></td><td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>FILESEXTRAPATHS:prepend:sc-gateway := &#34;${THISDIR}/files:&#34;
+</span></span></code></pre></td></tr></table></div></div><ul>
+<li>u-boot/boot.cmd</li></ul><div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
@@ -515,77 +358,50 @@ part /     --source otaimage --ondisk mmcblk0 --fstype=ext4 --align 2048
 </span><span class=lnt>20
 </span><span class=lnt>21
 </span><span class=lnt>22
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>setenv loadaddr ${kernel_addr_r}
-setenv bootcmd_resetvars &#39;setenv kernel_image; setenv bootargs; setenv kernel_image2; setenv bootargs2&#39;
-setenv bootcmd_otenv &#39;run bootcmd_resetvars; load mmc 0:2 $loadaddr /boot/loader/uEnv.txt; env import -t ${loadaddr} ${filesize}&#39;
-setenv bootcmd_rollbackenv &#39;setenv kernel_image ${kernel_image2}; setenv bootargs ${bootargs2}&#39;
-
-setenv bootcmd_args &#39;setenv bootargs &#34;${bootargs} ${bootargs_fdt} ostree_root=/dev/mmcblk0p2 root=/dev/ram0 rw rootwait rootdelay=2 ramdisk_size=8192 panic=1&#34;&#39;
-
-setenv bootcmd_getroot &#39;setexpr ostree_root gsub &#34;^.*ostree=([^ ]*).*$&#34; &#34;\\\\1&#34; &#34;${bootargs}&#34;;&#39;
-
-setenv bootcmd_load &#39;load mmc 0:2 ${ramdisk_addr_r} &#34;/boot&#34;${kernel_image}&#39;
-setenv bootcmd_run &#39;bootm &#34;${ramdisk_addr_r}&#34;&#39;
-
-setenv bootcmd_create_envfile &#39;if test ! -e mmc 0:1 uboot.env; then saveenv; fi;&#39;
-
-setenv bootlimit 3
-
-setenv bootcmd &#39;if test &#34;${rollback}&#34; = &#34;1&#34;; then run altbootcmd; else run bootcmd_create_envfile; run bootcmd_otenv; run bootcmd_args; run bootcmd_load; run bootcmd_run; if ! &#34;${upgrade_available}&#34; = &#34;1&#34;; then setenv upgrade_available 1; saveenv; fi; reset; fi&#39;
-
-setenv bootcmd_set_rollback &#39;if test ! &#34;${rollback}&#34; = &#34;1&#34;; then setenv rollback 1; setenv upgrade_available 0; saveenv; fi&#39;
-setenv altbootcmd &#39;run bootcmd_create_envfile; run bootcmd_otenv; run bootcmd_set_rollback; if test -n &#34;${kernel_image2}&#34;; then run bootcmd_rollbackenv; fi; run bootcmd_args; run bootcmd_load; run bootcmd_run; reset&#39;
-
-run bootcmd
-</code></pre></td></tr></table>
-</div>
-</div></li>
-</ul>
-<p>위와 같이 변경한 후 빌드를 하면 OSTRee가 적용된 이미지를 생성할 수 있다.</p>
-<h2 id=정리>정리</h2>
-<p>이번 과정은 OSTree 의 부팅과정과 이를 다른 타겟에 적용하는 방법을 알아보았다.
-다음 <a href=https://blog.humminglab.io/posts/yocto-ostree-meta-updater-3/ rel>Yocto에 OSTree upgrade 적용(3) - 업그레이드/롤백 및 OSTree 리뷰</a> 에서는 ostree를 이용하여 업그레이드, 롤백하는 과정을 알아보기로 한다.</p>
-</div>
-<div class=post-footer id=post-footer>
+</span></code></pre></td><td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>setenv loadaddr ${kernel_addr_r}
+</span></span><span class=line><span class=cl>setenv bootcmd_resetvars &#39;setenv kernel_image; setenv bootargs; setenv kernel_image2; setenv bootargs2&#39;
+</span></span><span class=line><span class=cl>setenv bootcmd_otenv &#39;run bootcmd_resetvars; load mmc 0:2 $loadaddr /boot/loader/uEnv.txt; env import -t ${loadaddr} ${filesize}&#39;
+</span></span><span class=line><span class=cl>setenv bootcmd_rollbackenv &#39;setenv kernel_image ${kernel_image2}; setenv bootargs ${bootargs2}&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>setenv bootcmd_args &#39;setenv bootargs &#34;${bootargs} ${bootargs_fdt} ostree_root=/dev/mmcblk0p2 root=/dev/ram0 rw rootwait rootdelay=2 ramdisk_size=8192 panic=1&#34;&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>setenv bootcmd_getroot &#39;setexpr ostree_root gsub &#34;^.*ostree=([^ ]*).*$&#34; &#34;\\\\1&#34; &#34;${bootargs}&#34;;&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>setenv bootcmd_load &#39;load mmc 0:2 ${ramdisk_addr_r} &#34;/boot&#34;${kernel_image}&#39;
+</span></span><span class=line><span class=cl>setenv bootcmd_run &#39;bootm &#34;${ramdisk_addr_r}&#34;&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>setenv bootcmd_create_envfile &#39;if test ! -e mmc 0:1 uboot.env; then saveenv; fi;&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>setenv bootlimit 3
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>setenv bootcmd &#39;if test &#34;${rollback}&#34; = &#34;1&#34;; then run altbootcmd; else run bootcmd_create_envfile; run bootcmd_otenv; run bootcmd_args; run bootcmd_load; run bootcmd_run; if ! &#34;${upgrade_available}&#34; = &#34;1&#34;; then setenv upgrade_available 1; saveenv; fi; reset; fi&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>setenv bootcmd_set_rollback &#39;if test ! &#34;${rollback}&#34; = &#34;1&#34;; then setenv rollback 1; setenv upgrade_available 0; saveenv; fi&#39;
+</span></span><span class=line><span class=cl>setenv altbootcmd &#39;run bootcmd_create_envfile; run bootcmd_otenv; run bootcmd_set_rollback; if test -n &#34;${kernel_image2}&#34;; then run bootcmd_rollbackenv; fi; run bootcmd_args; run bootcmd_load; run bootcmd_run; reset&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>run bootcmd
+</span></span></code></pre></td></tr></table></div></div></li></ul><p>위와 같이 변경한 후 빌드를 하면 OSTRee가 적용된 이미지를 생성할 수 있다.</p><h2 id=정리>정리</h2><p>이번 과정은 OSTree 의 부팅과정과 이를 다른 타겟에 적용하는 방법을 알아보았다.
+다음 <a href=https://blog.humminglab.io/posts/yocto-ostree-meta-updater-3/ rel>Yocto에 OSTree upgrade 적용(3) - 업그레이드/롤백 및 OSTree 리뷰</a> 에서는 ostree를 이용하여 업그레이드, 롤백하는 과정을 알아보기로 한다.</p></div><div class=post-footer id=post-footer>
 <div class=post-info>
 <div class=post-info-line>
 <div class=post-info-mod>
 <span>Updated on 2022-02-16</span>
-</div>
-<div class=post-info-license></div>
-</div>
-<div class=post-info-line>
-<div class=post-info-md></div>
-<div class=post-info-share>
+</div><div class=post-info-license></div></div><div class=post-info-line>
+<div class=post-info-md></div><div class=post-info-share>
 <span></span>
-</div>
-</div>
-</div>
-<div class=post-info-more>
-<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/yocto/>Yocto</a>,&nbsp;<a href=/tags/ostree/>OSTree</a>,&nbsp;<a href=/tags/ota/>OTA</a></section>
-<section>
+</div></div></div><div class=post-info-more>
+<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/yocto/>Yocto</a>,&nbsp;<a href=/tags/ostree/>OSTree</a>,&nbsp;<a href=/tags/ota/>OTA</a></section><section>
 <span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span>
-</section>
-</div>
-<div class=post-nav><a href=/posts/tls-cryptography-2-random/ class=prev rel=prev title="TLS/암호 알고리즘 쉽게 이해하기(2) - Random"><i class="fas fa-angle-left fa-fw"></i>TLS/암호 알고리즘 쉽게 이해하기(2) - Random</a>
-<a href=/posts/yocto-ostree-meta-updater-3/ class=next rel=next title="Yocto에 OSTree upgrade 적용(3) - 업그레이드/롤백 및 OSTree 리뷰">Yocto에 OSTree upgrade 적용(3) - 업그레이드/롤백 및 OSTree 리뷰<i class="fas fa-angle-right fa-fw"></i></a></div>
-</div>
-<div id=comments><div id=giscus></div><noscript>
+</section></div><div class=post-nav><a href=/posts/tls-cryptography-2-random/ class=prev rel=prev title="TLS/암호 알고리즘 쉽게 이해하기(2) - Random"><i class="fas fa-angle-left fa-fw"></i>TLS/암호 알고리즘 쉽게 이해하기(2) - Random</a>
+<a href=/posts/yocto-ostree-meta-updater-3/ class=next rel=next title="Yocto에 OSTree upgrade 적용(3) - 업그레이드/롤백 및 OSTree 리뷰">Yocto에 OSTree upgrade 적용(3) - 업그레이드/롤백 및 OSTree 리뷰<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=giscus></div><noscript>
 Please enable JavaScript to view the comments powered by <a href=https://giscus.app/>giscus</a>.
-</noscript></div></article></div>
-</main><footer class=footer>
-<div class=footer-container><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://www.humminglab.io target=_blank rel="noopener noreferrer">HummingLab</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div>
-</div></footer></div>
-<div id=fixed-buttons><a href=#back-to-top id=back-to-top-button class=fixed-button title="Back to Top">
+</noscript></div></article></div></main><footer class=footer>
+<div class=footer-container><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://www.humminglab.io target=_blank rel="noopener noreferrer">HummingLab</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=#back-to-top id=back-to-top-button class=fixed-button title="Back to Top">
 <i class="fas fa-arrow-up fa-fw"></i>
 </a><a href=# id=view-comments class=fixed-button title="View Comments">
 <i class="fas fa-comment fa-fw"></i>
 </a>
-</div><div class=assets><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/topbar/topbar.min.js></script><script type=text/javascript src=/lib/pjax/pjax.min.js></script><script type=text/javascript src=/js/theme.min.js></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','UA-83257319-3',{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=UA-83257319-3" async></script></div>
-<div class=pjax-assets><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",lightTheme:"light"}},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1}}</script><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/katex/katex.min.css>
-<noscript><link rel=stylesheet href=/lib/katex/katex.min.css></noscript><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/katex/copy-tex.min.css>
-<noscript><link rel=stylesheet href=/lib/katex/copy-tex.min.css></noscript></div>
-</body>
-</html>
+</div><div class=assets><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/topbar/topbar.min.js></script><script type=text/javascript src=/lib/pjax/pjax.min.js></script><script type=text/javascript src=/js/theme.min.js></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","UA-83257319-3",{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=UA-83257319-3" async></script></div><div class=pjax-assets><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",lightTheme:"light"}},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1}}</script><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/katex/katex.min.css>
+<noscript><link rel=stylesheet href=/lib/katex/katex.min.css></noscript><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/katex/copy-tex.min.css>
+<noscript><link rel=stylesheet href=/lib/katex/copy-tex.min.css></noscript></div></body></html>

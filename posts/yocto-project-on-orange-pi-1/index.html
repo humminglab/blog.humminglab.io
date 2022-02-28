@@ -20,151 +20,80 @@
 <meta name=apple-mobile-web-app-title content="All about IoT">
 <meta name=theme-color content="#f8f8f8"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/posts/yocto-project-on-orange-pi-1/><link rel=prev href=https://blog.humminglab.io/posts/how-to-capture-tls-with-wireshark/><link rel=next href=https://blog.humminglab.io/posts/nearley-builder-and-loader/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/fontawesome-free/all.min.css>
-<noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/animate/animate.min.css>
-<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Yocto Project 개발하기(1) - Orange Pi 보드 빌드","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/yocto-project-on-orange-pi-1\/"},"genre":"posts","keywords":"Yocto, Linux, OrangePi","wordcount":695,"url":"https:\/\/blog.humminglab.io\/posts\/yocto-project-on-orange-pi-1\/","datePublished":"2021-12-30T22:00:00+09:00","dateModified":"2022-01-18T22:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head>
-<body header-desktop header-mobile><script type=text/javascript>function setTheme(a){document.body.setAttribute('theme',a)}function saveTheme(a){window.localStorage&&localStorage.setItem('theme',a)}function getMeta(b){const a=document.getElementsByTagName('meta');for(let c=0;c<a.length;c++)if(a[c].getAttribute('name')===b)return a[c];return''}if(window.localStorage&&localStorage.getItem('theme')){let a=localStorage.getItem('theme');a==='light'||a==='dark'||a==='black'?setTheme(a):window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?setTheme('dark'):setTheme('light')}else''==='light'||''==='dark'||''==='black'?(setTheme(''),saveTheme('')):(saveTheme('auto'),window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?setTheme('dark'):setTheme('light'));let metaColors={light:'#f8f8f8',dark:'#252627',black:'#000000'};getMeta('theme-color').content=metaColors[document.body.getAttribute('theme')]</script>
-<div id=back-to-top></div>
-<div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/posts/yocto-project-on-orange-pi-1/><link rel=prev href=https://blog.humminglab.io/posts/how-to-capture-tls-with-wireshark/><link rel=next href=https://blog.humminglab.io/posts/nearley-builder-and-loader/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/fontawesome-free/all.min.css>
+<noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/animate/animate.min.css>
+<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Yocto Project 개발하기(1) - Orange Pi 보드 빌드","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/yocto-project-on-orange-pi-1\/"},"genre":"posts","keywords":"Yocto, Linux, OrangePi","wordcount":695,"url":"https:\/\/blog.humminglab.io\/posts\/yocto-project-on-orange-pi-1\/","datePublished":"2021-12-30T22:00:00+09:00","dateModified":"2022-01-18T22:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head><body header-desktop header-mobile><script type=text/javascript>function setTheme(e){document.body.setAttribute("theme",e)}function saveTheme(e){window.localStorage&&localStorage.setItem("theme",e)}function getMeta(t){const e=document.getElementsByTagName("meta");for(let n=0;n<e.length;n++)if(e[n].getAttribute("name")===t)return e[n];return''}if(window.localStorage&&localStorage.getItem("theme")){let e=localStorage.getItem("theme");e==="light"||e==="dark"||e==="black"?setTheme(e):window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?setTheme("dark"):setTheme("light")}else''==="light"||''==="dark"||''==="black"?(setTheme(''),saveTheme('')):(saveTheme("auto"),window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?setTheme("dark"):setTheme("light"));let metaColors={light:"#f8f8f8",dark:"#252627",black:"#000000"};getMeta("theme-color").content=metaColors[document.body.getAttribute("theme")]</script>
+<div id=back-to-top></div><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
 <div class=header-wrapper>
 <div class=header-title>
 <a href=/ title="All about IoT">All about IoT</a>
-</div>
-<div class=menu>
+</div><div class=menu>
 <div class=menu-inner><a class=menu-item href=/posts/> Posts </a><a class=menu-item href=/tags/> Tags </a><a class=menu-item href=/categories/> Categories </a><a class=menu-item href=https://www.humminglab.io/ rel="noopener noreffer" target=_blank> HummingLab </a><span class="menu-item delimiter"></span><a href=# onclick=return!1 class="menu-item theme-switch" title="Switch Theme">
 <i class="fas fa-adjust fa-fw"></i>
-</a></div>
-</div>
-</div>
-</header><header class=mobile id=header-mobile>
+</a></div></div></div></header><header class=mobile id=header-mobile>
 <div class=header-container>
 <div class=header-wrapper>
 <div class=header-title>
 <a href=/ title="All about IoT">All about IoT</a>
-</div>
-<div class=menu-toggle id=menu-toggle-mobile>
+</div><div class=menu-toggle id=menu-toggle-mobile>
 <span></span><span></span><span></span>
-</div>
-</div>
-<div class=menu id=menu-mobile><a class=menu-item href=/posts/ title>Posts</a><a class=menu-item href=/tags/ title>Tags</a><a class=menu-item href=/categories/ title>Categories</a><a class=menu-item href=https://www.humminglab.io/ title rel="noopener noreffer" target=_blank>HummingLab</a><a href=# onclick=return!1 class="menu-item theme-switch" title="Switch Theme">
+</div></div><div class=menu id=menu-mobile><a class=menu-item href=/posts/ title>Posts</a><a class=menu-item href=/tags/ title>Tags</a><a class=menu-item href=/categories/ title>Categories</a><a class=menu-item href=https://www.humminglab.io/ title rel="noopener noreffer" target=_blank>HummingLab</a><a href=# onclick=return!1 class="menu-item theme-switch" title="Switch Theme">
 <i class="fas fa-adjust fa-fw"></i>
-</a></div>
-</div>
-</header>
-<div class="search-dropdown desktop">
-<div id=search-dropdown-desktop></div>
-</div>
-<div class="search-dropdown mobile">
-<div id=search-dropdown-mobile></div>
-</div>
-<main class=main>
+</a></div></div></header><div class="search-dropdown desktop">
+<div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile">
+<div id=search-dropdown-mobile></div></div><main class=main>
 <div class=container><div class=toc id=toc-auto>
-<h2 class=toc-title>Contents</h2>
-<div class="toc-content always-active" id=toc-content-auto></div>
-</div><script>document.getElementsByTagName("main")[0].setAttribute("pageStyle","normal")</script><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC","true")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Yocto Project 개발하기(1) - Orange Pi 보드 빌드</h1><div class=post-meta>
+<h2 class=toc-title>Contents</h2><div class="toc-content always-active" id=toc-content-auto></div></div><script>document.getElementsByTagName("main")[0].setAttribute("pageStyle","normal")</script><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC","true")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Yocto Project 개발하기(1) - Orange Pi 보드 빌드</h1><div class=post-meta>
 <div class=post-meta-line>
 <span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
-</span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/development/><i class="far fa-folder fa-fw"></i>Development</a></span>&nbsp;<span class=post-category>and</span>&nbsp;<span class=post-series>series <a href=/series/yocto-project-%EA%B0%9C%EB%B0%9C%ED%95%98%EA%B8%B0/><i class="far fa-list-alt fa-fw"></i>Yocto Project 개발하기</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-12-30>2021-12-30</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2022-01-18>2022-01-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;695 words&nbsp;
-<i class="far fa-clock fa-fw"></i>&nbsp;4 minutes&nbsp;</div>
-</div>
-<div class="details toc" id=toc-static kept>
+</span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/development/><i class="far fa-folder fa-fw"></i>Development</a></span>&nbsp;<span class=post-category>and</span>&nbsp;<span class=post-series>series <a href=/series/yocto-project-%EA%B0%9C%EB%B0%9C%ED%95%98%EA%B8%B0/><i class="far fa-list-alt fa-fw"></i>Yocto Project 개발하기</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-12-30>2021-12-30</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2022-01-18>2022-01-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;695 words&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;4 minutes&nbsp;</div></div><div class="details toc" id=toc-static kept>
 <div class="details-summary toc-title">
 <span>Contents</span>
 <span><i class="details-icon fas fa-angle-right"></i></span>
-</div>
-<div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents>
+</div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents>
 <ul>
-<li><a href=#orange-pi-zero>Orange Pi Zero</a></li>
-<li><a href=#buildroot-vs-yocto-project>Buildroot vs. Yocto Project</a></li>
-<li><a href=#yocto-개발-환경-구성>Yocto 개발 환경 구성</a></li>
-<li><a href=#마무리>마무리</a></li>
-</ul>
-</nav></div>
-</div><div class=content id=content><p>이 문서는 <a href=http://www.orangepi.org/orangepizero/ target=_blank rel="noopener noreffer">Orange Pi Zero</a> 보드에서 <a href=https://www.yoctoproject.org/ target=_blank rel="noopener noreffer">Yocto Project</a>를 이용하여 배포본을 만들고, 개별 패키지를 관리하는 방법에 대하여 설명한다.</p>
-<p>설명은 다음과 같이 나누어서 설명을 할 에정이다.</p>
-<ul>
-<li><strong>Yocto Project 개발하기(1) - Orange Pi 보드 빌드</strong></li>
-<li><a href=https://blog.humminglab.io/posts/yocto-project-on-orange-pi-2/ rel>Yocto Project 개발하기(2) - Custom Layer 만들기</a></li>
-<li><a href=https://blog.humminglab.io/posts/yocto-project-on-orange-pi-3/ rel>Yocto Project 개발하기(3) - 개발 시 로컬 패키지 관리하기</a></li>
-<li>Yocto Project 개발하기(4) - Yocto SDK 빌드</li>
-<li>Yocto Project 개발하기(5) - Yocto eSDK 이용한 개발 모델</li>
-</ul>
-<p>이 문서에서는 첫번째 과정인 필요한 layer를 추가해서 빌드하여 타겟에 올려서 동작을 확인하는 과정을 설명한다.</p>
-<h2 id=orange-pi-zero>Orange Pi Zero</h2>
-<p>Orage Pi Zero 보드는 아래와 같은 기능을 제공한다. <a href=https://www.allwinnertech.com/ target=_blank rel="noopener noreffer">Allwinner</a> H2+ Cortex-A7 Quad-Core CPU, Mali400MP2 GPU, 256MB SDRAM, 2MB SFlash, 그리고 TF card 메모리 인터페이스를 지원하여 작은 gateway 기능으로 적합할 수 있다. 배터리를 고려한 power management가 필요치 않다면 가성비로는 좋은 편이다.</p>
-<figure><a class=lightgallery href=/posts/yocto-project-on-orange-pi-1/orangepizero.png title=/posts/yocto-project-on-orange-pi-1/orangepizero.png data-thumbnail=/posts/yocto-project-on-orange-pi-1/orangepizero.png data-sub-html="<h2>Orange Pi Zero Board</h2>">
+<li><a href=#orange-pi-zero>Orange Pi Zero</a></li><li><a href=#buildroot-vs-yocto-project>Buildroot vs. Yocto Project</a></li><li><a href=#yocto-개발-환경-구성>Yocto 개발 환경 구성</a></li><li><a href=#마무리>마무리</a></li></ul></nav></div></div><div class=content id=content><p>이 문서는 <a href=http://www.orangepi.org/orangepizero/ target=_blank rel="noopener noreffer">Orange Pi Zero</a> 보드에서 <a href=https://www.yoctoproject.org/ target=_blank rel="noopener noreffer">Yocto Project</a>를 이용하여 배포본을 만들고, 개별 패키지를 관리하는 방법에 대하여 설명한다.</p><p>설명은 다음과 같이 나누어서 설명을 할 에정이다.</p><ul>
+<li><strong>Yocto Project 개발하기(1) - Orange Pi 보드 빌드</strong></li><li><a href=https://blog.humminglab.io/posts/yocto-project-on-orange-pi-2/ rel>Yocto Project 개발하기(2) - Custom Layer 만들기</a></li><li><a href=https://blog.humminglab.io/posts/yocto-project-on-orange-pi-3/ rel>Yocto Project 개발하기(3) - 개발 시 로컬 패키지 관리하기</a></li><li>Yocto Project 개발하기(4) - Yocto SDK 빌드</li><li>Yocto Project 개발하기(5) - Yocto eSDK 이용한 개발 모델</li></ul><p>이 문서에서는 첫번째 과정인 필요한 layer를 추가해서 빌드하여 타겟에 올려서 동작을 확인하는 과정을 설명한다.</p><h2 id=orange-pi-zero>Orange Pi Zero</h2><p>Orage Pi Zero 보드는 아래와 같은 기능을 제공한다. <a href=https://www.allwinnertech.com/ target=_blank rel="noopener noreffer">Allwinner</a> H2+ Cortex-A7 Quad-Core CPU, Mali400MP2 GPU, 256MB SDRAM, 2MB SFlash, 그리고 TF card 메모리 인터페이스를 지원하여 작은 gateway 기능으로 적합할 수 있다. 배터리를 고려한 power management가 필요치 않다면 가성비로는 좋은 편이다.</p><figure><a class=lightgallery href=/posts/yocto-project-on-orange-pi-1/orangepizero.png title=/posts/yocto-project-on-orange-pi-1/orangepizero.png data-thumbnail=/posts/yocto-project-on-orange-pi-1/orangepizero.png data-sub-html="<h2>Orange Pi Zero Board</h2>">
 <img class=lazyload data-src=orangepizero.png data-srcset="/posts/yocto-project-on-orange-pi-1/orangepizero.png, orangepizero.png 1.5x, /posts/yocto-project-on-orange-pi-1/orangepizero.png 2x" data-sizes=auto alt=/posts/yocto-project-on-orange-pi-1/orangepizero.png height=auto width=600px>
-</a><figcaption class=image-caption>Orange Pi Zero Board</figcaption>
-</figure>
-<p>보드에 대한 정보는 다음에서 찾아볼 수 있다.</p>
-<ul>
-<li><a href=http://www.orangepi.org/downloadresources/ target=_blank rel="noopener noreffer">Orage Pi Resource</a></li>
-<li><a href=https://linux-sunxi.org/H3#Variants target=_blank rel="noopener noreffer">Linux Sunxi</a></li>
-</ul>
-<p>Android 나 <a href=https://www.armbian.com/ target=_blank rel="noopener noreffer">Armbian</a> 패키지는 제공하지만 gateway box로 구성하기에는 이보다는 BuildRoot 또는 Yocto를 이용하여 커스텀 롬을 만들어 내는 것이 OTA 등의 관리적인 측면에서 효과적이다.</p>
-<h2 id=buildroot-vs-yocto-project>Buildroot vs. Yocto Project</h2>
-<p><a href=https://buildroot.org/ target=_blank rel="noopener noreffer">Buildroot</a> 는 패키지를 위한 빌드 툴로 사용 방법이 직관적이지만, <a href=https://www.yoctoproject.org/ target=_blank rel="noopener noreffer">Yocto Project</a>는 개발 단계에서 어떻게 사용할지 명확치 않고 너무 복잡하다고 느낄 수 있다.</p>
-<p>간단하게 설명하면 Buildroot는 루트 이미지를 만드는 것이 목적인 빌드 툴이라고 보면 된다. 의존성에 따라서 패키지들을 빌드하여 root image를 결과물로 만들어 낸다.</p>
-<p>Yocto의 경우는 임베디드판 Ubuntu/Debian 과 같은 배포본 빌더라고 볼 수 있다. 즉, 각 패키지를 빌드하여 rpm/deb 를 만들고 이를 패키지 매니저를 이용하여 배포본을 만들어 낸다.
-Ubuntu와 차별점이라면 하드웨어 사양이 제 각각인 임베디드 시스템에 맞도록 커스터마이징을 쉽게 할 수 있다는 것이다.</p>
-<p>여기에서는 Yocto를 선정하여 배포본을 만들고, 개발하는 패키지를 개발 단계에서 Yocto project로 어떻게 관리하는지를 정리한다.</p>
-<h2 id=yocto-개발-환경-구성>Yocto 개발 환경 구성</h2>
-<p>Linux kernel 빌드는 아직까지는 linux 컴퓨터에 gcc 로만 가능하다. 또한 Yocto 빌드 시 사용하는 utility도 linux 용이라 결과적으로 linux 이외에서 개발은 불가능하다.
-Yocto 빌드는 메모리, CPU 자원을 많이 사용하므로 성능이 어느정도 받쳐 주는 linux 환경을 준비하여야 한다.</p>
-<p>Yocto는 빌드하는 기기 마다의 결과 차이를 없애기 위하여 gcc 나 빌드에 필요한 모든 것을 직접 빌드하여 사용한다. 관련 사항은 <a href=https://docs.yoctoproject.org/brief-yoctoprojectqs/index.html#compatible-linux-distribution target=_blank rel="noopener noreffer">Quick Build</a> 문서를 참고할 수 있다.</p>
-<p>Ubuntu 라면 다음과 같이 yocto에 필요한 툴을 설치한다.</p>
-<div class=highlight><div class=chroma>
+</a><figcaption class=image-caption>Orange Pi Zero Board</figcaption></figure><p>보드에 대한 정보는 다음에서 찾아볼 수 있다.</p><ul>
+<li><a href=http://www.orangepi.org/downloadresources/ target=_blank rel="noopener noreffer">Orage Pi Resource</a></li><li><a href=https://linux-sunxi.org/H3#Variants target=_blank rel="noopener noreffer">Linux Sunxi</a></li></ul><p>Android 나 <a href=https://www.armbian.com/ target=_blank rel="noopener noreffer">Armbian</a> 패키지는 제공하지만 gateway box로 구성하기에는 이보다는 BuildRoot 또는 Yocto를 이용하여 커스텀 롬을 만들어 내는 것이 OTA 등의 관리적인 측면에서 효과적이다.</p><h2 id=buildroot-vs-yocto-project>Buildroot vs. Yocto Project</h2><p><a href=https://buildroot.org/ target=_blank rel="noopener noreffer">Buildroot</a> 는 패키지를 위한 빌드 툴로 사용 방법이 직관적이지만, <a href=https://www.yoctoproject.org/ target=_blank rel="noopener noreffer">Yocto Project</a>는 개발 단계에서 어떻게 사용할지 명확치 않고 너무 복잡하다고 느낄 수 있다.</p><p>간단하게 설명하면 Buildroot는 루트 이미지를 만드는 것이 목적인 빌드 툴이라고 보면 된다. 의존성에 따라서 패키지들을 빌드하여 root image를 결과물로 만들어 낸다.</p><p>Yocto의 경우는 임베디드판 Ubuntu/Debian 과 같은 배포본 빌더라고 볼 수 있다. 즉, 각 패키지를 빌드하여 rpm/deb 를 만들고 이를 패키지 매니저를 이용하여 배포본을 만들어 낸다.
+Ubuntu와 차별점이라면 하드웨어 사양이 제 각각인 임베디드 시스템에 맞도록 커스터마이징을 쉽게 할 수 있다는 것이다.</p><p>여기에서는 Yocto를 선정하여 배포본을 만들고, 개발하는 패키지를 개발 단계에서 Yocto project로 어떻게 관리하는지를 정리한다.</p><h2 id=yocto-개발-환경-구성>Yocto 개발 환경 구성</h2><p>Linux kernel 빌드는 아직까지는 linux 컴퓨터에 gcc 로만 가능하다. 또한 Yocto 빌드 시 사용하는 utility도 linux 용이라 결과적으로 linux 이외에서 개발은 불가능하다.
+Yocto 빌드는 메모리, CPU 자원을 많이 사용하므로 성능이 어느정도 받쳐 주는 linux 환경을 준비하여야 한다.</p><p>Yocto는 빌드하는 기기 마다의 결과 차이를 없애기 위하여 gcc 나 빌드에 필요한 모든 것을 직접 빌드하여 사용한다. 관련 사항은 <a href=https://docs.yoctoproject.org/brief-yoctoprojectqs/index.html#compatible-linux-distribution target=_blank rel="noopener noreffer">Quick Build</a> 문서를 참고할 수 있다.</p><p>Ubuntu 라면 다음과 같이 yocto에 필요한 툴을 설치한다.</p><div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ sudo apt install gawk wget git diffstat unzip texinfo gcc build-essential <span class=se>\
-</span><span class=se></span> chrpath socat cpio python3 python3-pip python3-pexpect xz-utils debianutils <span class=se>\
-</span><span class=se></span> iputils-ping python3-git python3-jinja2 libegl1-mesa libsdl1.2-dev pylint3 <span class=se>\
-</span><span class=se></span> xterm python3-subunit mesa-common-dev zstd liblz4-tool
-</code></pre></td></tr></table>
-</div>
-</div><p>최신 버전인 Yocto 3.4.1 (honister) 을 다운로드 한다.</p>
-<div class=highlight><div class=chroma>
+</span></code></pre></td><td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ sudo apt install gawk wget git diffstat unzip texinfo gcc build-essential <span class=se>\
+</span></span></span><span class=line><span class=cl><span class=se></span> chrpath socat cpio python3 python3-pip python3-pexpect xz-utils debianutils <span class=se>\
+</span></span></span><span class=line><span class=cl><span class=se></span> iputils-ping python3-git python3-jinja2 libegl1-mesa libsdl1.2-dev pylint3 <span class=se>\
+</span></span></span><span class=line><span class=cl><span class=se></span> xterm python3-subunit mesa-common-dev zstd liblz4-tool
+</span></span></code></pre></td></tr></table></div></div><p>최신 버전인 Yocto 3.4.1 (honister) 을 다운로드 한다.</p><div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ mkdir ~/yocto
-$ <span class=nb>cd</span> ~/yocto
-$ git clone git://git.yoctoproject.org/poky -b honister
-</code></pre></td></tr></table>
-</div>
-</div><p>Yoco 내에 Allwinner layer인 meta-sunxi 를 설치한다. 또한 meta-sunxi 가 참조하는 meta-openembedded/meta-oe 도 추가로 설치한다.</p>
-<div class=highlight><div class=chroma>
+</span></code></pre></td><td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ mkdir ~/yocto
+</span></span><span class=line><span class=cl>$ <span class=nb>cd</span> ~/yocto
+</span></span><span class=line><span class=cl>$ git clone git://git.yoctoproject.org/poky -b honister
+</span></span></code></pre></td></tr></table></div></div><p>Yoco 내에 Allwinner layer인 meta-sunxi 를 설치한다. 또한 meta-sunxi 가 참조하는 meta-openembedded/meta-oe 도 추가로 설치한다.</p><div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ <span class=nb>cd</span> ~/yocto
-$ git clone git@github.com:linux-sunxi/meta-sunxi.git -b honister
-$ git clone git://git.openembedded.org/meta-openembedded -b honister
-</code></pre></td></tr></table>
-</div>
-</div><p>위와 같이 다운로드 받은 poky와 meta layer는 git submodule 등을 이용하여 관리를 하는 것이 좋을 수 있다.</p>
-<div class=highlight><div class=chroma>
+</span></code></pre></td><td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ <span class=nb>cd</span> ~/yocto
+</span></span><span class=line><span class=cl>$ git clone git@github.com:linux-sunxi/meta-sunxi.git -b honister
+</span></span><span class=line><span class=cl>$ git clone git://git.openembedded.org/meta-openembedded -b honister
+</span></span></code></pre></td></tr></table></div></div><p>위와 같이 다운로드 받은 poky와 meta layer는 git submodule 등을 이용하여 관리를 하는 것이 좋을 수 있다.</p><div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ <span class=nb>source</span> ./oe-init-build-env
-</code></pre></td></tr></table>
-</div>
-</div><p>위를 실행하면 메시지가 나오면서 poky 빌드에 필요한 환경 변수가 적절히 설정되고, 처음 실행이라면 <code>./build</code> 디렉토리를 만들고 다음과 같은 기본 설정 파일이 생성된다.</p>
-<div class=highlight><div class=chroma>
+</span></code></pre></td><td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ <span class=nb>source</span> ./oe-init-build-env
+</span></span></code></pre></td></tr></table></div></div><p>위를 실행하면 메시지가 나오면서 poky 빌드에 필요한 환경 변수가 적절히 설정되고, 처음 실행이라면 <code>./build</code> 디렉토리를 만들고 다음과 같은 기본 설정 파일이 생성된다.</p><div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
@@ -172,18 +101,14 @@ $ git clone git://git.openembedded.org/meta-openembedded -b honister
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>➜  build git:<span class=o>(</span>honister<span class=o>)</span> ✗ tree
-.
-└── conf
-    ├── bblayers.conf
-    ├── local.conf
-    └── templateconf.cfg
-</code></pre></td></tr></table>
-</div>
-</div><p><code>conf/bblayers.conf</code>를 에디터로 열어서 BBLAYERS 에 다음과 같이 meta-oe, meta-sunxi 를 추가한다.</p>
-<div class=highlight><div class=chroma>
+</span></code></pre></td><td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>➜  build git:<span class=o>(</span>honister<span class=o>)</span> ✗ tree
+</span></span><span class=line><span class=cl>.
+</span></span><span class=line><span class=cl>└── conf
+</span></span><span class=line><span class=cl>    ├── bblayers.conf
+</span></span><span class=line><span class=cl>    ├── local.conf
+</span></span><span class=line><span class=cl>    └── templateconf.cfg
+</span></span></code></pre></td></tr></table></div></div><p><code>conf/bblayers.conf</code>를 에디터로 열어서 BBLAYERS 에 다음과 같이 meta-oe, meta-sunxi 를 추가한다.</p><div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
@@ -192,101 +117,56 @@ $ git clone git://git.openembedded.org/meta-openembedded -b honister
 </span><span class=lnt>5
 </span><span class=lnt>6
 </span><span class=lnt>7
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>BBLAYERS ?= &#34; \
-  /home/yslee/yocto/poky/meta \
-  /home/yslee/yocto/poky/meta-poky \
-  /home/yslee/yocto/poky/meta-yocto-bsp \
-  /home/yslee/yocto/meta-openembedded/meta-oe \
-  /home/yslee/yocto/meta-sunxi \
-  &#34;
-</code></pre></td></tr></table>
-</div>
-</div><p>bblayer.conf를 위와 같이 직접 수정을 해주어도 되고, bitbake-layers 를 이용하여 <code>bitbake-layers add-layer ../meta-sunxi</code> 와 같이 추가를 할 수도 있다.</p>
-<p><code>conf/local.conf</code>의 default MACHINE 을 orage-pi-zero 로 변경한다. 해당 설정은 <code>meta-sunxi/conf/machine/orange-pi-zero.conf</code> 에 위치한다.</p>
-<div class=highlight><div class=chroma>
+</span></code></pre></td><td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>BBLAYERS ?= &#34; \
+</span></span><span class=line><span class=cl>  /home/yslee/yocto/poky/meta \
+</span></span><span class=line><span class=cl>  /home/yslee/yocto/poky/meta-poky \
+</span></span><span class=line><span class=cl>  /home/yslee/yocto/poky/meta-yocto-bsp \
+</span></span><span class=line><span class=cl>  /home/yslee/yocto/meta-openembedded/meta-oe \
+</span></span><span class=line><span class=cl>  /home/yslee/yocto/meta-sunxi \
+</span></span><span class=line><span class=cl>  &#34;
+</span></span></code></pre></td></tr></table></div></div><p>bblayer.conf를 위와 같이 직접 수정을 해주어도 되고, bitbake-layers 를 이용하여 <code>bitbake-layers add-layer ../meta-sunxi</code> 와 같이 추가를 할 수도 있다.</p><p><code>conf/local.conf</code>의 default MACHINE 을 orage-pi-zero 로 변경한다. 해당 설정은 <code>meta-sunxi/conf/machine/orange-pi-zero.conf</code> 에 위치한다.</p><div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>MACHINE ??= &#34;orange-pi-zero&#34;
-</code></pre></td></tr></table>
-</div>
-</div><p>최소 셋으로 배포본을 빌드해 본다.</p>
-<div class=highlight><div class=chroma>
+</span></code></pre></td><td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>MACHINE ??= &#34;orange-pi-zero&#34;
+</span></span></code></pre></td></tr></table></div></div><p>최소 셋으로 배포본을 빌드해 본다.</p><div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ bitbake core-image-minimal
-</code></pre></td></tr></table>
-</div>
-</div><p>최종 결과물은 <code>build/tmp/deploy/images/orange-pi-zero</code> 디렉토리에 생성된다. 이 중 <code>core-image-minimal-orange-pi-zero.sunxi-sdimg</code> 파일이 sd card 용으로 생성된 이미지 이다.
-이 파일을 sd card 에 다음과 같이 write 한다.</p>
-<div class=highlight><div class=chroma>
+</span></code></pre></td><td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ bitbake core-image-minimal
+</span></span></code></pre></td></tr></table></div></div><p>최종 결과물은 <code>build/tmp/deploy/images/orange-pi-zero</code> 디렉토리에 생성된다. 이 중 <code>core-image-minimal-orange-pi-zero.sunxi-sdimg</code> 파일이 sd card 용으로 생성된 이미지 이다.
+이 파일을 sd card 에 다음과 같이 write 한다.</p><div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ sudo dd <span class=k>if</span><span class=o>=</span>core-image-minimal-orange-pi-zero.sunxi-sdimg <span class=nv>of</span><span class=o>=</span>/dev/sdc <span class=nv>status</span><span class=o>=</span>progress
-</code></pre></td></tr></table>
-</div>
-</div><p>좀 더 안전하게 쓰려면 다음과 같이 by-path 나 by-id 경로의 디바이스 파일을 사용하는 것이 실수로 컴퓨터 디스크에 쓰는 것을 막을 수 있다.</p>
-<div class=highlight><div class=chroma>
+</span></code></pre></td><td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ sudo dd <span class=k>if</span><span class=o>=</span>core-image-minimal-orange-pi-zero.sunxi-sdimg <span class=nv>of</span><span class=o>=</span>/dev/sdc <span class=nv>status</span><span class=o>=</span>progress
+</span></span></code></pre></td></tr></table></div></div><p>좀 더 안전하게 쓰려면 다음과 같이 by-path 나 by-id 경로의 디바이스 파일을 사용하는 것이 실수로 컴퓨터 디스크에 쓰는 것을 막을 수 있다.</p><div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ sudo dd <span class=k>if</span><span class=o>=</span>core-image-minimal-orange-pi-zero.sunxi-sdimg <span class=nv>of</span><span class=o>=</span>/dev/disk/by-id/usb-Generic_STORAGE_DEVICE_000000001532-0:0 <span class=nv>status</span><span class=o>=</span>progress
-</code></pre></td></tr></table>
-</div>
-</div><p>SD card를 orange pi zero에 꽂고 부팅 시켜 보면 다음과 같은 로그가 출력된다.</p>
-<p><a href=/posts/yocto-project-on-orange-pi-1/orange-pi-boot.log rel>Orage Pi Boot Log</a></p>
-<p>로그를 보면 ethernet 까지는 정상적으로 동작되는 것을 확인할 수 있다.
-Wi-Fi 드라이버는 아직 설치가 안된 상태이다.</p>
-<h2 id=마무리>마무리</h2>
-<p>기본 동작을 확인하였고 다음은 프로젝트의 custom layer를 만들어 관리하는 방법을 설명한다.</p>
-<p>이전에 작성한 글 <a href=https://blog.humminglab.io/posts/yocto-project-history/ rel>Yocto Project History</a> 도 한번 읽어 보면 전체적으로 Yocto의 발전 과정을 볼 수 있다.</p>
-</div>
-<div class=post-footer id=post-footer>
+</span></code></pre></td><td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ sudo dd <span class=k>if</span><span class=o>=</span>core-image-minimal-orange-pi-zero.sunxi-sdimg <span class=nv>of</span><span class=o>=</span>/dev/disk/by-id/usb-Generic_STORAGE_DEVICE_000000001532-0:0 <span class=nv>status</span><span class=o>=</span>progress
+</span></span></code></pre></td></tr></table></div></div><p>SD card를 orange pi zero에 꽂고 부팅 시켜 보면 다음과 같은 로그가 출력된다.</p><p><a href=/posts/yocto-project-on-orange-pi-1/orange-pi-boot.log rel>Orage Pi Boot Log</a></p><p>로그를 보면 ethernet 까지는 정상적으로 동작되는 것을 확인할 수 있다.
+Wi-Fi 드라이버는 아직 설치가 안된 상태이다.</p><h2 id=마무리>마무리</h2><p>기본 동작을 확인하였고 다음은 프로젝트의 custom layer를 만들어 관리하는 방법을 설명한다.</p><p>이전에 작성한 글 <a href=https://blog.humminglab.io/posts/yocto-project-history/ rel>Yocto Project History</a> 도 한번 읽어 보면 전체적으로 Yocto의 발전 과정을 볼 수 있다.</p></div><div class=post-footer id=post-footer>
 <div class=post-info>
 <div class=post-info-line>
 <div class=post-info-mod>
 <span>Updated on 2022-01-18</span>
-</div>
-<div class=post-info-license></div>
-</div>
-<div class=post-info-line>
-<div class=post-info-md></div>
-<div class=post-info-share>
+</div><div class=post-info-license></div></div><div class=post-info-line>
+<div class=post-info-md></div><div class=post-info-share>
 <span></span>
-</div>
-</div>
-</div>
-<div class=post-info-more>
-<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/yocto/>Yocto</a>,&nbsp;<a href=/tags/linux/>Linux</a>,&nbsp;<a href=/tags/orangepi/>OrangePi</a></section>
-<section>
+</div></div></div><div class=post-info-more>
+<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/yocto/>Yocto</a>,&nbsp;<a href=/tags/linux/>Linux</a>,&nbsp;<a href=/tags/orangepi/>OrangePi</a></section><section>
 <span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span>
-</section>
-</div>
-<div class=post-nav><a href=/posts/how-to-capture-tls-with-wireshark/ class=prev rel=prev title="Wireshark 으로 TLS 캡쳐 및 디코딩 하기"><i class="fas fa-angle-left fa-fw"></i>Wireshark 으로 TLS 캡쳐 및 디코딩 하기</a>
-<a href=/posts/nearley-builder-and-loader/ class=next rel=next title="Nearley 로 설정용 파서 만들기">Nearley 로 설정용 파서 만들기<i class="fas fa-angle-right fa-fw"></i></a></div>
-</div>
-<div id=comments><div id=giscus></div><noscript>
+</section></div><div class=post-nav><a href=/posts/how-to-capture-tls-with-wireshark/ class=prev rel=prev title="Wireshark 으로 TLS 캡쳐 및 디코딩 하기"><i class="fas fa-angle-left fa-fw"></i>Wireshark 으로 TLS 캡쳐 및 디코딩 하기</a>
+<a href=/posts/nearley-builder-and-loader/ class=next rel=next title="Nearley 로 설정용 파서 만들기">Nearley 로 설정용 파서 만들기<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=giscus></div><noscript>
 Please enable JavaScript to view the comments powered by <a href=https://giscus.app/>giscus</a>.
-</noscript></div></article></div>
-</main><footer class=footer>
-<div class=footer-container><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://www.humminglab.io target=_blank rel="noopener noreferrer">HummingLab</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div>
-</div></footer></div>
-<div id=fixed-buttons><a href=#back-to-top id=back-to-top-button class=fixed-button title="Back to Top">
+</noscript></div></article></div></main><footer class=footer>
+<div class=footer-container><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://www.humminglab.io target=_blank rel="noopener noreferrer">HummingLab</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=#back-to-top id=back-to-top-button class=fixed-button title="Back to Top">
 <i class="fas fa-arrow-up fa-fw"></i>
 </a><a href=# id=view-comments class=fixed-button title="View Comments">
 <i class="fas fa-comment fa-fw"></i>
 </a>
-</div><div class=assets><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/topbar/topbar.min.js></script><script type=text/javascript src=/lib/pjax/pjax.min.js></script><script type=text/javascript src=/js/theme.min.js></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','UA-83257319-3',{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=UA-83257319-3" async></script></div>
-<div class=pjax-assets><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",lightTheme:"light"}},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1}}</script><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/katex/katex.min.css>
-<noscript><link rel=stylesheet href=/lib/katex/katex.min.css></noscript><link rel=preload as=style onload="this.onload=null,this.rel='stylesheet'" href=/lib/katex/copy-tex.min.css>
-<noscript><link rel=stylesheet href=/lib/katex/copy-tex.min.css></noscript></div>
-</body>
-</html>
+</div><div class=assets><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/topbar/topbar.min.js></script><script type=text/javascript src=/lib/pjax/pjax.min.js></script><script type=text/javascript src=/js/theme.min.js></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","UA-83257319-3",{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=UA-83257319-3" async></script></div><div class=pjax-assets><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",lightTheme:"light"}},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1}}</script><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/katex/katex.min.css>
+<noscript><link rel=stylesheet href=/lib/katex/katex.min.css></noscript><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/katex/copy-tex.min.css>
+<noscript><link rel=stylesheet href=/lib/katex/copy-tex.min.css></noscript></div></body></html>
