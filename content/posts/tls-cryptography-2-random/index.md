@@ -41,7 +41,7 @@ ARM Cortex-M 과 같은 MCU의 경우에도 내부에 TRNG(True Random Number Ge
 
 {{< figure src="stm32l562_512kb.jpg" width="400px" height="auto" caption="STM32L562 TRNG 예" >}}
 
-## RNG vs PRNG
+## RNG vs PRNG {#PRNG}
 
 위처럼 엔트로피 원을 이용하여 무작위한 난수를 생성하는 것만 아니라, PRNG(Pseudo Random Number Generator, 의사난수 발생기)가 필요한 경우도 있다
 
