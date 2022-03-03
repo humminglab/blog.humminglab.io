@@ -4,7 +4,7 @@ date: "2022-03-02T18:00:00+09:00"
 lastmod: "2022-03-02T18:00:00+09:00"
 draft: false
 authors: ["YSLee"]
-tags: ["Cryptographyß"]
+tags: ["Cryptography"]
 categories: ["Security"]
 series: ["TLS/암호 알고리즘 쉽게 이해하기"]
 ---
