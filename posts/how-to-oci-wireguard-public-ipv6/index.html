@@ -1,114 +1,26 @@
-<!doctype html><html lang=en>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width,initial-scale=1">
-<meta name=robots content="noodp">
-<title class=pjax-title>OCI, WireGuard 로 무료 공인 IPv6 주소 사용하기 - All about IoT</title><meta name=Description content><meta property="og:title" content="OCI, WireGuard 로 무료 공인 IPv6 주소 사용하기">
-<meta property="og:description" content="IPv6 서비스를 개발하거나 시험하려는 경우 국내에서 기업용 인터넷이 아닌 경우에는 IPv6 주소를 이용하기가 쉽지 않다. IPv4 주소만 제공하는 가정용 인터넷이나 LTE 망에서 Oracle Cloud Infrastruct(OCI) Free Tier 를 사용하여 무료로 공인 IPv6 망을 구성하는 방법을 설명한다.
-시스템 구성&#34; 시스템 구성  다른 방법들 공인 IPv6 를 할당받는 가장 쉬운 방법은 IPv6 TunnelBrokwer 를 이용하는 것이다. 미국 ISP 업체인 Hurricane Electric 에서 제공하는 Tunnel Broker는 아래 주소로 접속하여 가입하면 무료로 IPv6 주소를 할당 받아 사용할 수 있다.">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://blog.humminglab.io/posts/how-to-oci-wireguard-public-ipv6/"><meta property="article:section" content="posts">
-<meta property="article:published_time" content="2021-12-10T09:00:00+09:00">
-<meta property="article:modified_time" content="2021-12-11T09:00:00+09:00">
-<meta name=twitter:card content="summary">
-<meta name=twitter:title content="OCI, WireGuard 로 무료 공인 IPv6 주소 사용하기">
-<meta name=twitter:description content="IPv6 서비스를 개발하거나 시험하려는 경우 국내에서 기업용 인터넷이 아닌 경우에는 IPv6 주소를 이용하기가 쉽지 않다. IPv4 주소만 제공하는 가정용 인터넷이나 LTE 망에서 Oracle Cloud Infrastruct(OCI) Free Tier 를 사용하여 무료로 공인 IPv6 망을 구성하는 방법을 설명한다.
-시스템 구성&#34; 시스템 구성  다른 방법들 공인 IPv6 를 할당받는 가장 쉬운 방법은 IPv6 TunnelBrokwer 를 이용하는 것이다. 미국 ISP 업체인 Hurricane Electric 에서 제공하는 Tunnel Broker는 아래 주소로 접속하여 가입하면 무료로 IPv6 주소를 할당 받아 사용할 수 있다.">
-<meta name=application-name content="All about IoT">
-<meta name=apple-mobile-web-app-title content="All about IoT">
-<meta name=theme-color content="#f8f8f8"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
-<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/posts/how-to-oci-wireguard-public-ipv6/><link rel=prev href=https://blog.humminglab.io/posts/yocto-project-history/><link rel=next href=https://blog.humminglab.io/posts/how-to-capture-tls-with-wireshark/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/fontawesome-free/all.min.css>
-<noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/animate/animate.min.css>
-<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"OCI, WireGuard 로 무료 공인 IPv6 주소 사용하기","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/how-to-oci-wireguard-public-ipv6\/"},"genre":"posts","keywords":"OCI, WireGuard, IPv6","wordcount":1911,"url":"https:\/\/blog.humminglab.io\/posts\/how-to-oci-wireguard-public-ipv6\/","datePublished":"2021-12-10T09:00:00+09:00","dateModified":"2021-12-11T09:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head><body header-desktop header-mobile><script type=text/javascript>function setTheme(e){document.body.setAttribute("theme",e)}function saveTheme(e){window.localStorage&&localStorage.setItem("theme",e)}function getMeta(t){const e=document.getElementsByTagName("meta");for(let n=0;n<e.length;n++)if(e[n].getAttribute("name")===t)return e[n];return''}if(window.localStorage&&localStorage.getItem("theme")){let e=localStorage.getItem("theme");e==="light"||e==="dark"||e==="black"?setTheme(e):window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?setTheme("dark"):setTheme("light")}else''==="light"||''==="dark"||''==="black"?(setTheme(''),saveTheme('')):(saveTheme("auto"),window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?setTheme("dark"):setTheme("light"));let metaColors={light:"#f8f8f8",dark:"#252627",black:"#000000"};getMeta("theme-color").content=metaColors[document.body.getAttribute("theme")]</script>
-<div id=back-to-top></div><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
-<div class=header-wrapper>
-<div class=header-title>
-<a href=/ title="All about IoT">All about IoT</a>
-</div><div class=menu>
-<div class=menu-inner><a class=menu-item href=/posts/> Posts </a><a class=menu-item href=/tags/> Tags </a><a class=menu-item href=/categories/> Categories </a><a class=menu-item href=https://www.humminglab.io/ rel="noopener noreffer" target=_blank> HummingLab </a><span class="menu-item delimiter"></span><a href=# onclick=return!1 class="menu-item theme-switch" title="Switch Theme">
-<i class="fas fa-adjust fa-fw"></i>
-</a></div></div></div></header><header class=mobile id=header-mobile>
-<div class=header-container>
-<div class=header-wrapper>
-<div class=header-title>
-<a href=/ title="All about IoT">All about IoT</a>
-</div><div class=menu-toggle id=menu-toggle-mobile>
-<span></span><span></span><span></span>
-</div></div><div class=menu id=menu-mobile><a class=menu-item href=/posts/ title>Posts</a><a class=menu-item href=/tags/ title>Tags</a><a class=menu-item href=/categories/ title>Categories</a><a class=menu-item href=https://www.humminglab.io/ title rel="noopener noreffer" target=_blank>HummingLab</a><a href=# onclick=return!1 class="menu-item theme-switch" title="Switch Theme">
-<i class="fas fa-adjust fa-fw"></i>
-</a></div></div></header><div class="search-dropdown desktop">
-<div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile">
-<div id=search-dropdown-mobile></div></div><main class=main>
-<div class=container><div class=toc id=toc-auto>
-<h2 class=toc-title>Contents</h2><div class="toc-content always-active" id=toc-content-auto></div></div><script>document.getElementsByTagName("main")[0].setAttribute("pageStyle","normal")</script><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC","true")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX">OCI, WireGuard 로 무료 공인 IPv6 주소 사용하기</h1><div class=post-meta>
-<div class=post-meta-line>
-<span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><title class=pjax-title>OCI, WireGuard 로 무료 공인 IPv6 주소 사용하기 - All about IoT</title><meta name=Description content><meta property="og:title" content="OCI, WireGuard 로 무료 공인 IPv6 주소 사용하기"><meta property="og:description" content="IPv6 서비스를 개발하거나 시험하려는 경우 국내에서 기업용 인터넷이 아닌 경우에는 IPv6 주소를 이용하기가 쉽지 않다. IPv4 주소만 제공하는 가정용 인터넷이나 LTE 망에서 Oracle Cloud Infrastruct(OCI) Free Tier 를 사용하여 무료로 공인 IPv6 망을 구성하는 방법을 설명한다.
+시스템 구성&#34; 시스템 구성  다른 방법들 공인 IPv6 를 할당받는 가장 쉬운 방법은 IPv6 TunnelBrokwer 를 이용하는 것이다. 미국 ISP 업체인 Hurricane Electric 에서 제공하는 Tunnel Broker는 아래 주소로 접속하여 가입하면 무료로 IPv6 주소를 할당 받아 사용할 수 있다."><meta property="og:type" content="article"><meta property="og:url" content="https://blog.humminglab.io/posts/how-to-oci-wireguard-public-ipv6/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2021-12-10T09:00:00+09:00"><meta property="article:modified_time" content="2021-12-11T09:00:00+09:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="OCI, WireGuard 로 무료 공인 IPv6 주소 사용하기"><meta name=twitter:description content="IPv6 서비스를 개발하거나 시험하려는 경우 국내에서 기업용 인터넷이 아닌 경우에는 IPv6 주소를 이용하기가 쉽지 않다. IPv4 주소만 제공하는 가정용 인터넷이나 LTE 망에서 Oracle Cloud Infrastruct(OCI) Free Tier 를 사용하여 무료로 공인 IPv6 망을 구성하는 방법을 설명한다.
+시스템 구성&#34; 시스템 구성  다른 방법들 공인 IPv6 를 할당받는 가장 쉬운 방법은 IPv6 TunnelBrokwer 를 이용하는 것이다. 미국 ISP 업체인 Hurricane Electric 에서 제공하는 Tunnel Broker는 아래 주소로 접속하여 가입하면 무료로 IPv6 주소를 할당 받아 사용할 수 있다."><meta name=application-name content="All about IoT"><meta name=apple-mobile-web-app-title content="All about IoT"><meta name=theme-color content="#f8f8f8"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/posts/how-to-oci-wireguard-public-ipv6/><link rel=prev href=https://blog.humminglab.io/posts/yocto-project-history/><link rel=next href=https://blog.humminglab.io/posts/how-to-capture-tls-with-wireshark/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/fontawesome-free/all.min.css><noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/animate/animate.min.css><noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"OCI, WireGuard 로 무료 공인 IPv6 주소 사용하기","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/how-to-oci-wireguard-public-ipv6\/"},"genre":"posts","keywords":"OCI, WireGuard, IPv6","wordcount":1911,"url":"https:\/\/blog.humminglab.io\/posts\/how-to-oci-wireguard-public-ipv6\/","datePublished":"2021-12-10T09:00:00+09:00","dateModified":"2021-12-11T09:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head><body header-desktop header-mobile><script type=text/javascript>function setTheme(e){document.body.setAttribute("theme",e)}function saveTheme(e){window.localStorage&&localStorage.setItem("theme",e)}function getMeta(t){const e=document.getElementsByTagName("meta");for(let n=0;n<e.length;n++)if(e[n].getAttribute("name")===t)return e[n];return''}if(window.localStorage&&localStorage.getItem("theme")){let e=localStorage.getItem("theme");e==="light"||e==="dark"||e==="black"?setTheme(e):window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?setTheme("dark"):setTheme("light")}else''==="light"||''==="dark"||''==="black"?(setTheme(''),saveTheme('')):(saveTheme("auto"),window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?setTheme("dark"):setTheme("light"));let metaColors={light:"#f8f8f8",dark:"#252627",black:"#000000"};getMeta("theme-color").content=metaColors[document.body.getAttribute("theme")]</script><div id=back-to-top></div><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title="All about IoT">All about IoT</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/>Posts </a><a class=menu-item href=/tags/>Tags </a><a class=menu-item href=/categories/>Categories </a><a class=menu-item href=https://www.humminglab.io/ rel="noopener noreffer" target=_blank>HummingLab </a><span class="menu-item delimiter"></span><a href=# onclick=return!1 class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title="All about IoT">All about IoT</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><a class=menu-item href=/posts/ title>Posts</a><a class=menu-item href=/tags/ title>Tags</a><a class=menu-item href=/categories/ title>Categories</a><a class=menu-item href=https://www.humminglab.io/ title rel="noopener noreffer" target=_blank>HummingLab</a><a href=# onclick=return!1 class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>Contents</h2><div class="toc-content always-active" id=toc-content-auto></div></div><script>document.getElementsByTagName("main")[0].setAttribute("pageStyle","normal")</script><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC","true")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX">OCI, WireGuard 로 무료 공인 IPv6 주소 사용하기</h1><div class=post-meta><div class=post-meta-line><span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
 </span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/development/><i class="far fa-folder fa-fw"></i>Development</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-12-10>2021-12-10</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2021-12-11>2021-12-11</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;1911 words&nbsp;
-<i class="far fa-clock fa-fw"></i>&nbsp;9 minutes&nbsp;</div></div><div class="details toc" id=toc-static kept>
-<div class="details-summary toc-title">
-<span>Contents</span>
-<span><i class="details-icon fas fa-angle-right"></i></span>
-</div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents>
-<ul>
-<li><a href=#다른-방법들>다른 방법들</a></li><li><a href=#개요>개요</a></li><li><a href=#oci-ubntu-설치>OCI Ubntu 설치</a></li><li><a href=#ipv6-사설망-터널링-설정>IPv6 사설망 터널링 설정</a></li><li><a href=#macbook-에서-연결>MacBook 에서 연결</a>
-<ul>
-<li><a href=#mac-에서-ipv6-dns-문제-수정>MAC 에서 IPv6 DNS 문제 수정</a></li><li><a href=#ip-구성-확인>IP 구성 확인</a></li></ul></li><li><a href=#공인-ipv6로-변경>공인 IPv6로 변경</a>
-<ul>
-<li><a href=#공인-ip를-라우팅-하기>공인 IP를 라우팅 하기</a></li><li><a href=#oci-에서-설정>OCI 에서 설정</a></li></ul></li><li><a href=#공인-ipv6-주소-확인>공인 IPv6 주소 확인</a></li><li><a href=#정리>정리</a></li></ul></nav></div></div><div class=content id=content><p>IPv6 서비스를 개발하거나 시험하려는 경우 국내에서 기업용 인터넷이 아닌 경우에는 IPv6 주소를 이용하기가 쉽지 않다.
+<i class="far fa-clock fa-fw"></i>&nbsp;9 minutes&nbsp;</div></div><div class="details toc" id=toc-static kept><div class="details-summary toc-title"><span>Contents</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#다른-방법들>다른 방법들</a></li><li><a href=#개요>개요</a></li><li><a href=#oci-ubntu-설치>OCI Ubntu 설치</a></li><li><a href=#ipv6-사설망-터널링-설정>IPv6 사설망 터널링 설정</a></li><li><a href=#macbook-에서-연결>MacBook 에서 연결</a><ul><li><a href=#mac-에서-ipv6-dns-문제-수정>MAC 에서 IPv6 DNS 문제 수정</a></li><li><a href=#ip-구성-확인>IP 구성 확인</a></li></ul></li><li><a href=#공인-ipv6로-변경>공인 IPv6로 변경</a><ul><li><a href=#공인-ip를-라우팅-하기>공인 IP를 라우팅 하기</a></li><li><a href=#oci-에서-설정>OCI 에서 설정</a></li></ul></li><li><a href=#공인-ipv6-주소-확인>공인 IPv6 주소 확인</a></li><li><a href=#정리>정리</a></li></ul></nav></div></div><div class=content id=content><p>IPv6 서비스를 개발하거나 시험하려는 경우 국내에서 기업용 인터넷이 아닌 경우에는 IPv6 주소를 이용하기가 쉽지 않다.
 IPv4 주소만 제공하는 가정용 인터넷이나 LTE 망에서
-<a href=https://www.oracle.com/kr/cloud/ target=_blank rel="noopener noreffer">Oracle Cloud Infrastruct(OCI)</a> Free Tier 를 사용하여 무료로 공인 IPv6 망을 구성하는 방법을 설명한다.</p><figure><a class=lightgallery href=/posts/how-to-oci-wireguard-public-ipv6/oci-wireguard.png title=/posts/how-to-oci-wireguard-public-ipv6/oci-wireguard.png data-thumbnail=/posts/how-to-oci-wireguard-public-ipv6/oci-wireguard.png data-sub-html="<h2>시스템 구성</h2>">
-<img class=lazyload data-src=oci-wireguard.png data-srcset="/posts/how-to-oci-wireguard-public-ipv6/oci-wireguard.png, oci-wireguard.png 1.5x, /posts/how-to-oci-wireguard-public-ipv6/oci-wireguard.png 2x" data-sizes=auto alt=/posts/how-to-oci-wireguard-public-ipv6/oci-wireguard.png height=auto width=600px>
-</a><figcaption class=image-caption>시스템 구성</figcaption></figure><h2 id=다른-방법들>다른 방법들</h2><p>공인 IPv6 를 할당받는 가장 쉬운 방법은 IPv6 <a href=https://datatracker.ietf.org/doc/html/rfc3053 target=_blank rel="noopener noreffer">TunnelBrokwer</a> 를 이용하는 것이다.
-미국 ISP 업체인 Hurricane Electric 에서 제공하는 Tunnel Broker는 아래 주소로 접속하여 가입하면 무료로 IPv6 주소를 할당 받아 사용할 수 있다.</p><ul>
-<li><a href=https://tunnelbroker.net/ target=_blank rel="noopener noreffer">https://tunnelbroker.net/</a></li></ul><p>이곳은 <a href=https://en.wikipedia.org/wiki/6in4 target=_blank rel="noopener noreffer">6in4</a> tunnel 방식인데, 사용하려는 NAT 환경 에서는 문제가 있어 포기하였다. 관련 사항은 <a href=https://ipv6.he.net/certification/faq.php target=_blank rel="noopener noreffer">HE FAQ</a> 에서 확인할 수 있다.</p><p><a href=https://en.wikipedia.org/wiki/List_of_IPv6_tunnel_brokers target=_blank rel="noopener noreffer">Wikipedia TunnerBroker 서비스 목록</a> 중 <a href=https://6project.org/ target=_blank rel="noopener noreffer">6project</a> 와 같은 경우는 OpenVPN을 제공한다고 하여 시도는 해보았으나, 국내 신용카드로는 Donation 결제가 안되어 이곳도 포기하였다.</p><p>그래서 2개 까지 무료 인스턴스를 제공하는 <a href=https://www.oracle.com/kr/cloud/ target=_blank rel="noopener noreffer">OCI</a>의 가상머신에 <a href=https://www.wireguard.com/ target=_blank rel="noopener noreffer">WireGuard</a>
-VPN 을 이용하여 공인 IPv6 망을 구성하기로 하고, 이 설정 방법을 정리한다.</p><h2 id=개요>개요</h2><p>설정은 다음과 같은 절차로 수행한다.</p><ul>
-<li>VM instance 설치하고, IPv6 할당하기</li><li>Wiregaurd 설치</li><li>IP Masquerade로 가상 IPv4, IPv6 VPN tunneling 설정</li><li>Macbook에 WireGuard Peer 설치</li><li>Private IPv6 tunneling 동작 확인</li><li>Public IPv6 tunneling으로 설정 변경</li><li>Public IPv6 동작 확인</li></ul><h2 id=oci-ubntu-설치>OCI Ubntu 설치</h2><p>OCI Compute VM 에 Ubuntu 20.4 를 설치하다. OCI의 경우 IPv6 가 자동으로 할당되지 않아 설치 후 VCN(Virtual Cloud Networks)에 IPv6를 할당하여야 한다.</p><p>설치 과정은 다음과 같은 문서를 참고할 수 있다.</p><ul>
-<li><a href=https://docs.oracle.com/en-us/iaas/developer-tutorials/tutorials/apache-on-ubuntu/01oci-ubuntu-apache-summary.htm target=_blank rel="noopener noreffer">Free Tier: Install Apache and PHP on an Ubuntu Instance</a></li><li><a href=https://blog.51sec.org/2021/09/enable-ipv6-on-oracle-cloud.html target=_blank rel="noopener noreffer">Enable IPv6 on Oracle Cloud Infrastructure & Asiign it to CentOS</a></li></ul><p>다음과 같은 절차로 설치한다.</p><ul>
-<li><strong>Compute</strong> -> <strong>Instances</strong> -> <strong>Create Instance</strong> 로 무료 인스턴스를 생성한다.
-<ul>
-<li>Image는 <strong>Canonical Ubuntu 20.04</strong> 로 변경하여 설치한다.</li></ul></li><li><strong>Networking</strong> -> <strong>Virtual Cloud Networks</strong> 에서 VCN의 <strong>CIDR Blocks</strong>를 선택하여 IPv6 Subnet을 추가한다.
-<ul>
-<li><strong>Add IPv6 CIDR Block</strong> 으로 IPv6 block을 한다. VCN에 <code>2603:cafe:cafe:ca00::/56</code> 와 같이 public 대역을 할당 받을 수 있다.</li></ul></li><li>VCN 내의 Subnet 항목에도 Edit를 선택하여 <strong>Enable IPv6 CIDR Block</strong> 를 선택하고, 00~FF 사이의 값을 설정하여 해당 subnet에 /64 subnet을 등록한다. 이번 예에서는 01 을 설정하여 <code>2603:cafe:cafe:ca01::/64</code> 와 같은 subnet을 구성하였다.</li><li>Subnet의 <strong>Security Lists</strong> 항목을 선택하여 Ingress, Egress Rules에 각각 모든 IPv6 를 허용하도록 설정한다. 필요하다면 IPv6 주소나 프로토콜 중 허용 범위를 제한할 수도 있다.
-<ul>
-<li>CIDR, ::/0, All Protocols</li></ul></li><li><strong>VCN</strong> -> <strong>Route Tables</strong> -> route rules 항목에 IPv6 도 추가한다.
-<ul>
-<li>IPv6, Internet Gateway, ::/0</li></ul></li><li><strong>Compute</strong> -> <strong>Instances</strong> -> Instance -> <strong>Attached VNIC</strong> -> <strong>IPv6 Address</strong> 항목에서 생성한 Ubuntu Instances 에 IPv6 주소를 할당한다.
-<ul>
-<li><code>2603:cafe:cafe:ca01::1001</code> 와 같이 적절한 IP를 설정한다.</li></ul></li></ul><p>위와 같은 과정을 거치면 IPv4, IPv6가 설정된 intance를 생성할 수 있다. 세부 과정은 위 링크를 참고하면 도움이 된다.</p><p>절차를 정리해 보면 다음과 같다.</p><ul>
-<li>Ubuntu 가상 머신을 만들기</li><li>VCN IPv6 /56 block 할당</li><li>Subnet에도 /64 block 할당</li><li>네트워크 라우터와 Security rule에 IPv6 설정</li><li>Ubuntu 가상 머신에 subnet 내의 IPv6 주소 할당</li></ul><h2 id=ipv6-사설망-터널링-설정>IPv6 사설망 터널링 설정</h2><p>이제 부터는 Ubuntu machine에 WireGuard를 설치하고 IPv4, IPv6 VPN 터널링을 설치한다.
-Ubuntu VM에 IPv6 주소는 <code>2603:cafe:cafe:ca01::1001</code> 와 같이 하나의 주소가 설정되어 있고, IPv6 도 IPv4와 같은 방식으로 NAT 방식으로 이용한다.</p><p>설정 과정은 다음 문서를 참고할 수 있다.</p><ul>
-<li><a href=https://www.digitalocean.com/community/tutorials/how-to-set-up-wireguard-on-ubuntu-20-04 target=_blank rel="noopener noreffer">How To Set Up WireGuard on Ubuntu 20.04</a></li></ul><p>위 설치 과정에서는 ufw linux filewall을 설정하지만, OCI에서는 iptables로 기본 패킷 필터링이 설정되어 있어, ufw를 이용치 않고, 그냥 iptables로 설정을 변경한다.</p><p>다음과 같은 절차로 설치한다.</p><ul>
-<li>APT 로 wireguard를 설치한다.</li></ul><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+<a href=https://www.oracle.com/kr/cloud/ target=_blank rel="noopener noreffer">Oracle Cloud Infrastruct(OCI)</a> Free Tier 를 사용하여 무료로 공인 IPv6 망을 구성하는 방법을 설명한다.</p><figure><a class=lightgallery href=/posts/how-to-oci-wireguard-public-ipv6/oci-wireguard.png title=/posts/how-to-oci-wireguard-public-ipv6/oci-wireguard.png data-thumbnail=/posts/how-to-oci-wireguard-public-ipv6/oci-wireguard.png data-sub-html="<h2>시스템 구성</h2>"><img class=lazyload data-src=oci-wireguard.png data-srcset="/posts/how-to-oci-wireguard-public-ipv6/oci-wireguard.png, oci-wireguard.png 1.5x, /posts/how-to-oci-wireguard-public-ipv6/oci-wireguard.png 2x" data-sizes=auto alt=/posts/how-to-oci-wireguard-public-ipv6/oci-wireguard.png height=auto width=600px></a><figcaption class=image-caption>시스템 구성</figcaption></figure><h2 id=다른-방법들>다른 방법들</h2><p>공인 IPv6 를 할당받는 가장 쉬운 방법은 IPv6 <a href=https://datatracker.ietf.org/doc/html/rfc3053 target=_blank rel="noopener noreffer">TunnelBrokwer</a> 를 이용하는 것이다.
+미국 ISP 업체인 Hurricane Electric 에서 제공하는 Tunnel Broker는 아래 주소로 접속하여 가입하면 무료로 IPv6 주소를 할당 받아 사용할 수 있다.</p><ul><li><a href=https://tunnelbroker.net/ target=_blank rel="noopener noreffer">https://tunnelbroker.net/</a></li></ul><p>이곳은 <a href=https://en.wikipedia.org/wiki/6in4 target=_blank rel="noopener noreffer">6in4</a> tunnel 방식인데, 사용하려는 NAT 환경 에서는 문제가 있어 포기하였다. 관련 사항은 <a href=https://ipv6.he.net/certification/faq.php target=_blank rel="noopener noreffer">HE FAQ</a> 에서 확인할 수 있다.</p><p><a href=https://en.wikipedia.org/wiki/List_of_IPv6_tunnel_brokers target=_blank rel="noopener noreffer">Wikipedia TunnerBroker 서비스 목록</a> 중 <a href=https://6project.org/ target=_blank rel="noopener noreffer">6project</a> 와 같은 경우는 OpenVPN을 제공한다고 하여 시도는 해보았으나, 국내 신용카드로는 Donation 결제가 안되어 이곳도 포기하였다.</p><p>그래서 2개 까지 무료 인스턴스를 제공하는 <a href=https://www.oracle.com/kr/cloud/ target=_blank rel="noopener noreffer">OCI</a>의 가상머신에 <a href=https://www.wireguard.com/ target=_blank rel="noopener noreffer">WireGuard</a>
+VPN 을 이용하여 공인 IPv6 망을 구성하기로 하고, 이 설정 방법을 정리한다.</p><h2 id=개요>개요</h2><p>설정은 다음과 같은 절차로 수행한다.</p><ul><li>VM instance 설치하고, IPv6 할당하기</li><li>Wiregaurd 설치</li><li>IP Masquerade로 가상 IPv4, IPv6 VPN tunneling 설정</li><li>Macbook에 WireGuard Peer 설치</li><li>Private IPv6 tunneling 동작 확인</li><li>Public IPv6 tunneling으로 설정 변경</li><li>Public IPv6 동작 확인</li></ul><h2 id=oci-ubntu-설치>OCI Ubntu 설치</h2><p>OCI Compute VM 에 Ubuntu 20.4 를 설치하다. OCI의 경우 IPv6 가 자동으로 할당되지 않아 설치 후 VCN(Virtual Cloud Networks)에 IPv6를 할당하여야 한다.</p><p>설치 과정은 다음과 같은 문서를 참고할 수 있다.</p><ul><li><a href=https://docs.oracle.com/en-us/iaas/developer-tutorials/tutorials/apache-on-ubuntu/01oci-ubuntu-apache-summary.htm target=_blank rel="noopener noreffer">Free Tier: Install Apache and PHP on an Ubuntu Instance</a></li><li><a href=https://blog.51sec.org/2021/09/enable-ipv6-on-oracle-cloud.html target=_blank rel="noopener noreffer">Enable IPv6 on Oracle Cloud Infrastructure & Asiign it to CentOS</a></li></ul><p>다음과 같은 절차로 설치한다.</p><ul><li><strong>Compute</strong> -> <strong>Instances</strong> -> <strong>Create Instance</strong> 로 무료 인스턴스를 생성한다.<ul><li>Image는 <strong>Canonical Ubuntu 20.04</strong> 로 변경하여 설치한다.</li></ul></li><li><strong>Networking</strong> -> <strong>Virtual Cloud Networks</strong> 에서 VCN의 <strong>CIDR Blocks</strong>를 선택하여 IPv6 Subnet을 추가한다.<ul><li><strong>Add IPv6 CIDR Block</strong> 으로 IPv6 block을 한다. VCN에 <code>2603:cafe:cafe:ca00::/56</code> 와 같이 public 대역을 할당 받을 수 있다.</li></ul></li><li>VCN 내의 Subnet 항목에도 Edit를 선택하여 <strong>Enable IPv6 CIDR Block</strong> 를 선택하고, 00~FF 사이의 값을 설정하여 해당 subnet에 /64 subnet을 등록한다. 이번 예에서는 01 을 설정하여 <code>2603:cafe:cafe:ca01::/64</code> 와 같은 subnet을 구성하였다.</li><li>Subnet의 <strong>Security Lists</strong> 항목을 선택하여 Ingress, Egress Rules에 각각 모든 IPv6 를 허용하도록 설정한다. 필요하다면 IPv6 주소나 프로토콜 중 허용 범위를 제한할 수도 있다.<ul><li>CIDR, ::/0, All Protocols</li></ul></li><li><strong>VCN</strong> -> <strong>Route Tables</strong> -> route rules 항목에 IPv6 도 추가한다.<ul><li>IPv6, Internet Gateway, ::/0</li></ul></li><li><strong>Compute</strong> -> <strong>Instances</strong> -> Instance -> <strong>Attached VNIC</strong> -> <strong>IPv6 Address</strong> 항목에서 생성한 Ubuntu Instances 에 IPv6 주소를 할당한다.<ul><li><code>2603:cafe:cafe:ca01::1001</code> 와 같이 적절한 IP를 설정한다.</li></ul></li></ul><p>위와 같은 과정을 거치면 IPv4, IPv6가 설정된 intance를 생성할 수 있다. 세부 과정은 위 링크를 참고하면 도움이 된다.</p><p>절차를 정리해 보면 다음과 같다.</p><ul><li>Ubuntu 가상 머신을 만들기</li><li>VCN IPv6 /56 block 할당</li><li>Subnet에도 /64 block 할당</li><li>네트워크 라우터와 Security rule에 IPv6 설정</li><li>Ubuntu 가상 머신에 subnet 내의 IPv6 주소 할당</li></ul><h2 id=ipv6-사설망-터널링-설정>IPv6 사설망 터널링 설정</h2><p>이제 부터는 Ubuntu machine에 WireGuard를 설치하고 IPv4, IPv6 VPN 터널링을 설치한다.
+Ubuntu VM에 IPv6 주소는 <code>2603:cafe:cafe:ca01::1001</code> 와 같이 하나의 주소가 설정되어 있고, IPv6 도 IPv4와 같은 방식으로 NAT 방식으로 이용한다.</p><p>설정 과정은 다음 문서를 참고할 수 있다.</p><ul><li><a href=https://www.digitalocean.com/community/tutorials/how-to-set-up-wireguard-on-ubuntu-20-04 target=_blank rel="noopener noreffer">How To Set Up WireGuard on Ubuntu 20.04</a></li></ul><p>위 설치 과정에서는 ufw linux filewall을 설정하지만, OCI에서는 iptables로 기본 패킷 필터링이 설정되어 있어, ufw를 이용치 않고, 그냥 iptables로 설정을 변경한다.</p><p>다음과 같은 절차로 설치한다.</p><ul><li>APT 로 wireguard를 설치한다.</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ sudo apt update
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ sudo apt update
 </span></span><span class=line><span class=cl>$ sudo apt install wireguard
-</span></span></code></pre></td></tr></table></div></div><ul>
-<li>
-<p>WireGuard는 비대칭키를 생성하여 이를 이용하여 인증 및 암호화를 한다.</p><ul>
-<li>생성하는 비밀번호의 읽기 권한을 제한토록 설정</li></ul><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ <span class=nb>umask</span> <span class=m>077</span>
-</span></span></code></pre></td></tr></table></div></div><ul>
-<li>Private 키를 생성하고, 이를 이용하여 public key 생성</li></ul><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><ul><li><p>WireGuard는 비대칭키를 생성하여 이를 이용하여 인증 및 암호화를 한다.</p><ul><li>생성하는 비밀번호의 읽기 권한을 제한토록 설정</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ <span class=nb>umask</span> <span class=m>077</span>
+</span></span></code></pre></td></tr></table></div></div><ul><li>Private 키를 생성하고, 이를 이용하여 public key 생성</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ wg genkey <span class=p>|</span> sudo tee /etc/wireguard/private.key
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ wg genkey <span class=p>|</span> sudo tee /etc/wireguard/private.key
 </span></span><span class=line><span class=cl>$ sudo cat /etc/wireguard/private.key <span class=p>|</span> wg pubkey <span class=p>|</span> sudo tee /etc/wireguard/public.key
-</span></span></code></pre></td></tr></table></div></div></li><li>
-<p>VPN 터널링은 사설 IP를 이용하므로 각각을 임의로 다음과 같이 사용한다. IPv6 사설 IP 생성은 위 링크에 보면 나와 있으나 fd 로 시작하는 적당한 subnet을 선택하여 사용하면 된다.</p><ul>
-<li><code>10.8.0.0/24</code></li><li><code>fd4f:c479:8c81::/64</code></li></ul></li><li>
-<p>다음과 같이 /etc/wireguadd/wg0.conf 로 파일을 생성한다.</p><ul>
-<li>Address는 Wireguard 서버쪽의 주소와 서브넷이다.</li><li>SaveConfig는 설정이 변경된 경우 자동 저장토록 한다.</li><li>PostUp, PreDown을 이용하여 wireguard가 시작될 때 자동으로 IP Masquerade가 설정되어 NAT 동작이 되도록 한다.</li><li>ListenPort는 Remote Peer에서 wireguard 연결하는 포트를 설정한다.</li></ul></li></ul><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></span></code></pre></td></tr></table></div></div></li><li><p>VPN 터널링은 사설 IP를 이용하므로 각각을 임의로 다음과 같이 사용한다. IPv6 사설 IP 생성은 위 링크에 보면 나와 있으나 fd 로 시작하는 적당한 subnet을 선택하여 사용하면 된다.</p><ul><li><code>10.8.0.0/24</code></li><li><code>fd4f:c479:8c81::/64</code></li></ul></li><li><p>다음과 같이 /etc/wireguadd/wg0.conf 로 파일을 생성한다.</p><ul><li>Address는 Wireguard 서버쪽의 주소와 서브넷이다.</li><li>SaveConfig는 설정이 변경된 경우 자동 저장토록 한다.</li><li>PostUp, PreDown을 이용하여 wireguard가 시작될 때 자동으로 IP Masquerade가 설정되어 NAT 동작이 되도록 한다.</li><li>ListenPort는 Remote Peer에서 wireguard 연결하는 포트를 설정한다.</li></ul></li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -118,8 +30,7 @@ Ubuntu VM에 IPv6 주소는 <code>2603:cafe:cafe:ca01::1001</code> 와 같이 �
 </span><span class=lnt> 8
 </span><span class=lnt> 9
 </span><span class=lnt>10
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>[Interface]
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>[Interface]
 </span></span><span class=line><span class=cl>Address = 10.8.0.1/24
 </span></span><span class=line><span class=cl>Address = fd4f:c479:8c81::1/64
 </span></span><span class=line><span class=cl>SaveConfig = true
@@ -129,69 +40,30 @@ Ubuntu VM에 IPv6 주소는 <code>2603:cafe:cafe:ca01::1001</code> 와 같이 �
 </span></span><span class=line><span class=cl>PreDown = ip6tables -t nat -D POSTROUTING -o end3 -j MASQUERADE
 </span></span><span class=line><span class=cl>ListenPort = 51820
 </span></span><span class=line><span class=cl>PrivateKey = 2ZDTT0ebU4/pyLwg5CKnNNw2oLUcNIpwgjV7eyhtGQ0=
-</span></span></code></pre></td></tr></table></div></div><ul>
-<li>
-<p>패킷 필터링 중 적절한 부분을 해제 한다.</p><ul>
-<li>iptables 를 이용하여 다음과 같이 WireGuard 접속에 사용하는 UDP 51820 포트를 허용하고, Forward 가능하도록 FORWARD 에 등록된 것을 삭제한다.</li></ul><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><ul><li><p>패킷 필터링 중 적절한 부분을 해제 한다.</p><ul><li>iptables 를 이용하여 다음과 같이 WireGuard 접속에 사용하는 UDP 51820 포트를 허용하고, Forward 가능하도록 FORWARD 에 등록된 것을 삭제한다.</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ sudo iptables -L -v
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ sudo iptables -L -v
 </span></span><span class=line><span class=cl>$ sudo iptables -I INPUT <span class=m>4</span> -p udp --dport <span class=m>51820</span> -j ACCEPT
 </span></span><span class=line><span class=cl>$ sudo iptables -D FORWARD <span class=m>1</span>
-</span></span></code></pre></td></tr></table></div></div><ul>
-<li>iptables 설정이 제대로 반영된 것을 확인하고, 재부팅 후에도 유지되도록 저장한다.</li></ul><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><ul><li>iptables 설정이 제대로 반영된 것을 확인하고, 재부팅 후에도 유지되도록 저장한다.</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ sudo iptables -L -v
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ sudo iptables -L -v
 </span></span><span class=line><span class=cl>$ sudo netfilter-persistent save
-</span></span></code></pre></td></tr></table></div></div></li><li>
-<p>Ubuntu 머신에서 패킷 라우팅이 되도록 /etc/sysctl.conf 에 다음을 추가한다.</p></li></ul><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div></li><li><p>Ubuntu 머신에서 패킷 라우팅이 되도록 /etc/sysctl.conf 에 다음을 추가한다.</p></li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>net.ipv4.ip_forward=1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>net.ipv4.ip_forward=1
 </span></span><span class=line><span class=cl>net.ipv6.conf.all.forwarding=1
-</span></span></code></pre></td></tr></table></div></div><ul>
-<li>설정이 반영되도록 sysctl 을 실행한다.</li></ul><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ sudo sysctl -p
-</span></span></code></pre></td></tr></table></div></div><ul>
-<li>
-<p>OCI의 subnet에도 UDP 51820 포트가 수신되도록 설정한다.</p><ul>
-<li><strong>Networking</strong> -> <strong>Virtual Cloud Netowrks</strong> -> vcn -> subnet -> security list -> <strong>Ingress Rules</strong>
-<ul>
-<li>CIDR, 0.0.0.0/0, UDP, Dest Port: 51820</li></ul></li></ul></li><li>
-<p>wg0.conf 에 대한 데모을 enable 하고 실행한다.</p></li></ul><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><ul><li>설정이 반영되도록 sysctl 을 실행한다.</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ sudo sysctl -p
+</span></span></code></pre></td></tr></table></div></div><ul><li><p>OCI의 subnet에도 UDP 51820 포트가 수신되도록 설정한다.</p><ul><li><strong>Networking</strong> -> <strong>Virtual Cloud Netowrks</strong> -> vcn -> subnet -> security list -> <strong>Ingress Rules</strong><ul><li>CIDR, 0.0.0.0/0, UDP, Dest Port: 51820</li></ul></li></ul></li><li><p>wg0.conf 에 대한 데모을 enable 하고 실행한다.</p></li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ sudo systemctl <span class=nb>enable</span> wg-quick@wg0.service
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ sudo systemctl <span class=nb>enable</span> wg-quick@wg0.service
 </span></span><span class=line><span class=cl>$ sudo systemctl start wg-quick@wg0.service
 </span></span><span class=line><span class=cl>$ sudo systemctl status wg-quick@wg0.service
 </span></span></code></pre></td></tr></table></div></div><p>위와 같은 과정을 거치면 WireGuard의 기본설정은 마무리 된다.
-실제 연결한 PC (Peer) 에서 사용할 비대칭키와 IP 정보를 추가로 설정하면 바로 사용 가능하다.</p><h2 id=macbook-에서-연결>MacBook 에서 연결</h2><p>macOS 용으로는 GUI 앱이 있어 이를 이용하여 사용한다. 다른 OS를 사용하는 경우에도 유사한 과정을 수행하면 된다.</p><ul>
-<li>
-<p>다음 주소에서 맥용 앱을 설치한다.</p><ul>
-<li><a href=https://www.wireguard.com/install/ target=_blank rel="noopener noreffer">https://www.wireguard.com/install/</a></li></ul></li><li>
-<p>앱을 실행 후 <strong>Add Empty Tunnel</strong> 을 누르면 다음과 같이 설정 창이 뜬다.</p><ul>
-<li>앱에서 자동으로 Peer용 private를 생성하고, 자동으로 등록을 해준다.</li></ul></li></ul><figure><a class=lightgallery href=/posts/how-to-oci-wireguard-public-ipv6/wireguard-01.png title=/posts/how-to-oci-wireguard-public-ipv6/wireguard-01.png data-thumbnail=/posts/how-to-oci-wireguard-public-ipv6/wireguard-01.png data-sub-html="<h2>WireGuard Peer 설정창</h2>">
-<img class=lazyload data-src=wireguard-01.png data-srcset="/posts/how-to-oci-wireguard-public-ipv6/wireguard-01.png, wireguard-01.png 1.5x, /posts/how-to-oci-wireguard-public-ipv6/wireguard-01.png 2x" data-sizes=auto alt=/posts/how-to-oci-wireguard-public-ipv6/wireguard-01.png>
-</a><figcaption class=image-caption>WireGuard Peer 설정창</figcaption></figure><ul>
-<li>나머지 설정을 채워넣는다.
-<ul>
-<li>Address는 맥북에서 사용할 IP목록이다. IPv4, IPv6 각각 1개를 선택하였다. 주소는 서버의 설정에 있는 subnet 내 이어야 한다.</li><li>Peer의 PublicKey는 서버의 PublicKey 값이다. 위의 설정대로라면 서버 /etc/wireguard/public.key 에 저장되어 있다.</li><li>AllowedIPs는 VPN으로 터널링할 target IP 목록이다. 여기에서는 IPv6 용 public IP만 터널링 하도록 설정하였다.</li><li>만일 IPv4도 터널링 하려면 0.0.0.0/0 을 추가로 적으면, 하단에 &lsquo;Exclude private IPs&rsquo; 체크박스가 표시된다. 이를 선택하면 private IP를 제외한 주소만 터널링 된다. 모든 주소를 터널링 시키면 맥북이 사용하는 LAN의 사설 IP도 터널링 되어 정상적인 동작이 되지 않는다.</li><li>Endpoint에는 서버의 공인 IP와 포트를 적는다.</li></ul></li></ul><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+실제 연결한 PC (Peer) 에서 사용할 비대칭키와 IP 정보를 추가로 설정하면 바로 사용 가능하다.</p><h2 id=macbook-에서-연결>MacBook 에서 연결</h2><p>macOS 용으로는 GUI 앱이 있어 이를 이용하여 사용한다. 다른 OS를 사용하는 경우에도 유사한 과정을 수행하면 된다.</p><ul><li><p>다음 주소에서 맥용 앱을 설치한다.</p><ul><li><a href=https://www.wireguard.com/install/ target=_blank rel="noopener noreffer">https://www.wireguard.com/install/</a></li></ul></li><li><p>앱을 실행 후 <strong>Add Empty Tunnel</strong> 을 누르면 다음과 같이 설정 창이 뜬다.</p><ul><li>앱에서 자동으로 Peer용 private를 생성하고, 자동으로 등록을 해준다.</li></ul></li></ul><figure><a class=lightgallery href=/posts/how-to-oci-wireguard-public-ipv6/wireguard-01.png title=/posts/how-to-oci-wireguard-public-ipv6/wireguard-01.png data-thumbnail=/posts/how-to-oci-wireguard-public-ipv6/wireguard-01.png data-sub-html="<h2>WireGuard Peer 설정창</h2>"><img class=lazyload data-src=wireguard-01.png data-srcset="/posts/how-to-oci-wireguard-public-ipv6/wireguard-01.png, wireguard-01.png 1.5x, /posts/how-to-oci-wireguard-public-ipv6/wireguard-01.png 2x" data-sizes=auto alt=/posts/how-to-oci-wireguard-public-ipv6/wireguard-01.png></a><figcaption class=image-caption>WireGuard Peer 설정창</figcaption></figure><ul><li>나머지 설정을 채워넣는다.<ul><li>Address는 맥북에서 사용할 IP목록이다. IPv4, IPv6 각각 1개를 선택하였다. 주소는 서버의 설정에 있는 subnet 내 이어야 한다.</li><li>Peer의 PublicKey는 서버의 PublicKey 값이다. 위의 설정대로라면 서버 /etc/wireguard/public.key 에 저장되어 있다.</li><li>AllowedIPs는 VPN으로 터널링할 target IP 목록이다. 여기에서는 IPv6 용 public IP만 터널링 하도록 설정하였다.</li><li>만일 IPv4도 터널링 하려면 0.0.0.0/0 을 추가로 적으면, 하단에 &lsquo;Exclude private IPs&rsquo; 체크박스가 표시된다. 이를 선택하면 private IP를 제외한 주소만 터널링 된다. 모든 주소를 터널링 시키면 맥북이 사용하는 LAN의 사설 IP도 터널링 되어 정상적인 동작이 되지 않는다.</li><li>Endpoint에는 서버의 공인 IP와 포트를 적는다.</li></ul></li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -199,8 +71,7 @@ Ubuntu VM에 IPv6 주소는 <code>2603:cafe:cafe:ca01::1001</code> 와 같이 �
 </span><span class=lnt>6
 </span><span class=lnt>7
 </span><span class=lnt>8
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>[Interface]
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>[Interface]
 </span></span><span class=line><span class=cl>PrivateKey = sFDjqz+39nOR1kASq2AyZjm8eZOm9RIPTSoBqThBDGo=
 </span></span><span class=line><span class=cl>Address = 10.8.0.2/32, fd4f:c479:8c81::2/128
 </span></span><span class=line><span class=cl>
@@ -208,12 +79,7 @@ Ubuntu VM에 IPv6 주소는 <code>2603:cafe:cafe:ca01::1001</code> 와 같이 �
 </span></span><span class=line><span class=cl>PublicKey = RXqX80EgZn1xTDjPNUr482qruhEDvzf9dbhmVrKqwhQ=
 </span></span><span class=line><span class=cl>AllowedIPs = 2000::/4
 </span></span><span class=line><span class=cl>Endpoint = 131.111.111.111:51820
-</span></span></code></pre></td></tr></table></div></div><p>참고로 WireGuard에서는 client/server라고 구분하지 않고, 리모트를 Peer라고 한다.</p><ul>
-<li>서버의 /etc/wireguard/wg0.conf 에도 맥북을 Peer로 추가한다.
-<ul>
-<li>Peer PublicKey는 맥북의 public key를 적는다.</li><li>AllowedIPs는 허용할 IP 주소를 적는다. 맥북의 Interface-Address에 적은것과 동일하게 적으면 된다.</li></ul></li></ul><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></span></code></pre></td></tr></table></div></div><p>참고로 WireGuard에서는 client/server라고 구분하지 않고, 리모트를 Peer라고 한다.</p><ul><li>서버의 /etc/wireguard/wg0.conf 에도 맥북을 Peer로 추가한다.<ul><li>Peer PublicKey는 맥북의 public key를 적는다.</li><li>AllowedIPs는 허용할 IP 주소를 적는다. 맥북의 Interface-Address에 적은것과 동일하게 적으면 된다.</li></ul></li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -227,8 +93,7 @@ Ubuntu VM에 IPv6 주소는 <code>2603:cafe:cafe:ca01::1001</code> 와 같이 �
 </span><span class=lnt>12
 </span><span class=lnt>13
 </span><span class=lnt>14
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=o>[</span>Interface<span class=o>]</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=o>[</span>Interface<span class=o>]</span>
 </span></span><span class=line><span class=cl><span class=nv>Address</span> <span class=o>=</span> 10.8.0.1/24
 </span></span><span class=line><span class=cl><span class=nv>Address</span> <span class=o>=</span> fd4f:c479:8c81::1/64
 </span></span><span class=line><span class=cl><span class=nv>SaveConfig</span> <span class=o>=</span> <span class=nb>true</span>
@@ -242,46 +107,27 @@ Ubuntu VM에 IPv6 주소는 <code>2603:cafe:cafe:ca01::1001</code> 와 같이 �
 </span></span><span class=line><span class=cl><span class=o>[</span>Peer<span class=o>]</span>
 </span></span><span class=line><span class=cl><span class=nv>PublicKey</span> <span class=o>=</span> <span class=nv>6mRvCsDgqYqVldlaFABW8NrpFRG3pWFVqBj8xynEGWl</span><span class=o>=</span>
 </span></span><span class=line><span class=cl><span class=nv>AllowedIPs</span> <span class=o>=</span> 10.8.0.2/32, fd4f:c479:8c81::2/128
-</span></span></code></pre></td></tr></table></div></div><ul>
-<li>서버 설정 변경 후 재기동 한다.</li></ul><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ sudo systemctl restart wg-quick@wg0.service
-</span></span></code></pre></td></tr></table></div></div><ul>
-<li>맥북에서 Active를 해보면 다음과 같이 연결되었다고 표시된다.</li></ul><figure><a class=lightgallery href=/posts/how-to-oci-wireguard-public-ipv6/wireguard-02.png title=/posts/how-to-oci-wireguard-public-ipv6/wireguard-02.png data-thumbnail=/posts/how-to-oci-wireguard-public-ipv6/wireguard-02.png data-sub-html="<h2>WireGuard 연결</h2>">
-<img class=lazyload data-src=wireguard-02.png data-srcset="/posts/how-to-oci-wireguard-public-ipv6/wireguard-02.png, wireguard-02.png 1.5x, /posts/how-to-oci-wireguard-public-ipv6/wireguard-02.png 2x" data-sizes=auto alt=/posts/how-to-oci-wireguard-public-ipv6/wireguard-02.png>
-</a><figcaption class=image-caption>WireGuard 연결</figcaption></figure><p>정상적으로 설정이 되면 다음과 같이 IPv6 로 연결이 된다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><ul><li>서버 설정 변경 후 재기동 한다.</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ sudo systemctl restart wg-quick@wg0.service
+</span></span></code></pre></td></tr></table></div></div><ul><li>맥북에서 Active를 해보면 다음과 같이 연결되었다고 표시된다.</li></ul><figure><a class=lightgallery href=/posts/how-to-oci-wireguard-public-ipv6/wireguard-02.png title=/posts/how-to-oci-wireguard-public-ipv6/wireguard-02.png data-thumbnail=/posts/how-to-oci-wireguard-public-ipv6/wireguard-02.png data-sub-html="<h2>WireGuard 연결</h2>"><img class=lazyload data-src=wireguard-02.png data-srcset="/posts/how-to-oci-wireguard-public-ipv6/wireguard-02.png, wireguard-02.png 1.5x, /posts/how-to-oci-wireguard-public-ipv6/wireguard-02.png 2x" data-sizes=auto alt=/posts/how-to-oci-wireguard-public-ipv6/wireguard-02.png></a><figcaption class=image-caption>WireGuard 연결</figcaption></figure><p>정상적으로 설정이 되면 다음과 같이 IPv6 로 연결이 된다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ping6 v6.myip.tf
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ping6 v6.myip.tf
 </span></span><span class=line><span class=cl><span class=m>16</span> bytes from 2001:19f0:7001:3623:5400:1ff:feb4:ae7a, <span class=nv>icmp_seq</span><span class=o>=</span><span class=m>0</span> <span class=nv>hlim</span><span class=o>=</span><span class=m>54</span> <span class=nv>time</span><span class=o>=</span>66.299 ms
-</span></span></code></pre></td></tr></table></div></div><p>하지만 curl로 연결을 해보면 아래처럼 DNS 에러가 발생한다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p>하지만 curl로 연결을 해보면 아래처럼 DNS 에러가 발생한다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ curl -6 <span class=s1>&#39;http://v6.myip.tf&#39;</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ curl -6 <span class=s1>&#39;http://v6.myip.tf&#39;</span>
 </span></span><span class=line><span class=cl>curl: <span class=o>(</span>6<span class=o>)</span> Could not resolve host: v6.myip.tf
-</span></span></code></pre></td></tr></table></div></div><p>아래 처럼 직접 IP로 연결 해야만 정상적으로 연결이된다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p>아래 처럼 직접 IP로 연결 해야만 정상적으로 연결이된다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ host v6.myip.tf
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ host v6.myip.tf
 </span></span><span class=line><span class=cl>v6.myip.tf has IPv6 address 2001:19f0:9002:1f1c:5400:1ff:fe72:abe5
 </span></span><span class=line><span class=cl>v6.myip.tf has IPv6 address 2001:19f0:7001:3623:5400:1ff:feb4:ae7a
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>curl -6 -s <span class=s1>&#39;http://[2001:19f0:9002:1f1c:5400:1ff:fe72:abe5]&#39;</span> -H <span class=s1>&#39;Host: v6.myip.tf&#39;</span>
-</span></span></code></pre></td></tr></table></div></div><h3 id=mac-에서-ipv6-dns-문제-수정>MAC 에서 IPv6 DNS 문제 수정</h3><p>위와 같이 DNS query 가 정상적으로 안되는 문제는 macOS 에만 한정된 것으로 아래 링크에서 도움을 받을 수 있다.</p><ul>
-<li><a href=https://gist.github.com/smammy/3247b5114d717d12b68c201000ab163d target=_blank rel="noopener noreffer">How to convince macOS to do IPv6 DNS lookups when your only IPv6 address is via a VPN or tunnel of some sort</a></li></ul><p>간단하게 정리하면 맥에서는 물리적인 네트워크 인터페이스가 라우팅 가능한 IPv6 주소를 할당 받지 않는 경우 DNS 로 A 만 찾고, IPv6 주소인 AAAA 를 찾지 않는다.</p><p>scutil로 확인 가능하다. IPv6 query 가 되려면 &lsquo;Request A records, Request AAAA records&rsquo; 와 같이 보여야 한다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><h3 id=mac-에서-ipv6-dns-문제-수정>MAC 에서 IPv6 DNS 문제 수정</h3><p>위와 같이 DNS query 가 정상적으로 안되는 문제는 macOS 에만 한정된 것으로 아래 링크에서 도움을 받을 수 있다.</p><ul><li><a href=https://gist.github.com/smammy/3247b5114d717d12b68c201000ab163d target=_blank rel="noopener noreffer">How to convince macOS to do IPv6 DNS lookups when your only IPv6 address is via a VPN or tunnel of some sort</a></li></ul><p>간단하게 정리하면 맥에서는 물리적인 네트워크 인터페이스가 라우팅 가능한 IPv6 주소를 할당 받지 않는 경우 DNS 로 A 만 찾고, IPv6 주소인 AAAA 를 찾지 않는다.</p><p>scutil로 확인 가능하다. IPv6 query 가 되려면 &lsquo;Request A records, Request AAAA records&rsquo; 와 같이 보여야 한다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -290,8 +136,7 @@ Ubuntu VM에 IPv6 주소는 <code>2603:cafe:cafe:ca01::1001</code> 와 같이 �
 </span><span class=lnt>7
 </span><span class=lnt>8
 </span><span class=lnt>9
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>scutil --dns
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>scutil --dns
 </span></span><span class=line><span class=cl>DNS configuration
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>resolver <span class=c1>#1</span>
@@ -301,44 +146,16 @@ Ubuntu VM에 IPv6 주소는 <code>2603:cafe:cafe:ca01::1001</code> 와 같이 �
 </span></span><span class=line><span class=cl>  flags    : Request A records
 </span></span><span class=line><span class=cl>  reach    : 0x00000002 <span class=o>(</span>Reachable<span class=o>)</span>
 </span></span></code></pre></td></tr></table></div></div><p>curl의 경우 <code>getaddrinfo</code> 를 기본 설정으로 사용하여 <code>AI_ADDRCONFIG</code>로 되어 있고, 이로 인하여 A 만 query를 한다.
-ping6 는 이를 overwrite 하여 정상적으로 IPv6 주소를 얻게 된다.</p><p>이를 해결하기 위하여 수동으로 설정하거나 위 링크에서 제공하는 python script를 등록하여 맥북 wireguard 설정의 PostUp/PostDown 에 등록하여 사용하면 된다.</p><h3 id=ip-구성-확인>IP 구성 확인</h3><p>네트워크 구성을 보면 아래 그림과 같이 Ubuntu 서버가 NAT 라우터로 동작이 되는 구조이다.</p><p>전체적인 라우팅은 다음과 같은 기능을 동작하게 된다.</p><ul>
-<li>iptable은 이용한 IP Masquerade(NAT) 수행</li><li>sysctl 의 라우팅 설정(<code>net.ipv4.ip_forward</code>, <code>net.ipv6.conf.all.forwarding</code>)</li></ul><figure><a class=lightgallery href=/posts/how-to-oci-wireguard-public-ipv6/network1.png title=/posts/how-to-oci-wireguard-public-ipv6/network1.png data-thumbnail=/posts/how-to-oci-wireguard-public-ipv6/network1.png data-sub-html="<h2>사설 IP VPN 네트워크 구성</h2>">
-<img class=lazyload data-src=network1.png data-srcset="/posts/how-to-oci-wireguard-public-ipv6/network1.png, network1.png 1.5x, /posts/how-to-oci-wireguard-public-ipv6/network1.png 2x" data-sizes=auto alt=/posts/how-to-oci-wireguard-public-ipv6/network1.png>
-</a><figcaption class=image-caption>사설 IP VPN 네트워크 구성</figcaption></figure><h2 id=공인-ipv6로-변경>공인 IPv6로 변경</h2><p>외부 서버와 연결하는 경우라면 IPv6 사설망이어도 문제 없지만,
-Server를 실행하고 외부에서 IPv6 로 client 접속을 한다면 public IPv6 주소가 필요하다.</p><p>기존 설정을 변경하여 공인 IPv6 가 터널링 되도록 설정한다.</p><h3 id=공인-ip를-라우팅-하기>공인 IP를 라우팅 하기</h3><p>공인 IP로 라우팅은 다음과 같이 설정한다. 즉, 외부에서 공인 IPv6 주소인 <code>2603:cafe:cafe:ca01::2002</code> 에 접속을 할 수 있도록 한다.</p><figure><a class=lightgallery href=/posts/how-to-oci-wireguard-public-ipv6/network2.png title=/posts/how-to-oci-wireguard-public-ipv6/network2.png data-thumbnail=/posts/how-to-oci-wireguard-public-ipv6/network2.png data-sub-html="<h2>공인 IP VPN 네트워크 구성</h2>">
-<img class=lazyload data-src=network2.png data-srcset="/posts/how-to-oci-wireguard-public-ipv6/network2.png, network2.png 1.5x, /posts/how-to-oci-wireguard-public-ipv6/network2.png 2x" data-sizes=auto alt=/posts/how-to-oci-wireguard-public-ipv6/network2.png>
-</a><figcaption class=image-caption>공인 IP VPN 네트워크 구성</figcaption></figure><p>Internet Gateway에 적절한 라우팅 테이블 설정이 가능하다면 subnet을 구분하여 설정하면 되겠지만,
-무료 범주에서는 이런 구조를 사용하지 않는다.</p><p>WireGuard가 설치된 Ubuntu 서버에 NDP Proxy를 설정하여 특정 IP에 대해서 Neighbor Discovery 에 대해서 응답하도록 하면 해당 주소의 패킷을 수신할 수 있게 된다.</p><p>이 설정을 하려면 다음과 같이 하면 된다.</p><ul>
-<li>sysctl로 IPv6 NDP proxy를 허용</li></ul><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ sudo sysctl -w net.ipv6.conf.all.proxy_ndp<span class=o>=</span><span class=m>1</span>
-</span></span></code></pre></td></tr></table></div></div><ul>
-<li>ip command로 neigobor proxy 수행하기</li></ul><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ sudo ip -6 neigh add proxy 2603:cafe:cafe:ca01::2002 dev ens3
+ping6 는 이를 overwrite 하여 정상적으로 IPv6 주소를 얻게 된다.</p><p>이를 해결하기 위하여 수동으로 설정하거나 위 링크에서 제공하는 python script를 등록하여 맥북 wireguard 설정의 PostUp/PostDown 에 등록하여 사용하면 된다.</p><h3 id=ip-구성-확인>IP 구성 확인</h3><p>네트워크 구성을 보면 아래 그림과 같이 Ubuntu 서버가 NAT 라우터로 동작이 되는 구조이다.</p><p>전체적인 라우팅은 다음과 같은 기능을 동작하게 된다.</p><ul><li>iptable은 이용한 IP Masquerade(NAT) 수행</li><li>sysctl 의 라우팅 설정(<code>net.ipv4.ip_forward</code>, <code>net.ipv6.conf.all.forwarding</code>)</li></ul><figure><a class=lightgallery href=/posts/how-to-oci-wireguard-public-ipv6/network1.png title=/posts/how-to-oci-wireguard-public-ipv6/network1.png data-thumbnail=/posts/how-to-oci-wireguard-public-ipv6/network1.png data-sub-html="<h2>사설 IP VPN 네트워크 구성</h2>"><img class=lazyload data-src=network1.png data-srcset="/posts/how-to-oci-wireguard-public-ipv6/network1.png, network1.png 1.5x, /posts/how-to-oci-wireguard-public-ipv6/network1.png 2x" data-sizes=auto alt=/posts/how-to-oci-wireguard-public-ipv6/network1.png></a><figcaption class=image-caption>사설 IP VPN 네트워크 구성</figcaption></figure><h2 id=공인-ipv6로-변경>공인 IPv6로 변경</h2><p>외부 서버와 연결하는 경우라면 IPv6 사설망이어도 문제 없지만,
+Server를 실행하고 외부에서 IPv6 로 client 접속을 한다면 public IPv6 주소가 필요하다.</p><p>기존 설정을 변경하여 공인 IPv6 가 터널링 되도록 설정한다.</p><h3 id=공인-ip를-라우팅-하기>공인 IP를 라우팅 하기</h3><p>공인 IP로 라우팅은 다음과 같이 설정한다. 즉, 외부에서 공인 IPv6 주소인 <code>2603:cafe:cafe:ca01::2002</code> 에 접속을 할 수 있도록 한다.</p><figure><a class=lightgallery href=/posts/how-to-oci-wireguard-public-ipv6/network2.png title=/posts/how-to-oci-wireguard-public-ipv6/network2.png data-thumbnail=/posts/how-to-oci-wireguard-public-ipv6/network2.png data-sub-html="<h2>공인 IP VPN 네트워크 구성</h2>"><img class=lazyload data-src=network2.png data-srcset="/posts/how-to-oci-wireguard-public-ipv6/network2.png, network2.png 1.5x, /posts/how-to-oci-wireguard-public-ipv6/network2.png 2x" data-sizes=auto alt=/posts/how-to-oci-wireguard-public-ipv6/network2.png></a><figcaption class=image-caption>공인 IP VPN 네트워크 구성</figcaption></figure><p>Internet Gateway에 적절한 라우팅 테이블 설정이 가능하다면 subnet을 구분하여 설정하면 되겠지만,
+무료 범주에서는 이런 구조를 사용하지 않는다.</p><p>WireGuard가 설치된 Ubuntu 서버에 NDP Proxy를 설정하여 특정 IP에 대해서 Neighbor Discovery 에 대해서 응답하도록 하면 해당 주소의 패킷을 수신할 수 있게 된다.</p><p>이 설정을 하려면 다음과 같이 하면 된다.</p><ul><li>sysctl로 IPv6 NDP proxy를 허용</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ sudo sysctl -w net.ipv6.conf.all.proxy_ndp<span class=o>=</span><span class=m>1</span>
+</span></span></code></pre></td></tr></table></div></div><ul><li>ip command로 neigobor proxy 수행하기</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ sudo ip -6 neigh add proxy 2603:cafe:cafe:ca01::2002 dev ens3
 </span></span></code></pre></td></tr></table></div></div><p>위와 같이만 설정되면 Internet Gateway에서 <code>2603:cafe:cafe:ca01::2002</code> Neighbor Discovery 에 대해서 응답을 하게
-되어 패킷을 수신받게 되고, 내부 라우팅 룰에 따라 VPN Peer로 forwarding 된다.</p><p>아래 링크는 관련 설정을 정리한 것이다.</p><ul>
-<li><a href=https://gist.github.com/MartinBrugnara/cb0cd5b53a55861d92ecba77c80ba729 target=_blank rel="noopener noreffer">DigitalOcean, assign public ipv6 to wireguard clients</a></li></ul><p>하지만, OCI 에서 설정을 해보면 등록되지 않은 IP 주소에 대해서는 Neighbor Discovery 를 수행하지 않아, 위와 같이 설정해도 패킷을 수신받지 못한다.</p><h3 id=oci-에서-설정>OCI 에서 설정</h3><p>패킷을 수신받기 위하여 다음과 같이 설정한다.</p><ul>
-<li>
-<p>OCI 설정에서 Ubuntu VM에 <code>2603:cafe:cafe:ca01::2002</code> IP를 추가 등록. Uubntu는 <code>2603:cafe:cafe:ca01::1001</code>과 2개의 IPv6를 가짐</p><ul>
-<li><strong>Compute</strong> -> <strong>Instances</strong> -> Instance -> <strong>Attached VNICs</strong> -> vnic -> <strong>IPv6 Address</strong></li></ul></li><li>
-<p>VNIC에서 주소체크를 하지 않도록 수정</p><ul>
-<li><strong>Compute</strong> -> <strong>Instances</strong> -> Instance -> <strong>Attached VNICs</strong> -> Edit VNIC -> <strong>Skip source/destination check</strong> 체크</li></ul></li><li>
-<p>Wireguard 중지</p></li></ul><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ sudo systemctl stop wg-quick@wg0.service
-</span></span></code></pre></td></tr></table></div></div><ul>
-<li>/etc/wirdguard/wg0.conf 수정
-<ul>
-<li>Address를 임의의 주소로 변경. Subnet은 범위를 줄임</li><li>기존 IPv6 masquerade 설정 삭제</li><li>DHCP client를 강제 종료하고, 2603:cafe:cafe:ca01::2002 는 삭제</li></ul></li></ul><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+되어 패킷을 수신받게 되고, 내부 라우팅 룰에 따라 VPN Peer로 forwarding 된다.</p><p>아래 링크는 관련 설정을 정리한 것이다.</p><ul><li><a href=https://gist.github.com/MartinBrugnara/cb0cd5b53a55861d92ecba77c80ba729 target=_blank rel="noopener noreffer">DigitalOcean, assign public ipv6 to wireguard clients</a></li></ul><p>하지만, OCI 에서 설정을 해보면 등록되지 않은 IP 주소에 대해서는 Neighbor Discovery 를 수행하지 않아, 위와 같이 설정해도 패킷을 수신받지 못한다.</p><h3 id=oci-에서-설정>OCI 에서 설정</h3><p>패킷을 수신받기 위하여 다음과 같이 설정한다.</p><ul><li><p>OCI 설정에서 Ubuntu VM에 <code>2603:cafe:cafe:ca01::2002</code> IP를 추가 등록. Uubntu는 <code>2603:cafe:cafe:ca01::1001</code>과 2개의 IPv6를 가짐</p><ul><li><strong>Compute</strong> -> <strong>Instances</strong> -> Instance -> <strong>Attached VNICs</strong> -> vnic -> <strong>IPv6 Address</strong></li></ul></li><li><p>VNIC에서 주소체크를 하지 않도록 수정</p><ul><li><strong>Compute</strong> -> <strong>Instances</strong> -> Instance -> <strong>Attached VNICs</strong> -> Edit VNIC -> <strong>Skip source/destination check</strong> 체크</li></ul></li><li><p>Wireguard 중지</p></li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ sudo systemctl stop wg-quick@wg0.service
+</span></span></code></pre></td></tr></table></div></div><ul><li>/etc/wirdguard/wg0.conf 수정<ul><li>Address를 임의의 주소로 변경. Subnet은 범위를 줄임</li><li>기존 IPv6 masquerade 설정 삭제</li><li>DHCP client를 강제 종료하고, 2603:cafe:cafe:ca01::2002 는 삭제</li></ul></li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -348,8 +165,7 @@ Server를 실행하고 외부에서 IPv6 로 client 접속을 한다면 public I
 </span><span class=lnt> 8
 </span><span class=lnt> 9
 </span><span class=lnt>10
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>[Interface]
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>[Interface]
 </span></span><span class=line><span class=cl>Address = 10.8.0.1/24
 </span></span><span class=line><span class=cl>Address = 2603:cafe:cafe:ca01::2001/112
 </span></span><span class=line><span class=cl>SaveConfig = true
@@ -359,42 +175,12 @@ Server를 실행하고 외부에서 IPv6 로 client 접속을 한다면 public I
 </span></span><span class=line><span class=cl>PreDown = iptables -t nat -D POSTROUTING -o ens3 -j MASQUERADE
 </span></span><span class=line><span class=cl>ListenPort = 51820
 </span></span><span class=line><span class=cl>PrivateKey = 2ZDTT0ebU4/pyLwg5CKnNNw2oLUcNIpwgjV7eyhtGQ0=
-</span></span></code></pre></td></tr></table></div></div><ul>
-<li>재기동</li></ul><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ sudo systemctl start wg-quick@wg0.service
-</span></span></code></pre></td></tr></table></div></div><ul>
-<li>맥북에서는 Interface의 Address 를 public IPv6 로 변경</li></ul><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><ul><li>재기동</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ sudo systemctl start wg-quick@wg0.service
+</span></span></code></pre></td></tr></table></div></div><ul><li>맥북에서는 Interface의 Address 를 public IPv6 로 변경</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>[Interface]
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>[Interface]
 </span></span><span class=line><span class=cl>Address = 10.8.0.2/32, 2603:cafe:cafe:ca01::2002/128
-</span></span></code></pre></td></tr></table></div></div><p>이렇게 하면 Internet Gateway에서는 패킷을 전달하게 되고, 나머지는 Ubuntu 내부 라우팅 룰로 전달된다.</p><h2 id=공인-ipv6-주소-확인>공인 IPv6 주소 확인</h2><p>위의 설정으로 하면 다음과 같이 맥북에서 wireshark로 utun 인터페이스를 캡쳐해보면 정상적으로 ping 수신되는 것을 확인할 수 있다.</p><figure><a class=lightgallery href=/posts/how-to-oci-wireguard-public-ipv6/ping.png title=/posts/how-to-oci-wireguard-public-ipv6/ping.png data-thumbnail=/posts/how-to-oci-wireguard-public-ipv6/ping.png data-sub-html="<h2>ping 수행 결과</h2>">
-<img class=lazyload data-src=ping.png data-srcset="/posts/how-to-oci-wireguard-public-ipv6/ping.png, ping.png 1.5x, /posts/how-to-oci-wireguard-public-ipv6/ping.png 2x" data-sizes=auto alt=/posts/how-to-oci-wireguard-public-ipv6/ping.png>
-</a><figcaption class=image-caption>ping 수행 결과</figcaption></figure><h2 id=정리>정리</h2><p>DigitalOcean 과 같이 NDP proxy가 가능한 구조면 좀 더 깔끔하게 설정이 되었을 텐데, 이것이 안되어 조금은 설정이 복잡해졌다.</p><p>아직은 놔두면 다시 2603:cafe:cafe:ca01::2002 가 할당되어 주기적으로 삭제를 해주어야만 하지만, 급한데로 IPv6 를 테스트 할 수 있는 환경은 구축 완료 하였다.</p></div><div class=post-footer id=post-footer>
-<div class=post-info>
-<div class=post-info-line>
-<div class=post-info-mod>
-<span>Updated on 2021-12-11</span>
-</div><div class=post-info-license></div></div><div class=post-info-line>
-<div class=post-info-md></div><div class=post-info-share>
-<span></span>
-</div></div></div><div class=post-info-more>
-<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/oci/>OCI</a>,&nbsp;<a href=/tags/wireguard/>WireGuard</a>,&nbsp;<a href=/tags/ipv6/>IPv6</a></section><section>
-<span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span>
-</section></div><div class=post-nav><a href=/posts/yocto-project-history/ class=prev rel=prev title="Yocto Project History"><i class="fas fa-angle-left fa-fw"></i>Yocto Project History</a>
-<a href=/posts/how-to-capture-tls-with-wireshark/ class=next rel=next title="Wireshark 으로 TLS 캡쳐 및 디코딩 하기">Wireshark 으로 TLS 캡쳐 및 디코딩 하기<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=giscus></div><noscript>
-Please enable JavaScript to view the comments powered by <a href=https://giscus.app/>giscus</a>.
-</noscript></div></article></div></main><footer class=footer>
-<div class=footer-container><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://www.humminglab.io target=_blank rel="noopener noreferrer">HummingLab</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=#back-to-top id=back-to-top-button class=fixed-button title="Back to Top">
-<i class="fas fa-arrow-up fa-fw"></i>
-</a><a href=# id=view-comments class=fixed-button title="View Comments">
-<i class="fas fa-comment fa-fw"></i>
-</a>
-</div><div class=assets><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/topbar/topbar.min.js></script><script type=text/javascript src=/lib/pjax/pjax.min.js></script><script type=text/javascript src=/js/theme.min.js></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","UA-83257319-3",{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=UA-83257319-3" async></script></div><div class=pjax-assets><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",lightTheme:"light"}},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1}}</script><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/katex/katex.min.css>
-<noscript><link rel=stylesheet href=/lib/katex/katex.min.css></noscript><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/katex/copy-tex.min.css>
-<noscript><link rel=stylesheet href=/lib/katex/copy-tex.min.css></noscript></div></body></html>
+</span></span></code></pre></td></tr></table></div></div><p>이렇게 하면 Internet Gateway에서는 패킷을 전달하게 되고, 나머지는 Ubuntu 내부 라우팅 룰로 전달된다.</p><h2 id=공인-ipv6-주소-확인>공인 IPv6 주소 확인</h2><p>위의 설정으로 하면 다음과 같이 맥북에서 wireshark로 utun 인터페이스를 캡쳐해보면 정상적으로 ping 수신되는 것을 확인할 수 있다.</p><figure><a class=lightgallery href=/posts/how-to-oci-wireguard-public-ipv6/ping.png title=/posts/how-to-oci-wireguard-public-ipv6/ping.png data-thumbnail=/posts/how-to-oci-wireguard-public-ipv6/ping.png data-sub-html="<h2>ping 수행 결과</h2>"><img class=lazyload data-src=ping.png data-srcset="/posts/how-to-oci-wireguard-public-ipv6/ping.png, ping.png 1.5x, /posts/how-to-oci-wireguard-public-ipv6/ping.png 2x" data-sizes=auto alt=/posts/how-to-oci-wireguard-public-ipv6/ping.png></a><figcaption class=image-caption>ping 수행 결과</figcaption></figure><h2 id=정리>정리</h2><p>DigitalOcean 과 같이 NDP proxy가 가능한 구조면 좀 더 깔끔하게 설정이 되었을 텐데, 이것이 안되어 조금은 설정이 복잡해졌다.</p><p>아직은 놔두면 다시 2603:cafe:cafe:ca01::2002 가 할당되어 주기적으로 삭제를 해주어야만 하지만, 급한데로 IPv6 를 테스트 할 수 있는 환경은 구축 완료 하였다.</p></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>Updated on 2021-12-11</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share><span></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/oci/>OCI</a>,&nbsp;<a href=/tags/wireguard/>WireGuard</a>,&nbsp;<a href=/tags/ipv6/>IPv6</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span></section></div><div class=post-nav><a href=/posts/yocto-project-history/ class=prev rel=prev title="Yocto Project History"><i class="fas fa-angle-left fa-fw"></i>Yocto Project History</a>
+<a href=/posts/how-to-capture-tls-with-wireshark/ class=next rel=next title="Wireshark 으로 TLS 캡쳐 및 디코딩 하기">Wireshark 으로 TLS 캡쳐 및 디코딩 하기<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=giscus></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://giscus.app/>giscus</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://www.humminglab.io target=_blank rel="noopener noreferrer">HummingLab</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=#back-to-top id=back-to-top-button class=fixed-button title="Back to Top"><i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title="View Comments"><i class="fas fa-comment fa-fw"></i></a></div><div class=assets><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/topbar/topbar.min.js></script><script type=text/javascript src=/lib/pjax/pjax.min.js></script><script type=text/javascript src=/js/theme.min.js></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","UA-83257319-3",{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=UA-83257319-3" async></script></div><div class=pjax-assets><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",lightTheme:"light"}},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1}}</script><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/katex/katex.min.css><noscript><link rel=stylesheet href=/lib/katex/katex.min.css></noscript><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/katex/copy-tex.min.css><noscript><link rel=stylesheet href=/lib/katex/copy-tex.min.css></noscript></div></body></html>

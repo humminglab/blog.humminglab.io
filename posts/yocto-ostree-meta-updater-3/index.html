@@ -1,65 +1,15 @@
-<!doctype html><html lang=en>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width,initial-scale=1">
-<meta name=robots content="noodp">
-<title class=pjax-title>Yocto에 OSTree upgrade 적용(3) - 업그레이드/롤백 및 OSTree 리뷰 - All about IoT</title><meta name=Description content><meta property="og:title" content="Yocto에 OSTree upgrade 적용(3) - 업그레이드/롤백 및 OSTree 리뷰">
-<meta property="og:description" content="이전글 Yocto에 OSTree upgrade 적용(1) 에서 Yocto를 이용한 빌드 과정과, Yocto에 OSTree upgrade 적용(2) 에서 OSTree를 적용한 이미지의 부팅 과정에 대해서 설명하였다.
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><title class=pjax-title>Yocto에 OSTree upgrade 적용(3) - 업그레이드/롤백 및 OSTree 리뷰 - All about IoT</title><meta name=Description content><meta property="og:title" content="Yocto에 OSTree upgrade 적용(3) - 업그레이드/롤백 및 OSTree 리뷰"><meta property="og:description" content="이전글 Yocto에 OSTree upgrade 적용(1) 에서 Yocto를 이용한 빌드 과정과, Yocto에 OSTree upgrade 적용(2) 에서 OSTree를 적용한 이미지의 부팅 과정에 대해서 설명하였다.
 이번 글에서는 OSTree가 적용된 이미지를 실제로 업그레이드 하는 방법, 롤백 절차, 프로그램에서 이를 관리하는 방법에 대해서 설명한다.
-이해를 돕고자 OSTree의 업그레이드 절차를 git과 비교하여 설명한다. OSTree는 ostree CLI 명령을 이용하여 업그레이드 과정을 수행할 수 있고, libostree library 를 이용하여 프로그램으로 구현할 수 도 있다. 이 글에서는 CLI를 이용하는 업그레이드 방법을 설명한다.">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://blog.humminglab.io/posts/yocto-ostree-meta-updater-3/"><meta property="article:section" content="posts">
-<meta property="article:published_time" content="2022-02-16T22:00:00+09:00">
-<meta property="article:modified_time" content="2022-02-16T22:00:00+09:00">
-<meta name=twitter:card content="summary">
-<meta name=twitter:title content="Yocto에 OSTree upgrade 적용(3) - 업그레이드/롤백 및 OSTree 리뷰">
-<meta name=twitter:description content="이전글 Yocto에 OSTree upgrade 적용(1) 에서 Yocto를 이용한 빌드 과정과, Yocto에 OSTree upgrade 적용(2) 에서 OSTree를 적용한 이미지의 부팅 과정에 대해서 설명하였다.
+이해를 돕고자 OSTree의 업그레이드 절차를 git과 비교하여 설명한다. OSTree는 ostree CLI 명령을 이용하여 업그레이드 과정을 수행할 수 있고, libostree library 를 이용하여 프로그램으로 구현할 수 도 있다. 이 글에서는 CLI를 이용하는 업그레이드 방법을 설명한다."><meta property="og:type" content="article"><meta property="og:url" content="https://blog.humminglab.io/posts/yocto-ostree-meta-updater-3/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-02-16T22:00:00+09:00"><meta property="article:modified_time" content="2022-02-16T22:00:00+09:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="Yocto에 OSTree upgrade 적용(3) - 업그레이드/롤백 및 OSTree 리뷰"><meta name=twitter:description content="이전글 Yocto에 OSTree upgrade 적용(1) 에서 Yocto를 이용한 빌드 과정과, Yocto에 OSTree upgrade 적용(2) 에서 OSTree를 적용한 이미지의 부팅 과정에 대해서 설명하였다.
 이번 글에서는 OSTree가 적용된 이미지를 실제로 업그레이드 하는 방법, 롤백 절차, 프로그램에서 이를 관리하는 방법에 대해서 설명한다.
-이해를 돕고자 OSTree의 업그레이드 절차를 git과 비교하여 설명한다. OSTree는 ostree CLI 명령을 이용하여 업그레이드 과정을 수행할 수 있고, libostree library 를 이용하여 프로그램으로 구현할 수 도 있다. 이 글에서는 CLI를 이용하는 업그레이드 방법을 설명한다.">
-<meta name=application-name content="All about IoT">
-<meta name=apple-mobile-web-app-title content="All about IoT">
-<meta name=theme-color content="#f8f8f8"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
-<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/posts/yocto-ostree-meta-updater-3/><link rel=prev href=https://blog.humminglab.io/posts/yocto-ostree-meta-updater-2/><link rel=next href=https://blog.humminglab.io/posts/tls-cryptography-3-block-cipher/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/fontawesome-free/all.min.css>
-<noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/animate/animate.min.css>
-<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Yocto에 OSTree upgrade 적용(3) - 업그레이드/롤백 및 OSTree 리뷰","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/yocto-ostree-meta-updater-3\/"},"genre":"posts","keywords":"Yocto, OSTree, OTA, Uptane, U-Boot","wordcount":1308,"url":"https:\/\/blog.humminglab.io\/posts\/yocto-ostree-meta-updater-3\/","datePublished":"2022-02-16T22:00:00+09:00","dateModified":"2022-02-16T22:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head><body header-desktop header-mobile><script type=text/javascript>function setTheme(e){document.body.setAttribute("theme",e)}function saveTheme(e){window.localStorage&&localStorage.setItem("theme",e)}function getMeta(t){const e=document.getElementsByTagName("meta");for(let n=0;n<e.length;n++)if(e[n].getAttribute("name")===t)return e[n];return''}if(window.localStorage&&localStorage.getItem("theme")){let e=localStorage.getItem("theme");e==="light"||e==="dark"||e==="black"?setTheme(e):window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?setTheme("dark"):setTheme("light")}else''==="light"||''==="dark"||''==="black"?(setTheme(''),saveTheme('')):(saveTheme("auto"),window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?setTheme("dark"):setTheme("light"));let metaColors={light:"#f8f8f8",dark:"#252627",black:"#000000"};getMeta("theme-color").content=metaColors[document.body.getAttribute("theme")]</script>
-<div id=back-to-top></div><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
-<div class=header-wrapper>
-<div class=header-title>
-<a href=/ title="All about IoT">All about IoT</a>
-</div><div class=menu>
-<div class=menu-inner><a class=menu-item href=/posts/> Posts </a><a class=menu-item href=/tags/> Tags </a><a class=menu-item href=/categories/> Categories </a><a class=menu-item href=https://www.humminglab.io/ rel="noopener noreffer" target=_blank> HummingLab </a><span class="menu-item delimiter"></span><a href=# onclick=return!1 class="menu-item theme-switch" title="Switch Theme">
-<i class="fas fa-adjust fa-fw"></i>
-</a></div></div></div></header><header class=mobile id=header-mobile>
-<div class=header-container>
-<div class=header-wrapper>
-<div class=header-title>
-<a href=/ title="All about IoT">All about IoT</a>
-</div><div class=menu-toggle id=menu-toggle-mobile>
-<span></span><span></span><span></span>
-</div></div><div class=menu id=menu-mobile><a class=menu-item href=/posts/ title>Posts</a><a class=menu-item href=/tags/ title>Tags</a><a class=menu-item href=/categories/ title>Categories</a><a class=menu-item href=https://www.humminglab.io/ title rel="noopener noreffer" target=_blank>HummingLab</a><a href=# onclick=return!1 class="menu-item theme-switch" title="Switch Theme">
-<i class="fas fa-adjust fa-fw"></i>
-</a></div></div></header><div class="search-dropdown desktop">
-<div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile">
-<div id=search-dropdown-mobile></div></div><main class=main>
-<div class=container><div class=toc id=toc-auto>
-<h2 class=toc-title>Contents</h2><div class="toc-content always-active" id=toc-content-auto></div></div><script>document.getElementsByTagName("main")[0].setAttribute("pageStyle","normal")</script><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC","true")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Yocto에 OSTree upgrade 적용(3) - 업그레이드/롤백 및 OSTree 리뷰</h1><div class=post-meta>
-<div class=post-meta-line>
-<span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
+이해를 돕고자 OSTree의 업그레이드 절차를 git과 비교하여 설명한다. OSTree는 ostree CLI 명령을 이용하여 업그레이드 과정을 수행할 수 있고, libostree library 를 이용하여 프로그램으로 구현할 수 도 있다. 이 글에서는 CLI를 이용하는 업그레이드 방법을 설명한다."><meta name=application-name content="All about IoT"><meta name=apple-mobile-web-app-title content="All about IoT"><meta name=theme-color content="#f8f8f8"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/posts/yocto-ostree-meta-updater-3/><link rel=prev href=https://blog.humminglab.io/posts/yocto-ostree-meta-updater-2/><link rel=next href=https://blog.humminglab.io/posts/tls-cryptography-3-block-cipher/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/fontawesome-free/all.min.css><noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/animate/animate.min.css><noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Yocto에 OSTree upgrade 적용(3) - 업그레이드/롤백 및 OSTree 리뷰","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/yocto-ostree-meta-updater-3\/"},"genre":"posts","keywords":"Yocto, OSTree, OTA, Uptane, U-Boot","wordcount":1308,"url":"https:\/\/blog.humminglab.io\/posts\/yocto-ostree-meta-updater-3\/","datePublished":"2022-02-16T22:00:00+09:00","dateModified":"2022-02-16T22:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head><body header-desktop header-mobile><script type=text/javascript>function setTheme(e){document.body.setAttribute("theme",e)}function saveTheme(e){window.localStorage&&localStorage.setItem("theme",e)}function getMeta(t){const e=document.getElementsByTagName("meta");for(let n=0;n<e.length;n++)if(e[n].getAttribute("name")===t)return e[n];return''}if(window.localStorage&&localStorage.getItem("theme")){let e=localStorage.getItem("theme");e==="light"||e==="dark"||e==="black"?setTheme(e):window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?setTheme("dark"):setTheme("light")}else''==="light"||''==="dark"||''==="black"?(setTheme(''),saveTheme('')):(saveTheme("auto"),window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?setTheme("dark"):setTheme("light"));let metaColors={light:"#f8f8f8",dark:"#252627",black:"#000000"};getMeta("theme-color").content=metaColors[document.body.getAttribute("theme")]</script><div id=back-to-top></div><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title="All about IoT">All about IoT</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/>Posts </a><a class=menu-item href=/tags/>Tags </a><a class=menu-item href=/categories/>Categories </a><a class=menu-item href=https://www.humminglab.io/ rel="noopener noreffer" target=_blank>HummingLab </a><span class="menu-item delimiter"></span><a href=# onclick=return!1 class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title="All about IoT">All about IoT</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><a class=menu-item href=/posts/ title>Posts</a><a class=menu-item href=/tags/ title>Tags</a><a class=menu-item href=/categories/ title>Categories</a><a class=menu-item href=https://www.humminglab.io/ title rel="noopener noreffer" target=_blank>HummingLab</a><a href=# onclick=return!1 class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>Contents</h2><div class="toc-content always-active" id=toc-content-auto></div></div><script>document.getElementsByTagName("main")[0].setAttribute("pageStyle","normal")</script><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC","true")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Yocto에 OSTree upgrade 적용(3) - 업그레이드/롤백 및 OSTree 리뷰</h1><div class=post-meta><div class=post-meta-line><span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
 </span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/development/><i class="far fa-folder fa-fw"></i>Development</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2022-02-16>2022-02-16</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2022-02-16>2022-02-16</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;1308 words&nbsp;
-<i class="far fa-clock fa-fw"></i>&nbsp;7 minutes&nbsp;</div></div><div class="details toc" id=toc-static kept>
-<div class="details-summary toc-title">
-<span>Contents</span>
-<span><i class="details-icon fas fa-angle-right"></i></span>
-</div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents>
-<ul>
-<li>
-<ul>
-<li><a href=#ostree-repository-server>OSTree repository server</a></li><li><a href=#기기에서-업그레이드-수행>기기에서 업그레이드 수행</a></li><li><a href=#롤백-하기>롤백 하기</a></li></ul></li><li><a href=#자동-롤백-구현하기>자동 롤백 구현하기</a></li><li><a href=#마무리>마무리</a></li></ul></nav></div></div><div class=content id=content><p>이전글 <a href=https://blog.humminglab.io/posts/yocto-ostree-meta-updater-1/ rel>Yocto에 OSTree upgrade 적용(1)</a> 에서 Yocto를 이용한 빌드 과정과,
+<i class="far fa-clock fa-fw"></i>&nbsp;7 minutes&nbsp;</div></div><div class="details toc" id=toc-static kept><div class="details-summary toc-title"><span>Contents</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><ul><li><a href=#ostree-repository-server>OSTree repository server</a></li><li><a href=#기기에서-업그레이드-수행>기기에서 업그레이드 수행</a></li><li><a href=#롤백-하기>롤백 하기</a></li></ul></li><li><a href=#자동-롤백-구현하기>자동 롤백 구현하기</a></li><li><a href=#마무리>마무리</a></li></ul></nav></div></div><div class=content id=content><p>이전글 <a href=https://blog.humminglab.io/posts/yocto-ostree-meta-updater-1/ rel>Yocto에 OSTree upgrade 적용(1)</a> 에서 Yocto를 이용한 빌드 과정과,
 <a href=https://blog.humminglab.io/posts/yocto-ostree-meta-updater-2/ rel>Yocto에 OSTree upgrade 적용(2)</a> 에서 OSTree를 적용한 이미지의 부팅 과정에 대해서 설명하였다.</p><p>이번 글에서는 OSTree가 적용된 이미지를 실제로 업그레이드 하는 방법, 롤백 절차, 프로그램에서 이를 관리하는 방법에 대해서 설명한다.</p><p>이해를 돕고자 OSTree의 업그레이드 절차를 git과 비교하여 설명한다.
-OSTree는 ostree CLI 명령을 이용하여 업그레이드 과정을 수행할 수 있고, libostree library 를 이용하여 프로그램으로 구현할 수 도 있다. 이 글에서는 CLI를 이용하는 업그레이드 방법을 설명한다.</p><h3 id=ostree-repository-server>OSTree repository server</h3><p>Yocto 빌드를 하면 ostree repository는 deploy 디렉토리에 ostree_repo 로 생성된다.</p><p>빌드된 deploy 디렉토리에서 <code>ostree log</code>를 실행해보면 지금까지 빌드된 log를 확인할 수 있다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+OSTree는 ostree CLI 명령을 이용하여 업그레이드 과정을 수행할 수 있고, libostree library 를 이용하여 프로그램으로 구현할 수 도 있다. 이 글에서는 CLI를 이용하는 업그레이드 방법을 설명한다.</p><h3 id=ostree-repository-server>OSTree repository server</h3><p>Yocto 빌드를 하면 ostree repository는 deploy 디렉토리에 ostree_repo 로 생성된다.</p><p>빌드된 deploy 디렉토리에서 <code>ostree log</code>를 실행해보면 지금까지 빌드된 log를 확인할 수 있다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -76,8 +26,7 @@ OSTree는 ostree CLI 명령을 이용하여 업그레이드 과정을 수행할 
 </span><span class=lnt>15
 </span><span class=lnt>16
 </span><span class=lnt>17
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ostree --repo<span class=o>=</span>ostree_repo refs
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ostree --repo<span class=o>=</span>ostree_repo refs
 </span></span><span class=line><span class=cl>sc-gateway
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>$ ostree --repo<span class=o>=</span>ostree_repo log sc-gateway
@@ -94,24 +43,18 @@ OSTree는 ostree CLI 명령을 이용하여 업그레이드 과정을 수행할 
 </span></span><span class=line><span class=cl>Version: 1.0
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>    Commit-id: sc-gateway-image-sc-gateway-20220210094454
-</span></span></code></pre></td></tr></table></div></div><p>이 디렉토리를 웹 서버로 엑세스 가능하게만 해주면, 기기에서 이를 이용하여 OTA를 수행할 수 있다.</p><p>시험을 위하여 웹 서버를 실행하는 간단한 방법 중 하나는 python을 이용하여 다음과 같이 실행하면 된다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ python -m SimpleHTTPServer <span class=m>8081</span>
+</span></span></code></pre></td></tr></table></div></div><p>이 디렉토리를 웹 서버로 엑세스 가능하게만 해주면, 기기에서 이를 이용하여 OTA를 수행할 수 있다.</p><p>시험을 위하여 웹 서버를 실행하는 간단한 방법 중 하나는 python을 이용하여 다음과 같이 실행하면 된다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ python -m SimpleHTTPServer <span class=m>8081</span>
 </span></span></code></pre></td></tr></table></div></div><p>상용으로 OTA 서버를 운영하는 경우에는 인증 매커니즘이 들어가야 한다.
 이를 위해서 두가지 방법이 있는데, 첫번째는 ostree 에서 기본 제공하는 gpg 를 이용하여 정확한 서버의 데이타인 지를 클라이언트에서 검증하는 방법이고,
-두번째는 웹 서버 연결 시 HTTPS 웹 인증을 수행하여 서버, 클라이언트(기기) 인증을 하는 방법이다.</p><p>일반적인 상용 서비스에서는 두번째와 같은 방식을 많이 사용한다. 여기에서는 시험 용도로 별도의 인증은 사용 하지 않는다.</p><h3 id=기기에서-업그레이드-수행>기기에서 업그레이드 수행</h3><p>초기 부팅을 한 상태에서는 타겟 내에는 빌드된 OSTree 의 최종 snapshot 만 가지고 있다.</p><p><code>ostree log</code> 명령으로 로컬의 로그를 확인해 볼 수 있다 (<code>git log</code>와 유사). 타겟에서는 용량을 고려하여 모든 commit 정보를 가지고 있지 않고, 필요한 이력만 최소한으로 가지고 있다 (물론 필요하다면 로그 정보만 다 받아오는 것도 가능하다.)</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+두번째는 웹 서버 연결 시 HTTPS 웹 인증을 수행하여 서버, 클라이언트(기기) 인증을 하는 방법이다.</p><p>일반적인 상용 서비스에서는 두번째와 같은 방식을 많이 사용한다. 여기에서는 시험 용도로 별도의 인증은 사용 하지 않는다.</p><h3 id=기기에서-업그레이드-수행>기기에서 업그레이드 수행</h3><p>초기 부팅을 한 상태에서는 타겟 내에는 빌드된 OSTree 의 최종 snapshot 만 가지고 있다.</p><p><code>ostree log</code> 명령으로 로컬의 로그를 확인해 볼 수 있다 (<code>git log</code>와 유사). 타겟에서는 용량을 고려하여 모든 commit 정보를 가지고 있지 않고, 필요한 이력만 최소한으로 가지고 있다 (물론 필요하다면 로그 정보만 다 받아오는 것도 가능하다.)</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
 </span><span class=lnt>7
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ostree log poky:sc-gateway
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ostree log poky:sc-gateway
 </span></span><span class=line><span class=cl>commit 931c8ec950226dc18613e3e32f6d4079356e74e543314ce34f07df93492e1f51
 </span></span><span class=line><span class=cl>ContentChecksum:  a7bfe9ecec3dbc13014be7899706ac29a9db8bdab94d99c4291e0975156a4a84
 </span></span><span class=line><span class=cl>Date:  1970-01-01 00:00:00 +0000
@@ -119,22 +62,14 @@ OSTree는 ostree CLI 명령을 이용하여 업그레이드 과정을 수행할 
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>    Commit-id: sc-gateway-image-sc-gateway-20220211022907
 </span></span></code></pre></td></tr></table></div></div><p>기기에서 처음 할 일은 <code>ostree remote add</code>로 repository를 등록한다(<code>git remote add</code>와 유사).
-다음과 같이 실행하면 remote 서버를 &lsquo;poky&rsquo;로 추가하게 된다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ostree remote add --no-gpg-verify poky http://192.168.9.3/repo/
+다음과 같이 실행하면 remote 서버를 &lsquo;poky&rsquo;로 추가하게 된다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ostree remote add --no-gpg-verify poky http://192.168.9.3/repo/
 </span></span></code></pre></td></tr></table></div></div><p><code>ostree pull</code> 명령으로 서버의 최신 commit을 가져온다(<code>git fetch</code>와 유사).
-모든 이력을 가져오지 않고 최신 하나의 commit 정보만 가지고 온다. 뒤에 붙는 REFS의 &lsquo;poky&rsquo; 는 remote 이름이고, &lsquo;sc-gateway&rsquo;는 git branch로 이해할 수 있다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+모든 이력을 가져오지 않고 최신 하나의 commit 정보만 가지고 온다. 뒤에 붙는 REFS의 &lsquo;poky&rsquo; 는 remote 이름이고, &lsquo;sc-gateway&rsquo;는 git branch로 이해할 수 있다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ostree pull poky:sc-gateway
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ostree pull poky:sc-gateway
 </span></span><span class=line><span class=cl><span class=m>7</span> metadata, <span class=m>11</span> content objects fetched<span class=p>;</span> <span class=m>382</span> KiB transferred in <span class=m>0</span> seconds<span class=p>;</span> 861.9 kB content written
-</span></span></code></pre></td></tr></table></div></div><p><code>ostree log</code> 명령으로 가져온 로그를 확인할 수 있다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p><code>ostree log</code> 명령으로 가져온 로그를 확인할 수 있다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -142,8 +77,7 @@ OSTree는 ostree CLI 명령을 이용하여 업그레이드 과정을 수행할 
 </span><span class=lnt>6
 </span><span class=lnt>7
 </span><span class=lnt>8
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ostree log poky:sc-gateway
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ostree log poky:sc-gateway
 </span></span><span class=line><span class=cl>commit 7113d71eec68e79ab6765d86487babdf74707fdfcb5f03e68adb01342e6059f2
 </span></span><span class=line><span class=cl>Parent:  b10ffbc6124b8cf30f171ad8aa54cdb4722595ca740cfa7985916d50573b7efd
 </span></span><span class=line><span class=cl>ContentChecksum:  eaef166c55855134b79d9b6cce01da2503f9375b8380b982b12c71695694e2df
@@ -151,168 +85,107 @@ OSTree는 ostree CLI 명령을 이용하여 업그레이드 과정을 수행할 
 </span></span><span class=line><span class=cl>Version: 1.0
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>    Commit-id: sc-gateway-image-sc-gateway-20220215064144
-</span></span></code></pre></td></tr></table></div></div><p>가져온 commit을 deploy 하기 전에 우선 <code>ostree admin status</code>를 이용하여 현재 deploy 된 정보를 확인할 수 있다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p>가져온 commit을 deploy 하기 전에 우선 <code>ostree admin status</code>를 이용하여 현재 deploy 된 정보를 확인할 수 있다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ostree admin status
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ostree admin status
 </span></span><span class=line><span class=cl>* poky 931c8ec950226dc18613e3e32f6d4079356e74e543314ce34f07df93492e1f51.0
 </span></span><span class=line><span class=cl>    Version: 1.0
 </span></span><span class=line><span class=cl>    poky refspec: poky:sc-gateway
-</span></span></code></pre></td></tr></table></div></div><p>이제 <code>ostree admin deploy</code>를 이용하여 받아온 commit을 deploy 한다(<code>git checkout</code>와 유사).</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p>이제 <code>ostree admin deploy</code>를 이용하여 받아온 commit을 deploy 한다(<code>git checkout</code>와 유사).</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ostree admin deploy poky:sc-gateway
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ostree admin deploy poky:sc-gateway
 </span></span><span class=line><span class=cl>note: Deploying commit f9afc4650235fc6657e57d7ff9c4d56a1fcb0bb9f4f5ccaa11058e4cc871ea0c which contains content in /var/local that will be ignored.
 </span></span><span class=line><span class=cl>Copying /etc changes: <span class=m>1</span> modified, <span class=m>0</span> removed, <span class=m>4</span> added
 </span></span><span class=line><span class=cl>Transaction complete<span class=p>;</span> bootconfig swap: yes<span class=p>;</span> bootversion: boot.0.1, deployment count change: <span class=m>1</span>
-</span></span></code></pre></td></tr></table></div></div><p>이와 같이 실행하면 deploy 디렉토리(/sysroot/ostree/deploy/poky/deploy)에 새로 받은 버전이 추가된다. <code>ostree admin status</code>로 확인해 보면 다음과 같다.</p><p>기존에 있던 931&mldr;f51 이외에 f9a&mldr;a0c 가 추가 되었고 뒤에 (pending)이라고 되어 있다. 앞부분에 &lsquo;*&lsquo;가 있는 것이 현재 사용하고 있는 deploy이다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p>이와 같이 실행하면 deploy 디렉토리(/sysroot/ostree/deploy/poky/deploy)에 새로 받은 버전이 추가된다. <code>ostree admin status</code>로 확인해 보면 다음과 같다.</p><p>기존에 있던 931&mldr;f51 이외에 f9a&mldr;a0c 가 추가 되었고 뒤에 (pending)이라고 되어 있다. 앞부분에 &lsquo;*&lsquo;가 있는 것이 현재 사용하고 있는 deploy이다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
 </span><span class=lnt>7
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ostree admin status
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ostree admin status
 </span></span><span class=line><span class=cl>  poky f9afc4650235fc6657e57d7ff9c4d56a1fcb0bb9f4f5ccaa11058e4cc871ea0c.0 <span class=o>(</span>pending<span class=o>)</span>
 </span></span><span class=line><span class=cl>    Version: 1.0
 </span></span><span class=line><span class=cl>    origin refspec: poky:sc-gateway
 </span></span><span class=line><span class=cl>* poky 931c8ec950226dc18613e3e32f6d4079356e74e543314ce34f07df93492e1f51.0
 </span></span><span class=line><span class=cl>    Version: 1.0
 </span></span><span class=line><span class=cl>    origin refspec: poky:sc-gateway
-</span></span></code></pre></td></tr></table></div></div><p>이 상태에서 시스템을 리부팅하면 새로운 버전으로 변경되어 실행 된다. 시스템을 리부팅 후 status 를 확인해 보면 다음과 같다.</p><p>기존 931&mldr;f51은 (rollback) 로 표시되고, f9a&mldr;a0c 가 active 된다. Rollback은 필요 시 rollback 하기 위한 용도라고 보면 된다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p>이 상태에서 시스템을 리부팅하면 새로운 버전으로 변경되어 실행 된다. 시스템을 리부팅 후 status 를 확인해 보면 다음과 같다.</p><p>기존 931&mldr;f51은 (rollback) 로 표시되고, f9a&mldr;a0c 가 active 된다. Rollback은 필요 시 rollback 하기 위한 용도라고 보면 된다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
 </span><span class=lnt>7
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ostree admin status
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ostree admin status
 </span></span><span class=line><span class=cl>* poky f9afc4650235fc6657e57d7ff9c4d56a1fcb0bb9f4f5ccaa11058e4cc871ea0c.0
 </span></span><span class=line><span class=cl>    Version: 1.0
 </span></span><span class=line><span class=cl>    origin refspec: origin:sc-gateway
 </span></span><span class=line><span class=cl>  poky 931c8ec950226dc18613e3e32f6d4079356e74e543314ce34f07df93492e1f51.0 <span class=o>(</span>rollback<span class=o>)</span>
 </span></span><span class=line><span class=cl>    Version: 1.0
 </span></span><span class=line><span class=cl>    origin refspec: origing:sc-gateway
-</span></span></code></pre></td></tr></table></div></div><p>이상과 같이 간단하게 업그레이드 과정을 진행할 수 있다.</p><p>그리고, <code>ostree pull</code> 과 <code>ostree admin deploy</code> 를 합치 <code>ostree admin upgrade</code> 명령이 있어서 이를 이용한 경우 위 절차를 하나로 줄일 수 있다(<code>git pull</code>과 유사).</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p>이상과 같이 간단하게 업그레이드 과정을 진행할 수 있다.</p><p>그리고, <code>ostree pull</code> 과 <code>ostree admin deploy</code> 를 합치 <code>ostree admin upgrade</code> 명령이 있어서 이를 이용한 경우 위 절차를 하나로 줄일 수 있다(<code>git pull</code>과 유사).</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ostree admin upgrade
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ostree admin upgrade
 </span></span><span class=line><span class=cl><span class=m>6</span> metadata, <span class=m>2</span> content objects fetched<span class=p>;</span> <span class=m>5</span> KiB transferred in <span class=m>0</span> seconds<span class=p>;</span> <span class=m>14</span> bytes content written
 </span></span><span class=line><span class=cl>note: Deploying commit 0e90b885b48e4142dae209f1964046c54da75c840de1aca02ff1f19e923ec64f which contains content in /var/local that will be ignored.
 </span></span><span class=line><span class=cl>Copying /etc changes: <span class=m>1</span> modified, <span class=m>0</span> removed, <span class=m>4</span> added
 </span></span><span class=line><span class=cl>Transaction complete<span class=p>;</span> bootconfig swap: no<span class=p>;</span> bootversion: boot.0.0, deployment count change: <span class=m>0</span>
 </span></span><span class=line><span class=cl>Freed objects: 19.1?kB
-</span></span></code></pre></td></tr></table></div></div><h3 id=롤백-하기>롤백 하기</h3><p>만일 새로 받은 버전이 문제가 있는 경우 이전 버전으로 롤백을 할 수 있다.</p><p>위의 <code>ostree admin status</code> 에서 (rollback) 이 있는 상태에서, /sysroot/boot/loader/uEnv.txt 를 보면 다음과 같이 kernel_image 이외에 kernel_image2가 추가되어 있다. 이 2번 항목들이 rollback을 위한 것이다 (아래 에서는 kernel이 변경되지는 않아 동일한 것을 가리키고 있다).</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><h3 id=롤백-하기>롤백 하기</h3><p>만일 새로 받은 버전이 문제가 있는 경우 이전 버전으로 롤백을 할 수 있다.</p><p>위의 <code>ostree admin status</code> 에서 (rollback) 이 있는 상태에서, /sysroot/boot/loader/uEnv.txt 를 보면 다음과 같이 kernel_image 이외에 kernel_image2가 추가되어 있다. 이 2번 항목들이 rollback을 위한 것이다 (아래 에서는 kernel이 변경되지는 않아 동일한 것을 가리키고 있다).</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
 </span><span class=lnt>7
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ cat /sysroot/boot/loader/uEnv.txt
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ cat /sysroot/boot/loader/uEnv.txt
 </span></span><span class=line><span class=cl><span class=nv>kernel_image</span><span class=o>=</span>/boot/ostree/poky-1f81ac983fb706e6034016a81ed3b5d727700c2284f8cc52f4b5323740293f7d/vmlinuz-5.4.69
 </span></span><span class=line><span class=cl><span class=nv>ramdisk_image</span><span class=o>=</span>/boot/ostree/poky-1f81ac983fb706e6034016a81ed3b5d727700c2284f8cc52f4b5323740293f7d/initramfs-5.4.69.img
 </span></span><span class=line><span class=cl><span class=nv>bootargs</span><span class=o>=</span><span class=nv>ostree</span><span class=o>=</span>/ostree/boot.0/poky/1f81ac983fb706e6034016a81ed3b5d727700c2284f8cc52f4b5323740293f7d/0
 </span></span><span class=line><span class=cl><span class=nv>kernel_image2</span><span class=o>=</span>/boot/ostree/poky-1f81ac983fb706e6034016a81ed3b5d727700c2284f8cc52f4b5323740293f7d/vmlinuz-5.4.69
 </span></span><span class=line><span class=cl><span class=nv>ramdisk_image2</span><span class=o>=</span>/boot/ostree/poky-1f81ac983fb706e6034016a81ed3b5d727700c2284f8cc52f4b5323740293f7d/initramfs-5.4.69.img
 </span></span><span class=line><span class=cl><span class=nv>bootargs2</span><span class=o>=</span><span class=nv>ostree</span><span class=o>=</span>/ostree/boot.0/poky/1f81ac983fb706e6034016a81ed3b5d727700c2284f8cc52f4b5323740293f7d/1
-</span></span></code></pre></td></tr></table></div></div><p>롤백 절차를 간단히 정리해 보면 다음과 같다.</p><ul>
-<li>u-boot shell 에서 u-boot 변수 <code>rollback</code>을 1로 설정하고 부팅한다.</li></ul><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p>롤백 절차를 간단히 정리해 보면 다음과 같다.</p><ul><li>u-boot shell 에서 u-boot 변수 <code>rollback</code>을 1로 설정하고 부팅한다.</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=o>=</span>&gt; setenv rollback <span class=nv>1</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=o>=</span>&gt; setenv rollback <span class=nv>1</span>
 </span></span><span class=line><span class=cl><span class=o>=</span>&gt; run bootcmd
-</span></span></code></pre></td></tr></table></div></div><ul>
-<li>
-<p><code>rollback</code>이 1인 경우 <a href=https://blog.humminglab.io/posts/yocto-ostree-meta-updater-2/#target-에-yocto-적용하기 rel>Yocto에 OSTree upgrade 적용(2)</a> 의 u-boot/boot.cmd 와 같이 <code>altbootcmd</code> 를 수행한다. 이 과정은 kernel_image2를 사용하여 부팅되도록 되어 있다.</p></li><li>
-<p>initramfs에서도 <code>rollback</code> 인 경우 rootfs를 이전 상태로 하여 실행한다.</p></li></ul><p>이와 같이 rollback이 된 상태에서 보면 아래와 같이 deploy 된 직후의 상태로 돌아온다.</p><p>이 과정은 완전하게 rollback이 된 것은 아니고, 다시 리부팅을 하면 (peding) 되어 있던 것이 다시 active가 된다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><ul><li><p><code>rollback</code>이 1인 경우 <a href=https://blog.humminglab.io/posts/yocto-ostree-meta-updater-2/#target-에-yocto-적용하기 rel>Yocto에 OSTree upgrade 적용(2)</a> 의 u-boot/boot.cmd 와 같이 <code>altbootcmd</code> 를 수행한다. 이 과정은 kernel_image2를 사용하여 부팅되도록 되어 있다.</p></li><li><p>initramfs에서도 <code>rollback</code> 인 경우 rootfs를 이전 상태로 하여 실행한다.</p></li></ul><p>이와 같이 rollback이 된 상태에서 보면 아래와 같이 deploy 된 직후의 상태로 돌아온다.</p><p>이 과정은 완전하게 rollback이 된 것은 아니고, 다시 리부팅을 하면 (peding) 되어 있던 것이 다시 active가 된다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
 </span><span class=lnt>7
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ostree admin status
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ostree admin status
 </span></span><span class=line><span class=cl>  poky f9afc4650235fc6657e57d7ff9c4d56a1fcb0bb9f4f5ccaa11058e4cc871ea0c.0 <span class=o>(</span>pending<span class=o>)</span>
 </span></span><span class=line><span class=cl>    Version: 1.0
 </span></span><span class=line><span class=cl>    origin refspec: poky:sc-gateway
 </span></span><span class=line><span class=cl>* poky 931c8ec950226dc18613e3e32f6d4079356e74e543314ce34f07df93492e1f51.0
 </span></span><span class=line><span class=cl>    Version: 1.0
 </span></span><span class=line><span class=cl>    origin refspec: poky:sc-gateway
-</span></span></code></pre></td></tr></table></div></div><p>롤백된 상태를 계속 유지하려면 다음과 같이 <code>ostree admin undeply</code>로 제거하여야 한다. 첫번째 (0번 인덱스)를 제거하면 rollback 과정이 완료된다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p>롤백된 상태를 계속 유지하려면 다음과 같이 <code>ostree admin undeply</code>로 제거하여야 한다. 첫번째 (0번 인덱스)를 제거하면 rollback 과정이 완료된다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ostree admin undeploy <span class=m>0</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ostree admin undeploy <span class=m>0</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>$ ostree admin status
 </span></span><span class=line><span class=cl>* poky 931c8ec950226dc18613e3e32f6d4079356e74e543314ce34f07df93492e1f51.0
 </span></span><span class=line><span class=cl>    Version: 1.0
 </span></span><span class=line><span class=cl>    origin refspec: poky:sc-gateway
-</span></span></code></pre></td></tr></table></div></div><h2 id=자동-롤백-구현하기>자동 롤백 구현하기</h2><p>실제 제품으로 사용하는 경우에는 위와 같은 수동 롤백이 아니라, 업그레이드 후 문제 발생 시 자동 롤백 기능이 필요하다.</p><p><a href=https://github.com/advancedtelematic/meta-updater target=_blank rel="noopener noreffer">meta-updateer</a> 에서는 <a href=https://advancedtelematic.github.io/aktualizr/index.html target=_blank rel="noopener noreffer">Aktualizr</a> 라는 프로그램으로 전용 OTA 서버를 이용하는 기능이 구현되어 있다.</p><p>Aktualizr 를 사용하지 않고, 직접 구현하여 사용하는 경우에 필요한 처리 사항을 정리하면 다음과 같다.</p><p>U-Boot 에는 <a href=https://github.com/u-boot/u-boot/blob/master/doc/README.bootcount target=_blank rel="noopener noreffer">bootcount</a> 기능을 제공한다(자세한 방법은 이 링크의 설명을 참고).</p><p>관련된 환경변수는 다음과 같다.</p><ul>
-<li><code>bootcount</code>: 부팅 시 마다 1씩 자동으로 증가한다.</li><li><code>bootlimit</code>: <code>bootcount</code>가 <code>bootlimit</code> 값을 넘어서는 경우 <code>bootcmd</code>가 아닌 <code>altbootcmd</code> 를 실행한다. altbootcmd에서 rollback을 구현한다.</li><li><code>upgrade_available</code>: 만일 이 값이 0 이면 <code>bootcount</code>는 증가하지 않고, 1 인 경우에만 증가한다. 즉, upgrade 한 직후에만 1로 하여 문제 발생 시 rollback 될 수 있도록 할 수 있다.</li></ul><p>U-Boot 의 이 기능만으로 운영은 하지 못하고, 정상적으로 부팅이 완료된 후 데몬과 같은 프로그램에서 추가적인 처리를 해주어야 한다.</p><p>이 데몬과 U-Boot는 다음과 같이 동작한다.</p><ul>
-<li>업그레이드 시
-<ul>
-<li>데몬 프로그램
-<ul>
-<li><code>ostree admin upgrade</code>와 같은 절차를 수행하여 새로운 deploy를 생성한다.</li><li>U-Boot <a href=https://github.com/u-boot/u-boot/tree/master/tools/env target=_blank rel="noopener noreffer">fw_setenv</a> 등을 이용하여 U-Boot 환경변수 <code>upgrade_available</code>를 1 로 설정하고, <code>bootcount</code> 는 0, <code>bootlimit</code>는 적절한 값으로 설정한다.</li><li>리부팅</li></ul></li><li>U-Boot
-<ul>
-<li>부팅 시마다 <code>bootcount</code>를 1씩 증가한다.</li><li>linux 부팅 중 문제가 발생하는 경우 watchdog 등으로 인하여 리부팅 되면, <code>bootcount</code>는 1씩 증가한다.</li><li>만일 <code>bootcount</code>가 <code>bootlimit</code>만큼 되면 <code>altbootcmd</code>가 실행되어 롤백 부팅이 된다.</li></ul></li><li>데몬 프로그램
-<ul>
-<li>정상 부팅이 되면 <code>upgrade_available</code>을 0으로 설정하여 u-boot 에서 rollback 되지 않도록 한다.</li><li>만일 rollback 부팅 되었다면 문제가 되는 deployment를 제거한다.</li></ul></li></ul></li></ul><p><a href=https://advancedtelematic.github.io/aktualizr/index.html target=_blank rel="noopener noreffer">Aktualizr</a> 의 기능 중 일부가 위와 같은 데몬 프로그램의 역할을 하는 것이다.</p><p>이와 유사한 기능은 libostree를 이용하여 프로그램으로 구현을 하거나, demon script로 구현을 하면 자동 롤백 기능을 구현할 수 있다.</p><h2 id=마무리>마무리</h2><p>OSTree를 사용하는 <a href=https://getfedora.org/en/coreos target=_blank rel="noopener noreffer">Fedora CoreOS</a> 는 Kubernetes와 같이 수많은 클러스터를 위한 Container 전용 OS 이다. OSTree 기반의 rpm-ostree를 이용하여 다수의 클러스터를 동일한 snapshot 으로 유지 관리를 할 수 있다.
-위에서 언급한 <a href=https://advancedtelematic.github.io/aktualizr/index.html target=_blank rel="noopener noreffer">Aktualizr</a> 도 자동차의 Secure OTA를 위한 <a href=https://uptane.github.io target=_blank rel="noopener noreffer">Uptane Alliance</a>의 표준을 만족하는 OSTree 방식의 업그레이드 시스템이다.</p><p>OSTree는 이와 같이 수많은 기기들을 동일한 스냅샷으로 유지 관리할 필요가 있는 Clustering, 자동차, IoT OS 등의 upgrade 기능으로 장점을 가진다.</p><p>전체 파일 시스템을 업그레이드 하는 방식과 비교하여, 빠른 업그레이드 속도, overlayfs 방식의 임시수정, hotfix, mutlple delta 스위칭 등 다양한 기능을 활용할 수 있어 제품의 라이프 사이클이 길고, 지속적으로 기능이 향상되는 기기에서는 이의 적용을 검토해 보는 것도 좋을 것이다.</p></div><div class=post-footer id=post-footer>
-<div class=post-info>
-<div class=post-info-line>
-<div class=post-info-mod>
-<span>Updated on 2022-02-16</span>
-</div><div class=post-info-license></div></div><div class=post-info-line>
-<div class=post-info-md></div><div class=post-info-share>
-<span></span>
-</div></div></div><div class=post-info-more>
-<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/yocto/>Yocto</a>,&nbsp;<a href=/tags/ostree/>OSTree</a>,&nbsp;<a href=/tags/ota/>OTA</a>,&nbsp;<a href=/tags/uptane/>Uptane</a>,&nbsp;<a href=/tags/u-boot/>U-Boot</a></section><section>
-<span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span>
-</section></div><div class=post-nav><a href=/posts/yocto-ostree-meta-updater-2/ class=prev rel=prev title="Yocto에 OSTree upgrade 적용(2) - 부팅 절차"><i class="fas fa-angle-left fa-fw"></i>Yocto에 OSTree upgrade 적용(2) - 부팅 절차</a>
-<a href=/posts/tls-cryptography-3-block-cipher/ class=next rel=next title="TLS/암호 알고리즘 쉽게 이해하기(3) - Block Cipher">TLS/암호 알고리즘 쉽게 이해하기(3) - Block Cipher<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=giscus></div><noscript>
-Please enable JavaScript to view the comments powered by <a href=https://giscus.app/>giscus</a>.
-</noscript></div></article></div></main><footer class=footer>
-<div class=footer-container><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://www.humminglab.io target=_blank rel="noopener noreferrer">HummingLab</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=#back-to-top id=back-to-top-button class=fixed-button title="Back to Top">
-<i class="fas fa-arrow-up fa-fw"></i>
-</a><a href=# id=view-comments class=fixed-button title="View Comments">
-<i class="fas fa-comment fa-fw"></i>
-</a>
-</div><div class=assets><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/topbar/topbar.min.js></script><script type=text/javascript src=/lib/pjax/pjax.min.js></script><script type=text/javascript src=/js/theme.min.js></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","UA-83257319-3",{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=UA-83257319-3" async></script></div><div class=pjax-assets><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",lightTheme:"light"}},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1}}</script><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/katex/katex.min.css>
-<noscript><link rel=stylesheet href=/lib/katex/katex.min.css></noscript><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/katex/copy-tex.min.css>
-<noscript><link rel=stylesheet href=/lib/katex/copy-tex.min.css></noscript></div></body></html>
+</span></span></code></pre></td></tr></table></div></div><h2 id=자동-롤백-구현하기>자동 롤백 구현하기</h2><p>실제 제품으로 사용하는 경우에는 위와 같은 수동 롤백이 아니라, 업그레이드 후 문제 발생 시 자동 롤백 기능이 필요하다.</p><p><a href=https://github.com/advancedtelematic/meta-updater target=_blank rel="noopener noreffer">meta-updateer</a> 에서는 <a href=https://advancedtelematic.github.io/aktualizr/index.html target=_blank rel="noopener noreffer">Aktualizr</a> 라는 프로그램으로 전용 OTA 서버를 이용하는 기능이 구현되어 있다.</p><p>Aktualizr 를 사용하지 않고, 직접 구현하여 사용하는 경우에 필요한 처리 사항을 정리하면 다음과 같다.</p><p>U-Boot 에는 <a href=https://github.com/u-boot/u-boot/blob/master/doc/README.bootcount target=_blank rel="noopener noreffer">bootcount</a> 기능을 제공한다(자세한 방법은 이 링크의 설명을 참고).</p><p>관련된 환경변수는 다음과 같다.</p><ul><li><code>bootcount</code>: 부팅 시 마다 1씩 자동으로 증가한다.</li><li><code>bootlimit</code>: <code>bootcount</code>가 <code>bootlimit</code> 값을 넘어서는 경우 <code>bootcmd</code>가 아닌 <code>altbootcmd</code> 를 실행한다. altbootcmd에서 rollback을 구현한다.</li><li><code>upgrade_available</code>: 만일 이 값이 0 이면 <code>bootcount</code>는 증가하지 않고, 1 인 경우에만 증가한다. 즉, upgrade 한 직후에만 1로 하여 문제 발생 시 rollback 될 수 있도록 할 수 있다.</li></ul><p>U-Boot 의 이 기능만으로 운영은 하지 못하고, 정상적으로 부팅이 완료된 후 데몬과 같은 프로그램에서 추가적인 처리를 해주어야 한다.</p><p>이 데몬과 U-Boot는 다음과 같이 동작한다.</p><ul><li>업그레이드 시<ul><li>데몬 프로그램<ul><li><code>ostree admin upgrade</code>와 같은 절차를 수행하여 새로운 deploy를 생성한다.</li><li>U-Boot <a href=https://github.com/u-boot/u-boot/tree/master/tools/env target=_blank rel="noopener noreffer">fw_setenv</a> 등을 이용하여 U-Boot 환경변수 <code>upgrade_available</code>를 1 로 설정하고, <code>bootcount</code> 는 0, <code>bootlimit</code>는 적절한 값으로 설정한다.</li><li>리부팅</li></ul></li><li>U-Boot<ul><li>부팅 시마다 <code>bootcount</code>를 1씩 증가한다.</li><li>linux 부팅 중 문제가 발생하는 경우 watchdog 등으로 인하여 리부팅 되면, <code>bootcount</code>는 1씩 증가한다.</li><li>만일 <code>bootcount</code>가 <code>bootlimit</code>만큼 되면 <code>altbootcmd</code>가 실행되어 롤백 부팅이 된다.</li></ul></li><li>데몬 프로그램<ul><li>정상 부팅이 되면 <code>upgrade_available</code>을 0으로 설정하여 u-boot 에서 rollback 되지 않도록 한다.</li><li>만일 rollback 부팅 되었다면 문제가 되는 deployment를 제거한다.</li></ul></li></ul></li></ul><p><a href=https://advancedtelematic.github.io/aktualizr/index.html target=_blank rel="noopener noreffer">Aktualizr</a> 의 기능 중 일부가 위와 같은 데몬 프로그램의 역할을 하는 것이다.</p><p>이와 유사한 기능은 libostree를 이용하여 프로그램으로 구현을 하거나, demon script로 구현을 하면 자동 롤백 기능을 구현할 수 있다.</p><h2 id=마무리>마무리</h2><p>OSTree를 사용하는 <a href=https://getfedora.org/en/coreos target=_blank rel="noopener noreffer">Fedora CoreOS</a> 는 Kubernetes와 같이 수많은 클러스터를 위한 Container 전용 OS 이다. OSTree 기반의 rpm-ostree를 이용하여 다수의 클러스터를 동일한 snapshot 으로 유지 관리를 할 수 있다.
+위에서 언급한 <a href=https://advancedtelematic.github.io/aktualizr/index.html target=_blank rel="noopener noreffer">Aktualizr</a> 도 자동차의 Secure OTA를 위한 <a href=https://uptane.github.io target=_blank rel="noopener noreffer">Uptane Alliance</a>의 표준을 만족하는 OSTree 방식의 업그레이드 시스템이다.</p><p>OSTree는 이와 같이 수많은 기기들을 동일한 스냅샷으로 유지 관리할 필요가 있는 Clustering, 자동차, IoT OS 등의 upgrade 기능으로 장점을 가진다.</p><p>전체 파일 시스템을 업그레이드 하는 방식과 비교하여, 빠른 업그레이드 속도, overlayfs 방식의 임시수정, hotfix, mutlple delta 스위칭 등 다양한 기능을 활용할 수 있어 제품의 라이프 사이클이 길고, 지속적으로 기능이 향상되는 기기에서는 이의 적용을 검토해 보는 것도 좋을 것이다.</p></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>Updated on 2022-02-16</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share><span></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/yocto/>Yocto</a>,&nbsp;<a href=/tags/ostree/>OSTree</a>,&nbsp;<a href=/tags/ota/>OTA</a>,&nbsp;<a href=/tags/uptane/>Uptane</a>,&nbsp;<a href=/tags/u-boot/>U-Boot</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span></section></div><div class=post-nav><a href=/posts/yocto-ostree-meta-updater-2/ class=prev rel=prev title="Yocto에 OSTree upgrade 적용(2) - 부팅 절차"><i class="fas fa-angle-left fa-fw"></i>Yocto에 OSTree upgrade 적용(2) - 부팅 절차</a>
+<a href=/posts/tls-cryptography-3-block-cipher/ class=next rel=next title="TLS/암호 알고리즘 쉽게 이해하기(3) - Block Cipher">TLS/암호 알고리즘 쉽게 이해하기(3) - Block Cipher<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=giscus></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://giscus.app/>giscus</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://www.humminglab.io target=_blank rel="noopener noreferrer">HummingLab</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=#back-to-top id=back-to-top-button class=fixed-button title="Back to Top"><i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title="View Comments"><i class="fas fa-comment fa-fw"></i></a></div><div class=assets><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/topbar/topbar.min.js></script><script type=text/javascript src=/lib/pjax/pjax.min.js></script><script type=text/javascript src=/js/theme.min.js></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","UA-83257319-3",{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=UA-83257319-3" async></script></div><div class=pjax-assets><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",lightTheme:"light"}},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1}}</script><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/katex/katex.min.css><noscript><link rel=stylesheet href=/lib/katex/katex.min.css></noscript><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/katex/copy-tex.min.css><noscript><link rel=stylesheet href=/lib/katex/copy-tex.min.css></noscript></div></body></html>

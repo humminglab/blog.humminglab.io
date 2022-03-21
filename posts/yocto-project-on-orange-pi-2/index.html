@@ -1,67 +1,15 @@
-<!doctype html><html lang=en>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width,initial-scale=1">
-<meta name=robots content="noodp">
-<title class=pjax-title>Yocto Project 개발하기(2) - Custom Layer 만들기 - All about IoT</title><meta name=Description content><meta property="og:title" content="Yocto Project 개발하기(2) - Custom Layer 만들기">
-<meta property="og:description" content="이전 글 에서 meta-sunxi 를 추가하여 orage pi 용으로 빌드를 만들었고, 이번 과정은 project 용으로 meta layer를 만들어서 관리하는 방법을 설명한다.
+<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><title class=pjax-title>Yocto Project 개발하기(2) - Custom Layer 만들기 - All about IoT</title><meta name=Description content><meta property="og:title" content="Yocto Project 개발하기(2) - Custom Layer 만들기"><meta property="og:description" content="이전 글 에서 meta-sunxi 를 추가하여 orage pi 용으로 빌드를 만들었고, 이번 과정은 project 용으로 meta layer를 만들어서 관리하는 방법을 설명한다.
 실제 개발 과정을 이해하기 좋도록 meta layer 를 만들어 가는 과정을 설명한다.
- Yocto Project 개발하기(1) - Orange Pi 보드 빌드 Yocto Project 개발하기(2) - Custom Layer 만들기 Yocto Project 개발하기(3) - 개발 시 로컬 패키지 관리하기 Yocto Project 개발하기(4) - Yocto SDK 빌드 Yocto Project 개발하기(5) - Yocto eSDK 이용한 개발 모델  Layer 및 machine 생성 프로젝트를 sc-gateway 라고 명하고(이름에 특별한 의미는 없음), 이를 layer로 만든다.">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://blog.humminglab.io/posts/yocto-project-on-orange-pi-2/"><meta property="article:section" content="posts">
-<meta property="article:published_time" content="2022-01-07T19:00:00+09:00">
-<meta property="article:modified_time" content="2022-01-18T22:00:00+09:00">
-<meta name=twitter:card content="summary">
-<meta name=twitter:title content="Yocto Project 개발하기(2) - Custom Layer 만들기">
-<meta name=twitter:description content="이전 글 에서 meta-sunxi 를 추가하여 orage pi 용으로 빌드를 만들었고, 이번 과정은 project 용으로 meta layer를 만들어서 관리하는 방법을 설명한다.
+ Yocto Project 개발하기(1) - Orange Pi 보드 빌드 Yocto Project 개발하기(2) - Custom Layer 만들기 Yocto Project 개발하기(3) - 개발 시 로컬 패키지 관리하기 Yocto Project 개발하기(4) - Yocto SDK 빌드 Yocto Project 개발하기(5) - Yocto eSDK 이용한 개발 모델  Layer 및 machine 생성 프로젝트를 sc-gateway 라고 명하고(이름에 특별한 의미는 없음), 이를 layer로 만든다."><meta property="og:type" content="article"><meta property="og:url" content="https://blog.humminglab.io/posts/yocto-project-on-orange-pi-2/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-01-07T19:00:00+09:00"><meta property="article:modified_time" content="2022-01-18T22:00:00+09:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="Yocto Project 개발하기(2) - Custom Layer 만들기"><meta name=twitter:description content="이전 글 에서 meta-sunxi 를 추가하여 orage pi 용으로 빌드를 만들었고, 이번 과정은 project 용으로 meta layer를 만들어서 관리하는 방법을 설명한다.
 실제 개발 과정을 이해하기 좋도록 meta layer 를 만들어 가는 과정을 설명한다.
- Yocto Project 개발하기(1) - Orange Pi 보드 빌드 Yocto Project 개발하기(2) - Custom Layer 만들기 Yocto Project 개발하기(3) - 개발 시 로컬 패키지 관리하기 Yocto Project 개발하기(4) - Yocto SDK 빌드 Yocto Project 개발하기(5) - Yocto eSDK 이용한 개발 모델  Layer 및 machine 생성 프로젝트를 sc-gateway 라고 명하고(이름에 특별한 의미는 없음), 이를 layer로 만든다.">
-<meta name=application-name content="All about IoT">
-<meta name=apple-mobile-web-app-title content="All about IoT">
-<meta name=theme-color content="#f8f8f8"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
-<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/posts/yocto-project-on-orange-pi-2/><link rel=prev href=https://blog.humminglab.io/posts/nearley-builder-and-loader/><link rel=next href=https://blog.humminglab.io/posts/yocto-project-on-orange-pi-3/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/fontawesome-free/all.min.css>
-<noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/animate/animate.min.css>
-<noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Yocto Project 개발하기(2) - Custom Layer 만들기","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/yocto-project-on-orange-pi-2\/"},"genre":"posts","keywords":"Yocto, Linux, OrangePi","wordcount":985,"url":"https:\/\/blog.humminglab.io\/posts\/yocto-project-on-orange-pi-2\/","datePublished":"2022-01-07T19:00:00+09:00","dateModified":"2022-01-18T22:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head><body header-desktop header-mobile><script type=text/javascript>function setTheme(e){document.body.setAttribute("theme",e)}function saveTheme(e){window.localStorage&&localStorage.setItem("theme",e)}function getMeta(t){const e=document.getElementsByTagName("meta");for(let n=0;n<e.length;n++)if(e[n].getAttribute("name")===t)return e[n];return''}if(window.localStorage&&localStorage.getItem("theme")){let e=localStorage.getItem("theme");e==="light"||e==="dark"||e==="black"?setTheme(e):window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?setTheme("dark"):setTheme("light")}else''==="light"||''==="dark"||''==="black"?(setTheme(''),saveTheme('')):(saveTheme("auto"),window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?setTheme("dark"):setTheme("light"));let metaColors={light:"#f8f8f8",dark:"#252627",black:"#000000"};getMeta("theme-color").content=metaColors[document.body.getAttribute("theme")]</script>
-<div id=back-to-top></div><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
-<div class=header-wrapper>
-<div class=header-title>
-<a href=/ title="All about IoT">All about IoT</a>
-</div><div class=menu>
-<div class=menu-inner><a class=menu-item href=/posts/> Posts </a><a class=menu-item href=/tags/> Tags </a><a class=menu-item href=/categories/> Categories </a><a class=menu-item href=https://www.humminglab.io/ rel="noopener noreffer" target=_blank> HummingLab </a><span class="menu-item delimiter"></span><a href=# onclick=return!1 class="menu-item theme-switch" title="Switch Theme">
-<i class="fas fa-adjust fa-fw"></i>
-</a></div></div></div></header><header class=mobile id=header-mobile>
-<div class=header-container>
-<div class=header-wrapper>
-<div class=header-title>
-<a href=/ title="All about IoT">All about IoT</a>
-</div><div class=menu-toggle id=menu-toggle-mobile>
-<span></span><span></span><span></span>
-</div></div><div class=menu id=menu-mobile><a class=menu-item href=/posts/ title>Posts</a><a class=menu-item href=/tags/ title>Tags</a><a class=menu-item href=/categories/ title>Categories</a><a class=menu-item href=https://www.humminglab.io/ title rel="noopener noreffer" target=_blank>HummingLab</a><a href=# onclick=return!1 class="menu-item theme-switch" title="Switch Theme">
-<i class="fas fa-adjust fa-fw"></i>
-</a></div></div></header><div class="search-dropdown desktop">
-<div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile">
-<div id=search-dropdown-mobile></div></div><main class=main>
-<div class=container><div class=toc id=toc-auto>
-<h2 class=toc-title>Contents</h2><div class="toc-content always-active" id=toc-content-auto></div></div><script>document.getElementsByTagName("main")[0].setAttribute("pageStyle","normal")</script><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC","true")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Yocto Project 개발하기(2) - Custom Layer 만들기</h1><div class=post-meta>
-<div class=post-meta-line>
-<span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
+ Yocto Project 개발하기(1) - Orange Pi 보드 빌드 Yocto Project 개발하기(2) - Custom Layer 만들기 Yocto Project 개발하기(3) - 개발 시 로컬 패키지 관리하기 Yocto Project 개발하기(4) - Yocto SDK 빌드 Yocto Project 개발하기(5) - Yocto eSDK 이용한 개발 모델  Layer 및 machine 생성 프로젝트를 sc-gateway 라고 명하고(이름에 특별한 의미는 없음), 이를 layer로 만든다."><meta name=application-name content="All about IoT"><meta name=apple-mobile-web-app-title content="All about IoT"><meta name=theme-color content="#f8f8f8"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/posts/yocto-project-on-orange-pi-2/><link rel=prev href=https://blog.humminglab.io/posts/nearley-builder-and-loader/><link rel=next href=https://blog.humminglab.io/posts/yocto-project-on-orange-pi-3/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/fontawesome-free/all.min.css><noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/animate/animate.min.css><noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Yocto Project 개발하기(2) - Custom Layer 만들기","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/yocto-project-on-orange-pi-2\/"},"genre":"posts","keywords":"Yocto, Linux, OrangePi","wordcount":985,"url":"https:\/\/blog.humminglab.io\/posts\/yocto-project-on-orange-pi-2\/","datePublished":"2022-01-07T19:00:00+09:00","dateModified":"2022-01-18T22:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script></head><body header-desktop header-mobile><script type=text/javascript>function setTheme(e){document.body.setAttribute("theme",e)}function saveTheme(e){window.localStorage&&localStorage.setItem("theme",e)}function getMeta(t){const e=document.getElementsByTagName("meta");for(let n=0;n<e.length;n++)if(e[n].getAttribute("name")===t)return e[n];return''}if(window.localStorage&&localStorage.getItem("theme")){let e=localStorage.getItem("theme");e==="light"||e==="dark"||e==="black"?setTheme(e):window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?setTheme("dark"):setTheme("light")}else''==="light"||''==="dark"||''==="black"?(setTheme(''),saveTheme('')):(saveTheme("auto"),window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?setTheme("dark"):setTheme("light"));let metaColors={light:"#f8f8f8",dark:"#252627",black:"#000000"};getMeta("theme-color").content=metaColors[document.body.getAttribute("theme")]</script><div id=back-to-top></div><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title="All about IoT">All about IoT</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/>Posts </a><a class=menu-item href=/tags/>Tags </a><a class=menu-item href=/categories/>Categories </a><a class=menu-item href=https://www.humminglab.io/ rel="noopener noreffer" target=_blank>HummingLab </a><span class="menu-item delimiter"></span><a href=# onclick=return!1 class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title="All about IoT">All about IoT</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><a class=menu-item href=/posts/ title>Posts</a><a class=menu-item href=/tags/ title>Tags</a><a class=menu-item href=/categories/ title>Categories</a><a class=menu-item href=https://www.humminglab.io/ title rel="noopener noreffer" target=_blank>HummingLab</a><a href=# onclick=return!1 class="menu-item theme-switch" title="Switch Theme">
+<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>Contents</h2><div class="toc-content always-active" id=toc-content-auto></div></div><script>document.getElementsByTagName("main")[0].setAttribute("pageStyle","normal")</script><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC","true")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Yocto Project 개발하기(2) - Custom Layer 만들기</h1><div class=post-meta><div class=post-meta-line><span class=post-author><span class=author><i class="author fas fa-user-circle fa-fw"></i><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
 </span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/development/><i class="far fa-folder fa-fw"></i>Development</a></span>&nbsp;<span class=post-category>and</span>&nbsp;<span class=post-series>series <a href=/series/yocto-project-%EA%B0%9C%EB%B0%9C%ED%95%98%EA%B8%B0/><i class="far fa-list-alt fa-fw"></i>Yocto Project 개발하기</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2022-01-07>2022-01-07</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2022-01-18>2022-01-18</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;985 words&nbsp;
-<i class="far fa-clock fa-fw"></i>&nbsp;5 minutes&nbsp;</div></div><div class="details toc" id=toc-static kept>
-<div class="details-summary toc-title">
-<span>Contents</span>
-<span><i class="details-icon fas fa-angle-right"></i></span>
-</div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents>
-<ul>
-<li><a href=#layer-및-machine-생성>Layer 및 machine 생성</a></li><li><a href=#wi-fi-추가-하기>Wi-Fi 추가 하기</a></li><li><a href=#wpa_supplicant-로-무선랜-연결하기>wpa_supplicant 로 무선랜 연결하기</a></li><li><a href=#마무리>마무리</a></li></ul></nav></div></div><div class=content id=content><p><a href=https://blog.humminglab.io/posts/yocto-project-on-orange-pi-1/ rel>이전 글</a> 에서 meta-sunxi 를 추가하여 orage pi 용으로 빌드를 만들었고, 이번 과정은 project 용으로 meta layer를 만들어서 관리하는 방법을 설명한다.</p><p>실제 개발 과정을 이해하기 좋도록 meta layer 를 만들어 가는 과정을 설명한다.</p><ul>
-<li><a href=https://blog.humminglab.io/posts/yocto-project-on-orange-pi-1/ rel>Yocto Project 개발하기(1) - Orange Pi 보드 빌드</a></li><li><strong>Yocto Project 개발하기(2) - Custom Layer 만들기</strong></li><li><a href=https://blog.humminglab.io/posts/yocto-project-on-orange-pi-3/ rel>Yocto Project 개발하기(3) - 개발 시 로컬 패키지 관리하기</a></li><li>Yocto Project 개발하기(4) - Yocto SDK 빌드</li><li>Yocto Project 개발하기(5) - Yocto eSDK 이용한 개발 모델</li></ul><h2 id=layer-및-machine-생성>Layer 및 machine 생성</h2><p>프로젝트를 sc-gateway 라고 명하고(이름에 특별한 의미는 없음), 이를 layer로 만든다. 다음과 같이 yocto 폴더 안에 meta-sc-gateway를 생성한다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ mkdir -p meta-sc-gateway/conf/machine
-</span></span></code></pre></td></tr></table></div></div><p>Layer config 파일인 meta-sc-gateway/conf/layer.conf 를 다른 layer의 conf 를 참고하여 다음과 같이 만든다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+<i class="far fa-clock fa-fw"></i>&nbsp;5 minutes&nbsp;</div></div><div class="details toc" id=toc-static kept><div class="details-summary toc-title"><span>Contents</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#layer-및-machine-생성>Layer 및 machine 생성</a></li><li><a href=#wi-fi-추가-하기>Wi-Fi 추가 하기</a></li><li><a href=#wpa_supplicant-로-무선랜-연결하기>wpa_supplicant 로 무선랜 연결하기</a></li><li><a href=#마무리>마무리</a></li></ul></nav></div></div><div class=content id=content><p><a href=https://blog.humminglab.io/posts/yocto-project-on-orange-pi-1/ rel>이전 글</a> 에서 meta-sunxi 를 추가하여 orage pi 용으로 빌드를 만들었고, 이번 과정은 project 용으로 meta layer를 만들어서 관리하는 방법을 설명한다.</p><p>실제 개발 과정을 이해하기 좋도록 meta layer 를 만들어 가는 과정을 설명한다.</p><ul><li><a href=https://blog.humminglab.io/posts/yocto-project-on-orange-pi-1/ rel>Yocto Project 개발하기(1) - Orange Pi 보드 빌드</a></li><li><strong>Yocto Project 개발하기(2) - Custom Layer 만들기</strong></li><li><a href=https://blog.humminglab.io/posts/yocto-project-on-orange-pi-3/ rel>Yocto Project 개발하기(3) - 개발 시 로컬 패키지 관리하기</a></li><li>Yocto Project 개발하기(4) - Yocto SDK 빌드</li><li>Yocto Project 개발하기(5) - Yocto eSDK 이용한 개발 모델</li></ul><h2 id=layer-및-machine-생성>Layer 및 machine 생성</h2><p>프로젝트를 sc-gateway 라고 명하고(이름에 특별한 의미는 없음), 이를 layer로 만든다. 다음과 같이 yocto 폴더 안에 meta-sc-gateway를 생성한다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ mkdir -p meta-sc-gateway/conf/machine
+</span></span></code></pre></td></tr></table></div></div><p>Layer config 파일인 meta-sc-gateway/conf/layer.conf 를 다른 layer의 conf 를 참고하여 다음과 같이 만든다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -75,8 +23,7 @@
 </span><span class=lnt>12
 </span><span class=lnt>13
 </span><span class=lnt>14
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl># We have a conf and classes directory, add to BBPATH
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl># We have a conf and classes directory, add to BBPATH
 </span></span><span class=line><span class=cl>BBPATH .= &#34;:${LAYERDIR}&#34;
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl># We have recipes-* directories, add to BBFILES
@@ -90,10 +37,7 @@
 </span></span><span class=line><span class=cl>LAYERDEPENDS_sc-gateway += &#34;meta-sunxi&#34;
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>LAYERSERIES_COMPAT_sc-gateway = &#34;honister&#34;
-</span></span></code></pre></td></tr></table></div></div><ul>
-<li>10라인: layer의 priority를 10으로 높게 잡아 bb 파일 검색 시 우선 순위를 가지도록 함</li><li>12라인: meta-sunxi layer를 의존성에 추가</li><li>14라인: Yocto 호환 버전을 기록</li></ul><p>meta-sunxi/conf/machine/orange-pi-zero.conf 와 같이 기존 machine을 그대로 이용해도 되지만, 프로젝트에 맞게 machine 이름도 sc-gateway 로 바꾸어 준다.</p><p>orange-pi-zero.conf를 meta-sc-gatway/conf/machine/sc-gateway.conf 로 복사한다. 아직은 kernel 설정이나 다른 것을 바꾸지 않았으므로 그대로 이용한다.</p><p>최종 이미지 제작용 recipe를 core-image-minimal.bb 를 참고하여 meta-sc-gateway/recipes-core/images/sc-gateway-image.bb 로 다음과 같이 만든다. SUMMARY만 변경하였고 내용은 동일하다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></span></code></pre></td></tr></table></div></div><ul><li>10라인: layer의 priority를 10으로 높게 잡아 bb 파일 검색 시 우선 순위를 가지도록 함</li><li>12라인: meta-sunxi layer를 의존성에 추가</li><li>14라인: Yocto 호환 버전을 기록</li></ul><p>meta-sunxi/conf/machine/orange-pi-zero.conf 와 같이 기존 machine을 그대로 이용해도 되지만, 프로젝트에 맞게 machine 이름도 sc-gateway 로 바꾸어 준다.</p><p>orange-pi-zero.conf를 meta-sc-gatway/conf/machine/sc-gateway.conf 로 복사한다. 아직은 kernel 설정이나 다른 것을 바꾸지 않았으므로 그대로 이용한다.</p><p>최종 이미지 제작용 recipe를 core-image-minimal.bb 를 참고하여 meta-sc-gateway/recipes-core/images/sc-gateway-image.bb 로 다음과 같이 만든다. SUMMARY만 변경하였고 내용은 동일하다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -107,8 +51,7 @@
 </span><span class=lnt>12
 </span><span class=lnt>13
 </span><span class=lnt>14
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>SUMMARY = &#34;SC Gateway Image&#34;
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>SUMMARY = &#34;SC Gateway Image&#34;
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>IMAGE_INSTALL = &#34;packagegroup-core-boot \
 </span></span><span class=line><span class=cl>    ${CORE_IMAGE_EXTRA_INSTALL} \
@@ -122,9 +65,7 @@
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>IMAGE_ROOTFS_SIZE ?= &#34;8192&#34;
 </span></span><span class=line><span class=cl>IMAGE_ROOTFS_EXTRA_SPACE:append = &#34;${@bb.utils.contains(&#34;DISTRO_FEATURES&#34;, &#34;systemd&#34;, &#34; + 4096&#34;, &#34;&#34;, d)}&#34;
-</span></span></code></pre></td></tr></table></div></div><p>layer 가 적용되도록 다음과 같이 수정 한다.</p><p>build/conf/bblayer.conf 에 다음과 같이 meta-sc-gateway 를 추가한다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p>layer 가 적용되도록 다음과 같이 수정 한다.</p><p>build/conf/bblayer.conf 에 다음과 같이 meta-sc-gateway 를 추가한다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -132,8 +73,7 @@
 </span><span class=lnt>6
 </span><span class=lnt>7
 </span><span class=lnt>8
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>BBLAYERS ?= &#34; \
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>BBLAYERS ?= &#34; \
 </span></span><span class=line><span class=cl>  /home/yslee/yocto/poky/meta \
 </span></span><span class=line><span class=cl>  /home/yslee/yocto/poky/meta-poky \
 </span></span><span class=line><span class=cl>  /home/yslee/yocto/poky/meta-yocto-bsp \
@@ -141,79 +81,55 @@
 </span></span><span class=line><span class=cl>  /home/yslee/yocto/meta-sunxi \
 </span></span><span class=line><span class=cl>  /home/yslee/yocto/meta-sc-gateway \
 </span></span><span class=line><span class=cl>  &#34;
-</span></span></code></pre></td></tr></table></div></div><p>build/conf/local.conf 의 <code>MACHINE</code> 도 sc-gateway 로 바꾼다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>MACHINE ??= &#34;sc-gateway&#34;
-</span></span></code></pre></td></tr></table></div></div><p>이제 shell에서 sc-gateway-image를 빌드한다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ bitbake sc-gateway-image
-</span></span></code></pre></td></tr></table></div></div><p>최종 이미지는 build/tmp/deploy/images/sc-gateway/sc-gateway-image-sc-gateway.sunxi-sdimg 로 생성되고 이를 write 해서 실행해보면 기존과 동일하게 실행되는 것을 확인할 수 있다.</p><h2 id=wi-fi-추가-하기>Wi-Fi 추가 하기</h2><p>Orange-Pi Zero는 무선랜이 내장되어 있고 해당 드라이버는 meta-sunxi/recipes-kernel/xradio/xradio.bb 로 있다.</p><p>이를 sc-gateway-image.bb 파일에 다음과 같이 추가한다. 그리고 무선랜 디바이스의 CLI인 iw와 Wi-Fi Protected Access (WPA) client 인 wpa_supplicant 를 같이 추가한다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p>build/conf/local.conf 의 <code>MACHINE</code> 도 sc-gateway 로 바꾼다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>MACHINE ??= &#34;sc-gateway&#34;
+</span></span></code></pre></td></tr></table></div></div><p>이제 shell에서 sc-gateway-image를 빌드한다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ bitbake sc-gateway-image
+</span></span></code></pre></td></tr></table></div></div><p>최종 이미지는 build/tmp/deploy/images/sc-gateway/sc-gateway-image-sc-gateway.sunxi-sdimg 로 생성되고 이를 write 해서 실행해보면 기존과 동일하게 실행되는 것을 확인할 수 있다.</p><h2 id=wi-fi-추가-하기>Wi-Fi 추가 하기</h2><p>Orange-Pi Zero는 무선랜이 내장되어 있고 해당 드라이버는 meta-sunxi/recipes-kernel/xradio/xradio.bb 로 있다.</p><p>이를 sc-gateway-image.bb 파일에 다음과 같이 추가한다. 그리고 무선랜 디바이스의 CLI인 iw와 Wi-Fi Protected Access (WPA) client 인 wpa_supplicant 를 같이 추가한다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>IMAGE_INSTALL = &#34;packagegroup-core-boot \
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>IMAGE_INSTALL = &#34;packagegroup-core-boot \
 </span></span><span class=line><span class=cl>    ${CORE_IMAGE_EXTRA_INSTALL} \
 </span></span><span class=line><span class=cl>    xradio \
 </span></span><span class=line><span class=cl>    iw \
 </span></span><span class=line><span class=cl>    wpa_supplicant \
 </span></span><span class=line><span class=cl>    &#34;
-</span></span></code></pre></td></tr></table></div></div><p>다시 빌드를 해보면 xradio 관련하여 에러가 난다. 발생하는 이유는 xradio.bb 파일 내에 <code>COMPATIBLE_MACHINE</code> 으로 orange-pi-zero로 한정하였기 때문에 변경한 sc-gateway로는 xradio가 추가되지 않는다.</p><p>이 파일을 직접 수정해도 되지만 이 방식 보다는 bbappend 기능을 사용하여 모든 수정은 meta-sc-gateway 에 적용하도록 수정한다.</p><p>우선은 orange-pi-zero 로 한정된 recipe를 찾아본다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p>다시 빌드를 해보면 xradio 관련하여 에러가 난다. 발생하는 이유는 xradio.bb 파일 내에 <code>COMPATIBLE_MACHINE</code> 으로 orange-pi-zero로 한정하였기 때문에 변경한 sc-gateway로는 xradio가 추가되지 않는다.</p><p>이 파일을 직접 수정해도 되지만 이 방식 보다는 bbappend 기능을 사용하여 모든 수정은 meta-sc-gateway 에 적용하도록 수정한다.</p><p>우선은 orange-pi-zero 로 한정된 recipe를 찾아본다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$  grep -nHr <span class=s1>&#39;COMPATIBLE_MACHINE.*=.*orange-pi-zero&#39;</span> meta*
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$  grep -nHr <span class=s1>&#39;COMPATIBLE_MACHINE.*=.*orange-pi-zero&#39;</span> meta*
 </span></span><span class=line><span class=cl>meta-sunxi/recipes-kernel/xradio/xradio.bb:12:COMPATIBLE_MACHINE <span class=o>=</span> <span class=s2>&#34;orange-pi-zero&#34;</span>
 </span></span><span class=line><span class=cl>meta-sunxi/recipes-kernel/xradio-firmware/xradio-firmware.bb:10:COMPATIBLE_MACHINE <span class=o>=</span> <span class=s2>&#34;orange-pi-zero&#34;</span>
 </span></span><span class=line><span class=cl>$
-</span></span></code></pre></td></tr></table></div></div><p>위 처럼 xradio에 관련된 recipe만 해당된다.</p><p>동일한 디렉토리 구조로 다음과 걑이 bbappend를 만든다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p>위 처럼 xradio에 관련된 recipe만 해당된다.</p><p>동일한 디렉토리 구조로 다음과 걑이 bbappend를 만든다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ mkdir -p meta-sc-gateway/recipes-kernel/xradio
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ mkdir -p meta-sc-gateway/recipes-kernel/xradio
 </span></span><span class=line><span class=cl>$ mkdir -p meta-sc-gateway/recipes-kernel/xradio-firmware
 </span></span><span class=line><span class=cl>$ <span class=nb>echo</span> <span class=s1>&#39;COMPATIBLE_MACHINE:append:sc-gateway = &#34;|sc-gateway&#34;&#39;</span> &gt; meta-sc-gateway/recipes-kernel/xradio/xradio.bbappend
 </span></span><span class=line><span class=cl>$ <span class=nb>echo</span> <span class=s1>&#39;COMPATIBLE_MACHINE:append:sc-gateway = &#34;|sc-gateway&#34;&#39;</span> &gt; meta-sc-gateway/recipes-kernel/xradio-firmware/xradio-firmware.bbappend
-</span></span></code></pre></td></tr></table></div></div><p>위와 같이 bbappend로 두 파일의 내용 중 COMPATIBLE_MACHINE 에 sc-gateway를 추가한다. 이렇게 하면 실제 적용되어 다음과 같이 <code>COMPATIBLE_MACHINE</code> 이 설정되는 셈이다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>COMPATIBLE_MACHINE = &#34;orange-pi-zero|sc-gateway&#34;
-</span></span></code></pre></td></tr></table></div></div><p>이와 관련된 사항은 Yocto 매뉴얼의 다음을 참고할 수 있다.</p><ul>
-<li><a href=https://docs.yoctoproject.org/bitbake/bitbake-user-manual/bitbake-user-manual-metadata.html#conditional-syntax-overrides target=_blank rel="noopener noreffer">Conditional Syntax (Overrides)</a></li><li><a href="https://docs.yoctoproject.org/bitbake/bitbake-user-manual/bitbake-user-manual-intro.html?highlight=bbappend#append-files" target=_blank rel="noopener noreffer">Append Files</a></li></ul><p>이제 다시 빌드해 보면 정상적으로 xradio가 빌드된다. Target에 복사해서 실행 시켜보면 다음과 같이 wlan0 이 추가된 것을 확인할 수 있다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p>위와 같이 bbappend로 두 파일의 내용 중 COMPATIBLE_MACHINE 에 sc-gateway를 추가한다. 이렇게 하면 실제 적용되어 다음과 같이 <code>COMPATIBLE_MACHINE</code> 이 설정되는 셈이다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>COMPATIBLE_MACHINE = &#34;orange-pi-zero|sc-gateway&#34;
+</span></span></code></pre></td></tr></table></div></div><p>이와 관련된 사항은 Yocto 매뉴얼의 다음을 참고할 수 있다.</p><ul><li><a href=https://docs.yoctoproject.org/bitbake/bitbake-user-manual/bitbake-user-manual-metadata.html#conditional-syntax-overrides target=_blank rel="noopener noreffer">Conditional Syntax (Overrides)</a></li><li><a href="https://docs.yoctoproject.org/bitbake/bitbake-user-manual/bitbake-user-manual-intro.html?highlight=bbappend#append-files" target=_blank rel="noopener noreffer">Append Files</a></li></ul><p>이제 다시 빌드해 보면 정상적으로 xradio가 빌드된다. Target에 복사해서 실행 시켜보면 다음과 같이 wlan0 이 추가된 것을 확인할 수 있다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
 </span><span class=lnt>7
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ifconfig -a wlan0
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ifconfig -a wlan0
 </span></span><span class=line><span class=cl>wlan0     Link encap:Ethernet  HWaddr 12:42:4F:3B:42:7D
 </span></span><span class=line><span class=cl>          BROADCAST MULTICAST  MTU:1500  Metric:1
 </span></span><span class=line><span class=cl>          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
 </span></span><span class=line><span class=cl>          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
 </span></span><span class=line><span class=cl>          collisions:0 txqueuelen:1000
 </span></span><span class=line><span class=cl>          RX bytes:0 <span class=o>(</span>0.0 B<span class=o>)</span>  TX bytes:0 <span class=o>(</span>0.0 B<span class=o>)</span>
-</span></span></code></pre></td></tr></table></div></div><p>패스워드 설정이 안된 AP 가 있는 경우 다음과 같이 연결을 시킬 수 있다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></span></code></pre></td></tr></table></div></div><p>패스워드 설정이 안된 AP 가 있는 경우 다음과 같이 연결을 시킬 수 있다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -225,8 +141,7 @@
 </span><span class=lnt>10
 </span><span class=lnt>11
 </span><span class=lnt>12
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ifconfig wlan0 up
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ifconfig wlan0 up
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl><span class=c1># 무선랜 스캔 결과 확인</span>
 </span></span><span class=line><span class=cl>$ iw dev wlan0 scan
@@ -238,9 +153,7 @@
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl><span class=c1># ping 으로 정상 여부 확인</span>
 </span></span><span class=line><span class=cl>$ ping 1.1.1.1
-</span></span></code></pre></td></tr></table></div></div><h2 id=wpa_supplicant-로-무선랜-연결하기>wpa_supplicant 로 무선랜 연결하기</h2><p>일반적인 AP의 경우 WPA password 가 설정되어 있어 이는 wpa_supplicant를 사용하여 연결을 하여야 한다.</p><p>SSID가 testap, passphrase가 1234567890 이라고 하면 다음과 같이 /etc/wpa_supplicant.conf 파일에 추가한다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><h2 id=wpa_supplicant-로-무선랜-연결하기>wpa_supplicant 로 무선랜 연결하기</h2><p>일반적인 AP의 경우 WPA password 가 설정되어 있어 이는 wpa_supplicant를 사용하여 연결을 하여야 한다.</p><p>SSID가 testap, passphrase가 1234567890 이라고 하면 다음과 같이 /etc/wpa_supplicant.conf 파일에 추가한다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -248,8 +161,7 @@
 </span><span class=lnt>6
 </span><span class=lnt>7
 </span><span class=lnt>8
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ wpa_passphrase <span class=s2>&#34;testap&#34;</span> <span class=s2>&#34;1234567890&#34;</span> &gt;&gt; /etc/wpa_supplicant.conf
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ wpa_passphrase <span class=s2>&#34;testap&#34;</span> <span class=s2>&#34;1234567890&#34;</span> &gt;&gt; /etc/wpa_supplicant.conf
 </span></span><span class=line><span class=cl>$ cat /etc/wpa_supplicant.conf
 </span></span><span class=line><span class=cl>...
 </span></span><span class=line><span class=cl><span class=nv>network</span><span class=o>={</span>
@@ -257,72 +169,38 @@
 </span></span><span class=line><span class=cl>	<span class=c1>#psk=&#34;1234567890&#34;</span>
 </span></span><span class=line><span class=cl>	<span class=nv>psk</span><span class=o>=</span>83cb935df586238f2ead7d9c69b702507f81e9d213dd3879a640cfc0c1faafb5
 </span></span><span class=line><span class=cl><span class=o>}</span>
-</span></span></code></pre></td></tr></table></div></div><p>설정한 AP로 연결 시도를 해본다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p>설정한 AP로 연결 시도를 해본다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ wpa_supplicant -Dnl80211 -iwlan0 -c/etc/wpa_supplicant.conf
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ wpa_supplicant -Dnl80211 -iwlan0 -c/etc/wpa_supplicant.conf
 </span></span><span class=line><span class=cl>...
 </span></span><span class=line><span class=cl>wlan0: WPA: Failed to <span class=nb>set</span> PTK to the driver <span class=o>(</span><span class=nv>alg</span><span class=o>=</span><span class=m>3</span> <span class=nv>keylen</span><span class=o>=</span><span class=m>16</span> <span class=nv>bssid</span><span class=o>=</span>8a:36:6c:4f:38:a4<span class=o>)</span>
 </span></span><span class=line><span class=cl><span class=o>[</span> 2951.993580<span class=o>]</span> wlan0: deauthenticating from 8a:36:6c:4f:38:a4 by <span class=nb>local</span> choice <span class=o>(</span>Reason: <span class=nv>1</span><span class=o>=</span>UNSPECIFIED<span class=o>)</span>
-</span></span></code></pre></td></tr></table></div></div><p>PTK (Pairwise Transient Key)는 데이타 전송에 사용하는 암호키를 말한다. SSID, passphrase 를 이용하여 생성된 PSK(Pre-Shared Key)로 EAPOL handshake로 교환한 키이다.</p><p>다음과 같이 kernel의 설정을 확인해 본다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ bitbake virtual/kernel -c menuconfig
-</span></span></code></pre></td></tr></table></div></div><p>Menuconfig에서 &lsquo;/&rsquo; 로 검색에서 LIB80211 을 쳐보면 <code>LIB80211_CRYPT_CCMP</code> 등이 모두 모듈로 빌드된다. 관련된 모듈이 패키지에 포함되어 있지 않다.</p><figure><img src=kernel-menuconfig.png alt=Menuconfig width=800px height=auto><figcaption>
-<p>Menuconfig</p></figcaption></figure><p>모듈을 추가하는 방법은 아래 문서를 보고서 적절한 packagegroup 를 추가해 주면 된다.</p><ul>
-<li><a href=https://www.yoctoproject.org/docs/current/mega-manual/mega-manual.html#usingpoky-extend-customimage-customtasks target=_blank rel="noopener noreffer">7.2.4. Customizing Images Using Custom Package Groups</a></li></ul><p>하지만 사용하는 meta-sunxi의 경우 kernel 버전이 낮아서 모듈 이름이 다르다. 그리고 몇번의 확인 끝에 wpa_supplicant 에서 CRYPTO_CCM 모듈만 사용하는 것을 확인하였다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p>PTK (Pairwise Transient Key)는 데이타 전송에 사용하는 암호키를 말한다. SSID, passphrase 를 이용하여 생성된 PSK(Pre-Shared Key)로 EAPOL handshake로 교환한 키이다.</p><p>다음과 같이 kernel의 설정을 확인해 본다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ bitbake virtual/kernel -c menuconfig
+</span></span></code></pre></td></tr></table></div></div><p>Menuconfig에서 &lsquo;/&rsquo; 로 검색에서 LIB80211 을 쳐보면 <code>LIB80211_CRYPT_CCMP</code> 등이 모두 모듈로 빌드된다. 관련된 모듈이 패키지에 포함되어 있지 않다.</p><figure><img src=kernel-menuconfig.png alt=Menuconfig width=800px height=auto><figcaption><p>Menuconfig</p></figcaption></figure><p>모듈을 추가하는 방법은 아래 문서를 보고서 적절한 packagegroup 를 추가해 주면 된다.</p><ul><li><a href=https://www.yoctoproject.org/docs/current/mega-manual/mega-manual.html#usingpoky-extend-customimage-customtasks target=_blank rel="noopener noreffer">7.2.4. Customizing Images Using Custom Package Groups</a></li></ul><p>하지만 사용하는 meta-sunxi의 경우 kernel 버전이 낮아서 모듈 이름이 다르다. 그리고 몇번의 확인 끝에 wpa_supplicant 에서 CRYPTO_CCM 모듈만 사용하는 것을 확인하였다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
 </span><span class=lnt>7
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>IMAGE_INSTALL = &#34;packagegroup-core-boot \
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>IMAGE_INSTALL = &#34;packagegroup-core-boot \
 </span></span><span class=line><span class=cl>    ${CORE_IMAGE_EXTRA_INSTALL} \
 </span></span><span class=line><span class=cl>    kernel-module-ccm \
 </span></span><span class=line><span class=cl>    xradio \
 </span></span><span class=line><span class=cl>    iw \
 </span></span><span class=line><span class=cl>    wpa-supplicant \
 </span></span><span class=line><span class=cl>    &#34;
-</span></span></code></pre></td></tr></table></div></div><p>이와 같이 CCM 모듈만 추가를 하고 다시 이미지 만든 후에, 위의 /etc/wpa_supplicant.conf를 설정하고 실행해 보면 정상적으로 작동되는 것을 확인할 수 있다. 이번에는 <code>-B</code> 옵션을 주어서 background 로 실행하였다.</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p>이와 같이 CCM 모듈만 추가를 하고 다시 이미지 만든 후에, 위의 /etc/wpa_supplicant.conf를 설정하고 실행해 보면 정상적으로 작동되는 것을 확인할 수 있다. 이번에는 <code>-B</code> 옵션을 주어서 background 로 실행하였다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ wpa_passphrase <span class=s2>&#34;testap&#34;</span> <span class=s2>&#34;1234567890&#34;</span> &gt;&gt; /etc/wpa_supplicant.conf
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ wpa_passphrase <span class=s2>&#34;testap&#34;</span> <span class=s2>&#34;1234567890&#34;</span> &gt;&gt; /etc/wpa_supplicant.conf
 </span></span><span class=line><span class=cl>$ wpa_supplicant -Dnl80211 -iwlan0 -c/etc/wpa_supplicant.conf -B
 </span></span><span class=line><span class=cl>$ udhcpc -i wlan0
 </span></span><span class=line><span class=cl>$ ping 8.8.8.8
-</span></span></code></pre></td></tr></table></div></div><h2 id=마무리>마무리</h2><p>보드를 살리는 과정은 이렇게 하나 하나 yocto package 내의 설정 들을 찾아서 잡아 주는 과정이다.</p><p>wpa_supplicant.conf 의 초기 설정 등을 이미지 생성 전에 하려면 sc-gateway-image.bb 파일에 <a href="https://docs.yoctoproject.org/ref-manual/variables.html?highlight=rootfs_postprocess_command#term-ROOTFS_POSTPROCESS_COMMAND" target=_blank rel="noopener noreffer">ROOTFS_POSTPROCESS_COMMAND</a> 에 스크립트를 추가할 수 있다.</p><p>이렇게 yocto layer를 만들어 가는 과정은 마무리하고, 다음으로는 커널이나 개발하는 프로그램을 yocto 에서 관리하고 빌드하는 방법을 알아보도록 한다.</p></div><div class=post-footer id=post-footer>
-<div class=post-info>
-<div class=post-info-line>
-<div class=post-info-mod>
-<span>Updated on 2022-01-18</span>
-</div><div class=post-info-license></div></div><div class=post-info-line>
-<div class=post-info-md></div><div class=post-info-share>
-<span></span>
-</div></div></div><div class=post-info-more>
-<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/yocto/>Yocto</a>,&nbsp;<a href=/tags/linux/>Linux</a>,&nbsp;<a href=/tags/orangepi/>OrangePi</a></section><section>
-<span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span>
-</section></div><div class=post-nav><a href=/posts/nearley-builder-and-loader/ class=prev rel=prev title="Nearley 로 설정용 파서 만들기"><i class="fas fa-angle-left fa-fw"></i>Nearley 로 설정용 파서 만들기</a>
-<a href=/posts/yocto-project-on-orange-pi-3/ class=next rel=next title="Yocto Project 개발하기(3) - 개발 시 로컬 패키지 관리하기">Yocto Project 개발하기(3) - 개발 시 로컬 패키지 관리하기<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=giscus></div><noscript>
-Please enable JavaScript to view the comments powered by <a href=https://giscus.app/>giscus</a>.
-</noscript></div></article></div></main><footer class=footer>
-<div class=footer-container><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://www.humminglab.io target=_blank rel="noopener noreferrer">HummingLab</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=#back-to-top id=back-to-top-button class=fixed-button title="Back to Top">
-<i class="fas fa-arrow-up fa-fw"></i>
-</a><a href=# id=view-comments class=fixed-button title="View Comments">
-<i class="fas fa-comment fa-fw"></i>
-</a>
-</div><div class=assets><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/topbar/topbar.min.js></script><script type=text/javascript src=/lib/pjax/pjax.min.js></script><script type=text/javascript src=/js/theme.min.js></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","UA-83257319-3",{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=UA-83257319-3" async></script></div><div class=pjax-assets><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",lightTheme:"light"}},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1}}</script><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/katex/katex.min.css>
-<noscript><link rel=stylesheet href=/lib/katex/katex.min.css></noscript><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/katex/copy-tex.min.css>
-<noscript><link rel=stylesheet href=/lib/katex/copy-tex.min.css></noscript></div></body></html>
+</span></span></code></pre></td></tr></table></div></div><h2 id=마무리>마무리</h2><p>보드를 살리는 과정은 이렇게 하나 하나 yocto package 내의 설정 들을 찾아서 잡아 주는 과정이다.</p><p>wpa_supplicant.conf 의 초기 설정 등을 이미지 생성 전에 하려면 sc-gateway-image.bb 파일에 <a href="https://docs.yoctoproject.org/ref-manual/variables.html?highlight=rootfs_postprocess_command#term-ROOTFS_POSTPROCESS_COMMAND" target=_blank rel="noopener noreffer">ROOTFS_POSTPROCESS_COMMAND</a> 에 스크립트를 추가할 수 있다.</p><p>이렇게 yocto layer를 만들어 가는 과정은 마무리하고, 다음으로는 커널이나 개발하는 프로그램을 yocto 에서 관리하고 빌드하는 방법을 알아보도록 한다.</p></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>Updated on 2022-01-18</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share><span></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/yocto/>Yocto</a>,&nbsp;<a href=/tags/linux/>Linux</a>,&nbsp;<a href=/tags/orangepi/>OrangePi</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span></section></div><div class=post-nav><a href=/posts/nearley-builder-and-loader/ class=prev rel=prev title="Nearley 로 설정용 파서 만들기"><i class="fas fa-angle-left fa-fw"></i>Nearley 로 설정용 파서 만들기</a>
+<a href=/posts/yocto-project-on-orange-pi-3/ class=next rel=next title="Yocto Project 개발하기(3) - 개발 시 로컬 패키지 관리하기">Yocto Project 개발하기(3) - 개발 시 로컬 패키지 관리하기<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=giscus></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://giscus.app/>giscus</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://www.humminglab.io target=_blank rel="noopener noreferrer">HummingLab</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=#back-to-top id=back-to-top-button class=fixed-button title="Back to Top"><i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title="View Comments"><i class="fas fa-comment fa-fw"></i></a></div><div class=assets><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/topbar/topbar.min.js></script><script type=text/javascript src=/lib/pjax/pjax.min.js></script><script type=text/javascript src=/js/theme.min.js></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","UA-83257319-3",{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=UA-83257319-3" async></script></div><div class=pjax-assets><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",lightTheme:"light"}},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1}}</script><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/katex/katex.min.css><noscript><link rel=stylesheet href=/lib/katex/katex.min.css></noscript><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/katex/copy-tex.min.css><noscript><link rel=stylesheet href=/lib/katex/copy-tex.min.css></noscript></div></body></html>
