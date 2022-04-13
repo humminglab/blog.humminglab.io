@@ -1,5 +1,5 @@
 ---
-title: "TLS/암호 알고리즘 쉽게 이해하기(9) - DSA"
+title: "TLS/암호 알고리즘 쉽게 이해하기(9) - Digital Signature"
 date: "2022-04-12T09:00:00+09:00"
 lastmod: "2022-04-12T09:00:00+09:00"
 draft: false
@@ -11,7 +11,7 @@ series: ["TLS/암호 알고리즘 쉽게 이해하기"]
 
 DSA는 Digital Signature Algorothm 의 약자로, 미국 NIST 에서 제정한 디지털 서명 알고리즘이다.
 
-이번 글에서는 이 디지털 서명에 관한 전반적인 사항을 다음과 같은 순서로 정리한다.
+이번 글에서는 이와 같은 디지털 서명에 관한 전반적인 사항을 다음과 같은 순서로 정리한다.
 
 - RSA 서명 알고리즘
 - ElGamal 서명 알고리즘
@@ -68,19 +68,17 @@ ElGamal Algorithm은 RSA 처럼 [이산대수 문제]({{< ref "posts/tls-cryptog
 ElGamal 방식도 RSA 처럼 암호화와 서명 두 가지 방식을 지원한다.
 RSA의 경우 암호화나 서명이나 어떤 데이타를 어떤 키로 암호화 하는지만 다르지만, ElGamal 방식은 암호화와 서명 방법이 조금 다르다.
 
-우선은 이산대수 문제를 간략히 다시 정리해 본다.
+우선은 이를 이해하기 위하여 이산대수 문제를 간략히 다시 정리해 본다.
 
 - 소수 모듈러 연산은 사칙연산에 닫혀 있고, 교환법칙, 결합법칙도 성립한다.
-- 페르마의 소정리에 의하여 소수 $p$ 보다 작은 양수 $k$ 에 대해 다음 식이 항상 성립한다.
+- 페르마의 소정리에 의하여 소수 $p$ 보다 작고 0보다 큰 양수 $k$ 에 대해 다음 식이 항상 성립한다.
   - $k^{p-1} \equiv 1 \pmod p$
 - 아래 처럼 $p$를 곱해서 지수만 보면 $(p-1)$의 모듈러 연산이 된다.
 
   - $k^p \equiv k^1 \pmod p$
   - $p = 1 \pmod {p-1}$
 
-- $(p-1)$ 과 서로소인 $s$ 를 선정하고, 확장 유클리드 호제법으로 $s$의 모듈러 $(p-1)$ 에서의 역원 $t$를 찾음
-
-  - $\gcd(k, p-1) = 1$
+- $(p-1)$ 과 서로소인 $s$ 를 임의로 선정하면, 확장 유클리드 호제법으로 모듈러 $(p-1)$ 에서 $s$의 곱하기 역원 $t$를 찾을 수 있다.
 
 위에서 찾은 $p$, $s$, $t$ 가 이산대수 암호화의 기본적인 요소로 사용된다.
 조금 더 자세한 내용은 [이산대수 문제]({{< ref "posts/tls-cryptography-6-math">}}) 를 참고하면 된다.
@@ -90,7 +88,7 @@ RSA의 경우 암호화나 서명이나 어떤 데이타를 어떤 키로 암호
 Bob은 다음과 같이 키를 만든다.
 
 - 큰 소수 $p$ 선정
-- $p$ 보다 작은 임의의 숫자 $\alpha$, $z$를 선정하여 다음과 같이 $\beta$ 를 계산
+- $p$ 보다 작은 임의의 숫자 primitive root $\alpha$, 비밀키 $z$를 선정하여 다음과 같이 $\beta$ 를 계산
 - $\beta \equiv \alpha^z \pmod p$
 - $(p, \alpha, \beta)$는 공개키, $z$은 개인키로 공개키를 사전에 공유한다.
 
@@ -108,7 +106,7 @@ Bob은 $\beta^k$의 모듈러 $p$에 대한 곱하기 역원만 구하면 된다
 Bob은 다음과 같이 연산을 하여 복호화 할 수 있다.
 
 - $s$ 에 포함된
-  $\beta^k \pmod p$ 는 다음과 같이 변형하여 $\beta^k$ 를 얻을 수 있다.
+  $\beta^k \pmod p$ 는 다음과 같이 변형하여 $r$ 로 부터 얻을 수 있다.
   - $\beta^k \equiv (\alpha^z)^k \equiv (\alpha^k)^z \equiv r^z \pmod p$
 - 위의 값을 얻은 후 이를 확장 유클리드 호제법을 이용하여 모듈러 곱하기 역원 $\overline{\beta^k}$ 를 계산한다.
 - 이를 $s$에 곱하여 원문을 얻는다.
@@ -149,7 +147,7 @@ Bob은 다음과 같이 두 연산을 수행하여 비교한다.
   - $sk \equiv \overline{k} (m - zr)k \equiv (m-zr) \pmod {p-1}$
 - 이를 $m$ 으로 다시 정리해 보면 다음과 같다.
   - $m \equiv sk + zr \pmod {p-1}$
-- 위 $v_2$ 를 $m$을 풀면 다음과 같다.
+- 위 $v_2$의 $m$을 위의 값으로 치환하면 다음과 같다.
   - $v_2 \equiv \alpha^m \equiv \alpha^{sk+zr} \equiv \alpha^{sk} \cdot  \alpha^{zr} \equiv (\alpha^k)^s \cdot (\alpha^z)^r \equiv r^s\beta^r \equiv v_1 \pmod p$
 
 위와 같이 지수 $m$을 $sk + zr \pmod {p-1}$ 로 대체할 수 있는 것은 페르마 소정리에 의하여 지수만 보면 $(p-1)$ 모듈러 연산 형태가 되기 때문이다.
@@ -158,9 +156,10 @@ Bob은 다음과 같이 두 연산을 수행하여 비교한다.
 
 TLS에서 ElGamal 방식은 직접적으로는 사용하지 않는다.
 
-ElGamal 방식은 특허가 없어서 오픈소스 암호화 알고리즘인 [PGP(Pretty Good Privacy)](https://en.wikipedia.org/wiki/Pretty_Good_Privacy) 같은 곳에서 이를 이용한다.
+지금은 RSA도 특허가 만료되어 큰 장점은 아니지만 초기에 ElGamal 방식은 특허가 없어서 오픈소스 암호화 알고리즘에서 많이 사용하였다.
+[PGP(Pretty Good Privacy)](https://en.wikipedia.org/wiki/Pretty_Good_Privacy) 도 이를 기반으로 공개키를 사용한다.
 
-ElGamal 서명은 직접적으로 사용하지는 않으나 대부분의 서명 알고리즘이 이를 기반으로 하고 있다. 다음에 설명할 DSA, ECDSA가 이를 기반으로 하는 서명 알고리즘이다.
+ElGamal 서명은 직접적으로 사용하지는 않으나 상용을 포함한 많은 서명 알고리즘이 이를 기반으로 하고 있다. 다음에 설명할 DSA, ECDSA가 이를 기반으로 하는 서명 알고리즘이다.
 
 ## DSA Signature
 
@@ -176,10 +175,10 @@ DSA는 ElGamal의 취약점을 개선한 것으로 다음과 같은 장점이 �
 
 서명을 할 Alice는 다음과 같은 방식으로 키를 만든다.
 
-- 두 소수 $p$ 와 $p$를 찾는다.
-  - $p$는 1024bit 길이의 소수이어야 한다.
-  - $q$는 160bit 길이의 소수이면서, $(p-1)$ 의 약수 이어야 한다.
-  - 실제로는 소인수 분해가 어려우므로 $q$를 먼저 선정하고, 이에 맞는 $p$를 찾는다.
+- 두 소수 $p$ 와 $q$를 찾는다.
+  - $p$는 1024bit 길이의 임의의 소수를 선정한다.
+  - $q$는 160bit 길이의 소수이면서, $(p-1)$ 의 약수인 임의의 수를 선정한다. (1024bit, 160bit는 임의로 정한 길이로 암호화 강도에 따라 조정이 된다)
+  - 소인수 분해가 어려우므로 실제로는 $q$를 먼저 선정하고, 이에 맞는 $p$를 찾는다.
 - Primitive root $g$를 임의로 선정하여 다음과 같이 $\alpha$를 계산한다.
   - $\alpha \equiv g^{(p-1)/q} \pmod p$
   - 위 수식의 의미는 페르마 소정리($g^{p-1}\equiv 1 \pmod p$)에 의하여 다음과 같은 의미가 된다.
@@ -189,14 +188,14 @@ DSA는 ElGamal의 취약점을 개선한 것으로 다음과 같은 장점이 �
 - 위에서 얻은 $(p, q, \alpha, \beta)$ 는 공개키가 되고, $z$ 은 비밀키가 된다.
 - 위 식을 보면 전체는 모듈러 $p$ 연산이지만, 지수부는 모듈러 $q$ 연산이 된다.
 
-DSA에서는 서명시 본문을 그대로 하지 않고, SHA 같은 hash 함수를 이용한 축약된 hash 값을 서명한다.
+DSA에서는 서명 시 본문을 그대로 사용하지 않고, SHA 같은 hash 함수를 이용한 축약된 hash 값을 서명한다($q$ 값은 이 hash 크기 보다는 큰 수가 되어야 한다).
 
 Alice는 다음과 같이 서명한다.
 
 - $(q-1)$보다 작은 임의의 랜덤값 $k$를 선정한다.
 - 본문 $m$의 hash 값 $x$를 얻는다.
 - 다음과 같이 $r, s$ 를 구한다. ($r$은 $p, q$ 각각의 모듈로 연산을 함)
-  - $r \equiv (a^k \pmod p) \pmod q$
+  - $r \equiv (\alpha^k \pmod p) \pmod q$
   - $s \equiv \overline{k} (x + zr) \pmod q$
 - 서명으로 $x, (r,s)$를 본문 $m$과 같이 전달한다.
 
@@ -214,9 +213,9 @@ Bob은 다음과 같이 서명을 검증한다.
   - $ks \equiv x + zr \pmod q$
 - 이를 다시 $s$의 역원 $\overline{s}$를 곱하여 $s$를 제거한다.
   - $k \equiv ks\overline{s} \equiv x \overline{s} + zr \overline{s} \pmod q$
-- 이식은 위에서 구한 $u_1$ 과 $u_2$로 치환한다.
+- 이식을 위에서 구한 $u_1$ 과 $u_2$로 치환한다.
   - $k \equiv u_1 + z u_2 \pmod q$
-- 지수부는 $q$ 의 모듈러 연산이므로 이 값을 $r$ 식의 $k$를 치환할 수 있다.
+- $r$ 식의 지수부는 $q$의 모듈러 연산이므로, 위의 $k$로 치환 할 수 있다.
   $$
   \begin{align*}
       r &\equiv (a^k \bmod p) \bmod q \\\\
@@ -232,7 +231,7 @@ DSA는 암호화에 사용시 키 길이에 따라 다음과 같은 $p$ 와 $q$ 
 | p    | q   | 서명길이 | 노트                                                 |
 | ---- | --- | -------- | ---------------------------------------------------- |
 | 1024 | 160 | 320      | 보안상 더이상 사용치 않음                            |
-| 2048 | 256 | 512      | 초기에는 q로 224bit를 사용하나, 지금은 256bit로 변경 |
+| 2048 | 256 | 512      | 초기에는 q로 224bit를 사용하나, 지금은 256bit를 이용 |
 | 3072 | 256 | 512      |                                                      |
 
 ## OpenSSL
@@ -246,7 +245,7 @@ DSA는 암호화에 사용시 키 길이에 따라 다음과 같은 $p$ 와 $q$ 
 
 ```shell
 $ openssl genrsa -out private.pem 2048
-$ openssl rsa  -in private.pem -out public.pem -pubout
+$ openssl rsa -in private.pem -out public.pem -pubout
 ```
 
 서명할 임의의 데이터를 생성한다.
@@ -293,11 +292,11 @@ $ openssl sha1 mydata.txt
 SHA1(mydata.txt)= 12039d6dd9a7e27622301e935b6eefc78846802e
 ```
 
-`-verify` 명령은 실제로 검증까지는 하지 않고, 공개키로 디코딩하여 padding을 제거한 데이타를 출력한다.
+`-verify` 명령은 실제로 검증까지는 하지 않고, 공개키로 복호화하여 padding을 제거한 데이타를 출력한다.
 
 sha1의 결과값이 뒤에 들어가 있는 것을 확인할 수 있다.
 
-앞에 들어간 3021300906052b0e03021a05000414 magic byte는 ASN.1 이라는 형식으로 인코딩 된 것으로 `-asnparse` 옵션을 추가하여 확인할 수 있다.
+앞에 들어간 3021300906052b0e03021a05000414 magic byte는 ASN.1 이라는 형식으로 인코딩 된 것으로 `-asn1parse` 옵션을 추가하여 확인할 수 있다.
 
 ```shell
 $ openssl rsautl -verify -inkey public.pem -in sha1.sign -pubin -asn1parse
@@ -354,7 +353,7 @@ $ ls -l mydata.txt.sig
 -rw-r--r--  1 yslee  staff  70  4 12 11:18 mydata.txt.sig
 ```
 
-Q가 256bit(32bytes)로 서명은 2배 길이인 64bytes이어야 하는데, 서명 파일이 ASN.1 DER encoding 되어 있기 때문이다.
+Q가 256bit(32bytes)로 서명은 2배 길이인 64bytes이어야 하는데, 파일 크기가 70bytes 인 것은 서명이 ASN.1 DER encoding 되어 있기 때문이다.
 
 다음과 같이 256bit의 $r$ 과 $s$ 를 확인할 수 있다.
 
@@ -364,6 +363,8 @@ $ openssl asn1parse -in mydata.txt.sig -inform DER
     2:d=1  hl=2 l=  32 prim: INTEGER           :6955D869E8F438018D9D0615D40A280551B4F0654B967BBA262C4FFFF1D32C40
    36:d=1  hl=2 l=  32 prim: INTEGER           :7E4FDBE5484759B4725DF862ECCB5E6D8078766C9F8AB2006B3D9C00B752D749
 ```
+
+서명 검증은 다음과 같이 할 수 있다.
 
 ```shell
 $ openssl dgst -sha1 -verify dsa_pub.pem -signature mydata.txt.sig mydata.txt
@@ -378,4 +379,4 @@ Verified OK
 서명과 관련된 표준은 미국 NIST 에서 정의한 [FIPS 186-4, Digital Signature Standard (DSS)](https://csrc.nist.gov/publications/detail/fips/186/4/final) 를 참고할 수 있다.
 이 문서에는 DSA, RSA 서명, ECDSA 에 대해서 정의되어 있다.
 
-ECDSA는 DSA 의 이산대수 문제를 Elliptic Curve (EC) 로 대체하는 알고리즘으로 다음에 타원곡선 알고리즘에서 설명할 예정이다.
+ECDSA는 DSA 의 이산대수 문제를 Elliptic Curve (EC) 로 대체하는 알고리즘으로 다음 기회에 타원곡선 알고리즘에서 설명할 예정이다.
