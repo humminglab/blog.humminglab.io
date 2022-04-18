@@ -1,0 +1,7 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Cryptography, ECC, ECDH, ECDSA - Tag - All about IoT</title><link>https://blog.humminglab.io/tags/cryptography-ecc-ecdh-ecdsa/</link><description>Cryptography, ECC, ECDH, ECDSA - Tag - All about IoT</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 18 Apr 2022 10:00:00 +0900</lastBuildDate><atom:link href="https://blog.humminglab.io/tags/cryptography-ecc-ecdh-ecdsa/" rel="self" type="application/rss+xml"/><item><title>TLS/암호 알고리즘 쉽게 이해하기(11) - Elliptic Curve Cryptography(ECC)</title><link>https://blog.humminglab.io/posts/tls-cryptography-11-ecc/</link><pubDate>Mon, 18 Apr 2022 10:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/tls-cryptography-11-ecc/</guid><description>타원 곡선(Elliptic Curve)는 일반적으로 생각하는 가로 세로비가 다른 길쭉한 원을 말하는 것이 아니라 다음과 같은 공식으로 구성된 곡선을 말한다.
+$$y^2 = x^3 + ax + b$$
+$a$ 와 $b$ 는 임의의 수로 특이점이 없도록 다음과 같은 조건을 만족하여야 한다.
+$$4 a^3 + 27b^2 \neq 0$$
+이와 같은 조건을 만족하는 곡선은 다음과 같은 모양을 가진다.
+b=1, a=2~-3 일 때의 모양
+만일 위 조건을 만족하지 않는 경우는 아래와 같이 첨 점이거나 교차하는 특이점이 있다.</description></item></channel></rss>
