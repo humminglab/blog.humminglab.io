@@ -1,7 +1,7 @@
 ---
 title: "TLS/암호 알고리즘 쉽게 이해하기(11) - Elliptic Curve Cryptography(ECC)"
 date: "2022-04-18T10:00:00+09:00"
-lastmod: "2022-04-18T10:00:00+09:00"
+lastmod: "2022-04-19T09:00:00+09:00"
 draft: false
 authors: ["YSLee"]
 tags: ["Cryptography, ECC, ECDH, ECDSA"]
@@ -256,7 +256,7 @@ $$
 
 점의 모양이 타원곡선의 형태는 없지만, y축의 모듈러 중앙값을 기준으로 점이 대칭 형태로 구성되는 것은 동일하다.
 
-임의의 큰 소수 p에 대해서 이와 같은 가능한 점들의 개수는 소수 p와 일치하지 않고, 그보다는 작다.
+임의의 큰 소수 p에 대해서 이와 같은 가능한 점들의 개수는 소수 p와 일치하지 않는다.
 이 개수를 구하는 방법은 [Schoof's algorithm](https://en.wikipedia.org/wiki/Schoof%27s_algorithm)를 이용하여 구할 수 있다.
 이와 같은 가능한 점의 개수를 **Order of the group**(N) 이라고 한다.
 
@@ -281,7 +281,7 @@ Cyclic subgroup(n)과 Order of the group(N)은 [Lagrange's theorem (group theory
 - 임의의 좌표에 대한 연산은 이 N 전체를 순환하지 않고, N의 약수 개수 만큼인 Cyclic subgroup(n)을 순환하다.
 - 만일 이 n이 연산이 불가능하도록 큰 소수라면 암호화 용도로 적합하다.
 
-연산이 [이산 대수]({{< ref "posts/tls-cryptography-6-math">}})의 모듈러 지수 연산과 비슷하게 된다. 다만 이때는 지수 연산이지만, 타원곡선에서는 더하기 연산 형태이다.
+연산이 [이산 대수]({{< ref "posts/tls-cryptography-6-math">}})의 모듈러 지수 연산과 비슷하게 된다. 다만 이때는 지수 연산이지만, 타원곡선에서는 곱하기 연산 형태이다.
 
 예를 들어 다음과 같은 조건을 생각해 보자.
 
