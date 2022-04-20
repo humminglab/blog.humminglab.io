@@ -1,7 +1,7 @@
 ---
 title: "TLS/암호 알고리즘 쉽게 이해하기(12) - ECDH, ECDSA"
 date: "2022-04-19T13:00:00+09:00"
-lastmod: "2022-04-19T13:00:00+09:00"
+lastmod: "2022-04-20T10:00:00+09:00"
 draft: false
 authors: ["YSLee"]
 tags: ["Cryptography, ECC, ECDH, ECDSA"]
@@ -227,6 +227,117 @@ OpenSSL command line에서는 아직은 Curve25519를 지원하지 않아 genpke
 - IoT 기기 등 저사양을 고려한다면 X25519, ED25519 사용
 
 IoT 기기에서 사용하여 X25519, ED25519를 사용한다면 [libsodium](https://libsodium.gitbook.io/doc/advanced/ed25519-curve25519) 등의 library를 사용할 수 있다.
+
+## Openssl 로 동작 확인
+
+### ECDH 시험
+
+Openssl을 이용하여 ECDH를 확인 해본다.
+
+- 우선 지원되는 curve를 확인한다.
+
+```shell
+$ openssl ecparam -list_curves
+```
+
+- ecparam subcommand로 Alice의 개인키를 생성한다. 여기에서는 P-256 (prime256v1)을 생성하였다.
+
+```shell
+$ openssl ecparam -name prime256v1 -genkey -noout -out alice-priv.pem
+```
+
+- 생성된 개인키는 다음과 같이 확인 가능하다.
+  - Private key는 랜덤하게 생성된 것으로 이 경우 256bit의 길이가 맞다.
+  - Public key의 경우 private 보다 약 2배 가량 되는데, 이유는 위에서 처럼 $H_a = d_a G$ 와 같이 x,y 좌표를 가진 Genearator G와 곱한 결과인 x, y 좌표와 1bit의 parity 가 추가되었기 때문이다.
+
+```shell
+$ openssl ec -in alice-priv.pem -text -noout
+read EC key
+Private-Key: (256 bit)
+priv:
+    1c:6d:99:e3:18:fa:78:0e:9e:08:a7:81:95:49:0c:
+    e5:b3:6e:26:7b:40:76:94:c3:79:74:50:98:cd:db:
+    f4:bf
+pub:
+    04:c0:00:72:22:80:b6:27:12:78:4e:a2:9c:1f:6b:
+    3c:e5:96:b2:24:94:59:3c:a0:5f:64:36:ef:f4:1b:
+    32:34:38:e1:cf:84:9a:ed:08:27:30:ee:6c:08:13:
+    32:c5:0c:96:fc:1a:99:97:f2:d5:5c:5f:bc:fd:b9:
+    ed:f5:6d:a9:8e
+ASN1 OID: prime256v1
+NIST CURVE: P-256
+```
+
+- 개인키로 공개키를 생성한다.
+
+```shell
+$ openssl ec -in alice-priv.pem -pubout -out alice-pub.pem
+```
+
+- 동일한 방식으로 Bob의 개인키와 공개키를 생성한다.
+
+```shell
+$ openssl ecparam -name prime256v1 -genkey -noout -out bob-priv.pem
+$ openssl ec -in bob-priv.pem -pubout -out bob-pub.pem
+```
+
+- Alice와 Bob은 prime256v1 타원곡선 정보와 각자 자신의 공개키를 상대방에게 전달하였다고 하자.
+
+- Alice는 Bob의 공개키를 이용하여 키를 유도할 수 있다.
+
+```shell
+$ openssl pkeyutl -derive -out alicebob.key -inkey alice-priv.pem -peerkey bob-pub.pem
+```
+
+- Bob도 Alice의 공개키를 이용하여 키를 유도할 수 있다.
+
+```shell
+$ openssl pkeyutl -derive -out bobalice.key -inkey bob-priv.pem -peerkey alice-pub.pem
+```
+
+- 둘이 생성한 키 값을 비교하면 아래와 같이 동일한 것을 알수 있다.
+
+```shell
+$ hexdump alicebob.key
+0000000 f5d1 d9f7 cb35 be15 51af d264 b90f 4bb7
+0000010 c031 dae3 ed42 71c4 f3b1 c0a5 42f1 7955
+
+$ hexdump bobalice.key
+0000000 f5d1 d9f7 cb35 be15 51af d264 b90f 4bb7
+0000010 c031 dae3 ed42 71c4 f3b1 c0a5 42f1 7955
+```
+
+### ECDSA 시험
+
+위에서 생성한 Alice의 키를 이용하여 서명을 해본다.
+
+- 서명할 파일 생성
+
+```shell
+$ echo 1234567890 > mydata.txt
+```
+
+- dgst subcommand로 SHA-256 해시함수를 사용하여 서명한다.
+
+```shell
+$ openssl dgst -sha256 -sign alice-priv.pem -out mydata.sha256 mydata.txt
+```
+
+- 서명파일은 DER 인코딩 된 것으로 asn1parse 로 확인하면 다음과 같이 256bit의 두 값 r 과 s가 차례대로 들어 있는 것을 확인할 수 있다.
+
+```shell
+$ openssl asn1parse -in mydata.sha256 -inform DER
+    0:d=0  hl=2 l=  68 cons: SEQUENCE
+    2:d=1  hl=2 l=  32 prim: INTEGER           :56E84F9DC7396284C9E03B78DF1AE024E5EE86051EAC52AB02B940A861A5C62F
+   36:d=1  hl=2 l=  32 prim: INTEGER           :78831E8F60EE73AD23DFB43E5A460A5ADB4A75C49CA5AAEA49ACEE37D94C5C36
+```
+
+- 서명 검증은 alice의 공개키를 이용하여 할 수 있다.
+
+```shell
+$ openssl dgst -sha256 -verify alice-pub.pem -signature mydata.sha256 mydata.txt
+Verified OK
+```
 
 ## 마치며
 
