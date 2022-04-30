@@ -1,5 +1,5 @@
 ---
-title: "TLS/암호 알고리즘 쉽게 이해하기(12) - MAC, AE, AEAD"
+title: "TLS/암호 알고리즘 쉽게 이해하기(13) - MAC, AE, AEAD"
 date: "2022-04-30T09:00:00+09:00"
 lastmod: "2022-04-30T09:00:00+09:00"
 draft: false
