@@ -127,4 +127,22 @@ AES-GCM 과 ChaCha20-Poly1305 는 OpenSSL command line으로는 제공하지 않
 
 - [from openssl docs](https://github.com/openssl/openssl/blob/14d3bb06c9c11b3e13c64611913757c27bc057f2/doc/man1/openssl-enc.pod.in#L268)
 
-이상으로 MAC, AE, AEAD의 특징 및 알고리즘을 정리를 마무리 한다.
+## 마무리
+
+최신 TLS 1.3 에서는 보안에 문제가 있는 AES-CBC 등이 제거되고, 아래와 같이 5개의 cipher suite로 정리되었다.
+
+- TLS\_**AES_128_GCM**\_SHA256
+- TLS\_**AES_256_GCM**\_SHA384
+- TLS\_**CHACHA20_POLY1305**\_SHA256
+- TLS\_**AES_128_CCM**\_SHA256
+- TLS\_**AES_128_CCM_8**\_SHA256
+
+[AES_CCM](https://datatracker.ietf.org/doc/html/rfc3610) 도 위에 AE에서 언급한 MAC-then-Encrypt 로 AEAD 방식의 일종이지만 실제로는 많이는 사용하지 않는다.
+
+[The 2021 TLS Telemetry Report - F5 Labs](https://www.f5.com/labs/articles/threat-intelligence/the-2021-tls-telemetry-report) 을 보면 2021년에 조사한 백만개 사이트 중 94% 가까운 연결이 AES-GCM 방법을 사용하고, ChaCha20-Poly1305 가 2% 정도 사용 되었다고 한다.
+
+시간이 지나면 보안이 취약한 기존 cipher suite 들의 사용이 줄어든다면 이 두 방식이 주를 이룰 것으로 보여진다.
+
+두 방식의 차이점은 AES hardware acceleration 이 있는 경우에는 AES-GCM 방식이 장점이 있으나, 순수하게 소프트웨어로 구동을 하는 경우 ChaCha20-Poly1305 방식이 빠르기 때문에 IoT 등 저사양 기기들이 늘어나면서 ChaCha20-Poly1305 방식도 점차로 인기가 많아질 듯 싶다.
+
+이상으로 MAC, AE, AEAD의 특징 및 알고리즘 정리를 마무리 한다.
