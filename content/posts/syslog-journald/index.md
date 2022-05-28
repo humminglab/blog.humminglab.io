@@ -1,7 +1,7 @@
 ---
 title: "Syslog and Journald"
 date: "2022-05-27T09:00:00+09:00"
-lastmod: "2022-05-27T09:00:00+09:00"
+lastmod: "2022-05-28T09:00:00+09:00"
 draft: false
 authors: ["YSLee"]
 tags: ["Yocto", "syslog", "rsyslogs", "systemd", "journald"]
@@ -117,11 +117,11 @@ Journald는 이를 다음과 같이 개선한 것이다.
 
 - **Binary & Indexing**: Binary 형식으로 데이타를 저장하고 indexing 하여 검색이 빠름
 - **Structure logging**: 기본으로 로그 분석이 가능한 툴(journalctl) 제공하고, 구조화된 로그 제공(특정 데몬만 보거나, 특정 시점만 확인하거나)
-- **Access control**: 사용자에 따른 별도의 로그로 로그 억세스 제어 가능
+- **Access control**: 사용자에 따른 별도의 로그로 억세스 제어 가능
 - **Automatic log rotation**: 기본 제공
 - **Forward Secure Sealing(FSS)**: sealing key로 sealing 하고, verification key로 로그의 유효성 검증하여 로그 조작 방지
 
-무엇보다고 가장 좋은 기능은 구조화된 로깅으로 mini command line ELK(Elasticsearch, Logstash, Kibana) 라고도 할 수 있다.
+무엇보다고 가장 좋은 기능은 구조화된 로깅으로 mini command line 로그분석도구 라고도 할 수 있다.
 
 하지만 journald의 단점은 반대로 binary 로 저장되어 텍스트로 저장하는 syslog처럼 다른 시스템과 연동이 어렵다는 것이다.
 대부분 원격 로깅을 위한 log-shipper 에서는 syslog를 기본으로 사용하는 것이 많다.
@@ -130,7 +130,7 @@ Journald는 이를 다음과 같이 개선한 것이다.
 
 우선 더 자세한 로그를 남기는 journald가 호스트에서 생성되는 로그를 수집하여 저장하고, 이를 syslog daemon에서 다음과 같이 두 방법 중 하나로 참조한다.
 
-- syslog daemon이 journald client 직접 journald 로그를 읽기: [rsyslogd imjournal](https://www.rsyslog.com/doc/v8-stable/configuration/modules/imjournal.html)
+- syslog daemon이 직접 journal 로그 읽기: [rsyslogd imjournal](https://www.rsyslog.com/doc/v8-stable/configuration/modules/imjournal.html)
   - syslog 프로토콜로는 severity, hostname, message 정도 밖에 전송 되지 않으므로 직접 엑세스 하는 것이 더 많은 정보를 얻을 수 있음
   - 다른 프로그램이 journald 데이타를 참조하므로 불안정할 수 있고, 읽기 속도가 빠르지 않음
 - journald에서 syslog로 메시지 forward 하기: [rsyslogd imuxsock](https://www.rsyslog.com/doc/v8-stable/configuration/modules/imuxsock.html)
@@ -141,7 +141,7 @@ Ubuntu의 경우 기본 설정은 imuxsock을 이용하여 syslog로 forward하�
 
 ## Yocto에서 journald를 적용 시 고려사항
 
-가장 먼저 저장장치와 메모리를 고려하여야 다음과 같이 고려 할 수 있을 것이다.
+어떤 로그시스템을 선택할지는 메모리와 저장장치의 상황을 감안하여 다음과 같이 결정할 수 있을 것이다.
 
 - 로그를 볼일이 거의 없다면 journald 보다는 가벼운 busybox syslogd를 유지하는 것이 좋다.
 - Log-shipper를 사용하지 않는다면 syslogd는 중지하고, journald 만 로그를 저장하고, syslog로 forward 하지 않도록 설정한다.
