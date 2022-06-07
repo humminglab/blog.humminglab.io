@@ -2,4 +2,4 @@
 이 글에서 설명할 내용은 다음과 같다.
 MAC(Message Authentication Code) AE(Authenticated Encryption) AEAD(Authenticated Encryption with Associated Data) MAC (Message Authentication Code) MAC은 한마디로 정리하면 Hash에 비밀키를 추가한 버전이라고 볼 수 있다.
 키를 사용한다는 것으로 보면 DSA 디지털 서명과 비슷한 기능을 수행하지만, 공유키를 사용한다는 것이 다르다.
-DSA는 Alice의 공개키를 가진 다수의 사람이 검증을 위한 용도이고, MAC은 키를 공유한 사람 간에 검증을 하기 위한 용도이다.</description></item></channel></rss>
+DSA는 Alice의 공개키를 가진 다수의 사람이 검증을 위한 용도이고, MAC은 키를 공유한 사람 간에 검증을 하기 위한 용도이다. 물론 연산량도 DSA와 비교하여 더 적고 빠르다.</description></item></channel></rss>
