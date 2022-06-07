@@ -1,7 +1,7 @@
 ---
 title: "TLS/암호 알고리즘 쉽게 이해하기(12) - ECDH, ECDSA"
 date: "2022-04-19T13:00:00+09:00"
-lastmod: "2022-04-20T10:00:00+09:00"
+lastmod: "2022-06-07T09:00:00+09:00"
 draft: false
 authors: ["YSLee"]
 tags: ["Cryptography, ECC, ECDH, ECDSA"]
@@ -33,7 +33,7 @@ hash 결과 값(서명 시)이나, 랜덤하게 만들어진 키 교환 등의 �
 
 ## ECDH 키교환
 
-[Diffie-Hellman Key Exchange]({{< ref "posts/tls-cryptography-7-diffie-hellman">}}) 에서는 이산대부 문제인 모듈러 지수 연산의 어려움을 이용한 키교환 방법이었다.
+[Diffie-Hellman Key Exchange]({{< ref "posts/tls-cryptography-7-diffie-hellman">}}) 에서는 이산대수 문제인 모듈러 지수 연산의 어려움을 이용한 키교환 방법이었다.
 
 이 지수 연산을 타원곡선의 곱하기 연산으로 대체한 것이 ECDH(Elliptic-curve Diffie–Hellman) 이다.
 
