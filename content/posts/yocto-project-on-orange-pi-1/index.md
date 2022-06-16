@@ -1,7 +1,7 @@
 ---
 title: "Yocto Project 개발하기(1) - Orange Pi 보드 빌드"
 date: "2021-12-30T22:00:00+09:00"
-lastmod: "2022-01-18T22:00:00+09:00"
+lastmod: "2022-06-16T10:00:00+09:00"
 draft: false
 authors: ["YSLee"]
 tags: ["Yocto", "Linux", "OrangePi"]
@@ -73,20 +73,23 @@ Yoco 내에 Allwinner layer인 meta-sunxi 를 설치한다. 또한 meta-sunxi �
 
 ```shell
 $ cd ~/yocto
-$ git clone git@github.com:linux-sunxi/meta-sunxi.git -b honister
+$ git clone https://github.com/linux-sunxi/meta-sunxi.git -b honister
 $ git clone git://git.openembedded.org/meta-openembedded -b honister
 ```
 
 위와 같이 다운로드 받은 poky와 meta layer는 git submodule 등을 이용하여 관리를 하는 것이 좋을 수 있다.
 
 ```shell
-$ source ./oe-init-build-env
+$ cd ~/yocto
+$ source poky/oe-init-build-env
 ```
 
 위를 실행하면 메시지가 나오면서 poky 빌드에 필요한 환경 변수가 적절히 설정되고, 처음 실행이라면 `./build` 디렉토리를 만들고 다음과 같은 기본 설정 파일이 생성된다.
 
 ```shell
-➜  build git:(honister) ✗ tree
+$ pwd 
+/home/yslee/yocto/build
+$ tree
 .
 └── conf
     ├── bblayers.conf
@@ -94,7 +97,17 @@ $ source ./oe-init-build-env
     └── templateconf.cfg
 ```
 
-`conf/bblayers.conf`를 에디터로 열어서 BBLAYERS 에 다음과 같이 meta-oe, meta-sunxi 를 추가한다.
+`conf/bblayers.conf` 에 meta-openembedded/meta-oe, meta-sunxi 를 추가한다. 
+추가는 직접 파일을 수정해도 되고, bitbake-layer 를 사용하여도 된다. 
+
+```shell 
+$ pwd 
+/home/yslee/yocto/build
+$ bitbake-layers add-layer ../meta-openembedded/meta-oe
+$ bitbake-layers add-layer ../meta-sunxi
+```
+
+`conf/bblayer.conf` 를 확인해 보면 다음과 같이 layer가 추가된 것을 확인할 수 있다.
 
 ```
 BBLAYERS ?= " \
@@ -105,8 +118,6 @@ BBLAYERS ?= " \
   /home/yslee/yocto/meta-sunxi \
   "
 ```
-
-bblayer.conf를 위와 같이 직접 수정을 해주어도 되고, bitbake-layers 를 이용하여 `bitbake-layers add-layer ../meta-sunxi` 와 같이 추가를 할 수도 있다.
 
 `conf/local.conf`의 default MACHINE 을 orage-pi-zero 로 변경한다. 해당 설정은 `meta-sunxi/conf/machine/orange-pi-zero.conf` 에 위치한다.
 
