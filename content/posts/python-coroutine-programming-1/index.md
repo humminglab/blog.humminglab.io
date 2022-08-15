@@ -1,7 +1,7 @@
 ---
 title: "Python 비동기 프로그래밍 제대로 이해하기(1/2) - Asyncio, Coroutine"
 date: "2018-03-26T23:00:00+09:00"
-lastmod: "2018-03-26T23:00:00+09:00"
+lastmod: "2022-08-15T15:00:00+09:00"
 draft: false
 authors: ["YSLee"]
 tags: ["Python"]
@@ -55,7 +55,8 @@ class Counter(object):
     def __iter__(self):
         iter = Iterator()
         return iter
-	
+
+
 class Iterator(object):
     def __init__(self):
         self.index = 0
@@ -69,12 +70,14 @@ class Iterator(object):
 ```
 
 위 예는 짝수를 리턴하는 iterator이다. 
-실제 확인은 iterator의 다음 값을 얻는 builtin `next()` 함수를 사용할 수 있다.
+
+실제 확인은 itertor object를 얻는 builtin `iter()` 함수와, 이 iterator object에서 다음 값을 얻는 builtin `next()` 함수를 사용할 수 있다.
 ```python
 >>> c = Counter()
->>> next(c)
+>>> i = iter(c)
+>>> next(i)
 0
->>> next (c)
+>>> next (i)
 2
 ```
 
