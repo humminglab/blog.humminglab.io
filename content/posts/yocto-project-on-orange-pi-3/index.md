@@ -72,7 +72,7 @@ EXTERNALSRC:pn-u-boot = "/home/yslee/u-boot"
 EXTERNALSRC_BUILD:pn-u-boot = "/home/yslee/u-boot"
 ```
 
-- 첫번쨰 줄은 externalsrc.bbclass를 추가하는 것이다. 이와 같은 conf 파일에는 [INHERIT](https://docs.yoctoproject.org/bitbake/bitbake-user-manual/bitbake-user-manual-metadata.html#inherit-configuration-directive) 문법을 사용하고, .bb recipe 파일에는 [inherit directive](https://docs.yoctoproject.org/bitbake/bitbake-user-manual/bitbake-user-manual-metadata.html#inherit-directive) 를 사용한다.
+- 첫번째 줄은 externalsrc.bbclass를 추가하는 것이다. 이와 같은 conf 파일에는 [INHERIT](https://docs.yoctoproject.org/bitbake/bitbake-user-manual/bitbake-user-manual-metadata.html#inherit-configuration-directive) 문법을 사용하고, .bb recipe 파일에는 [inherit directive](https://docs.yoctoproject.org/bitbake/bitbake-user-manual/bitbake-user-manual-metadata.html#inherit-directive) 를 사용한다.
 - `EXTERNALSRC:pn-`{PACKAGE_NAME} 로 패키지의 소스 디렉토리를 절대 경로로 기록한다. 이와 같이 하면 u-boot 는 빌드 시 recipe 에 정의된 소스 파일을 사용하지 않고, 이 디렉토리의 소스로 빌드를 수행한다.
 - `EXTERNALSRC_BUILD:pn-`{PACKAGE_NAME} 로 패키지의 빌드 디렉토리를 절대 경로로 기록한다. 이 부분은 필요시에 추가하면 된다. 이를 추가하게 되면 compile 시 생성되는 파일도 해당 디렉토리에 생성된다. 실제 object 파일 등을 확인하려고 할때는 이와 같이 source 디렉토리에 생성되도록 하면 편리할 수도 있다.
 
