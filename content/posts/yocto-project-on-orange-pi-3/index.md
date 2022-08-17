@@ -88,4 +88,4 @@ EXTERNALSRC 는 패키지 소스 수정이 필요한 경우 다음과 같은 절
 
 위와 같이 externalsrc 로 등록한 패키지의 경우 해당 compile task는 tained mode로 설정되어 `bitbake -f -c compile` 과 같이 force 옵션을 주지 않아도 매번 compile을 수행한다.
 
-이와 같이 externalsrc 로 가장 자주 사용하는 부분은 kernel 수정 작업 시 이다. 커널의 경우 externalsrc로 설정하고 수정 후 빌드를 하면 의존성 있는 kernel module package 나 initramfs 와 같은 recipe도 재빌드 되어 수작업으로 패키지을 할 필요가 없다.
+이와 같이 externalsrc 로 가장 자주 사용하는 부분은 kernel 수정 작업 시 이다. 커널의 경우 externalsrc로 설정하고 수정 후 빌드를 하면 의존성 있는 kernel module package 나 initramfs 와 같은 recipe도 재빌드 되어 수작업으로 패키징을 할 필요가 없다.
