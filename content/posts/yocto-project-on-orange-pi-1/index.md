@@ -11,7 +11,7 @@ series: ["Yocto Project 개발하기"]
 
 이 문서는 [Orange Pi Zero](http://www.orangepi.org/orangepizero/) 보드에서 [Yocto Project](https://www.yoctoproject.org/)를 이용하여 배포본을 만들고, 개별 패키지를 관리하는 방법에 대하여 설명한다.
 
-설명은 다음과 같이 나누어서 설명을 할 에정이다.
+설명은 다음과 같이 나누어서 설명을 할 예정이다.
 
 - **Yocto Project 개발하기(1) - Orange Pi 보드 빌드**
 - [Yocto Project 개발하기(2) - Custom Layer 만들기]({{< ref "posts/yocto-project-on-orange-pi-2">}})
