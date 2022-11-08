@@ -107,7 +107,7 @@ $$A \star B = B \star A$$
 
 {{< figure src="ec-f-6.png" width="500px" height="auto" caption="$A \star A' = 0$">}}
 
-그리고 마지막, 같은 점과 같은 점에 대해서 연산은 어떻게 할까? 이떄는 미분으로 접선을 구해서 다른 점을 찾을 수 있다.
+그리고 마지막, 같은 점과 같은 점에 대해서 연산은 어떻게 할까? 이때는 미분으로 접선을 구해서 다른 점을 찾을 수 있다.
 
 {{< figure src="ec-f-7.png" width="500px" height="auto" caption="$A \star A = T$">}}
 

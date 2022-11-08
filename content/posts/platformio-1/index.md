@@ -10,7 +10,7 @@ series: ["PlatformIO 개발하기"]
 ---
 
 Cortex-M series 급을 이용한 임베디드 시스템 개발을 하다 보면, 지속적으로 사용할 수 있는 통합 개발 환경이 마땅치 않다는 문제가 있다.
-Windows 나 Linux 라면 한번 익혀 두면 수년은 두고 두고 쓸수 있는 개발 환경들이 있지만 임베디드 개발 환경의 경우 MCU 가 바뀔 때마다 전체적인 개발환경도 바꾸어야만 하는 경우가 생긴다. 
+Windows 나 Linux 라면 한번 익혀 두면 수년은 두고 두고 쓸수 있는 개발 환경들이 있지만 임베디드 개발 환경의 경우 MCU 가 바뀔 때마다 개발환경을 바꾸어야만 하는 경우가 생긴다. 
 개발 환경의 범위를 최소 셋인 컴파일, 다운로드 만이 아닌 디버깅, unit test 까지로 고려한다면 범위가 더 좁아 질 수 밖에 없다. 
 
 지금까지는 대부분의 프로젝트는 임베디드 Linux 와 마찬가지로 gcc, binutils, gdb, OpenOCD 을 이용하여 개발하였고, 디버깅을 지원하는 통합 개발 환경으로는 emacs를 사용하였다. 
@@ -33,7 +33,7 @@ ESP, Atmel, STM32 Cube, Nordic NRF52, Linux ARM, ... 등 다양한 플랫폼을 
 이번 연재에서는 다음과 같이 나누어 설명을 할 예정이다. 
 
 - PlatformIO (1) - 개요 및 특징
-- PlatformIO (2) - STM32Cube Platform 개발
+- [PlatformIO (2) - STM32Cube Platform 개발]({{< ref "posts/platformio-2-stm32-cube">}})
 - PlatformIO (3) - STM32Cube FreeRTOS 적용
 - PlatformIO (4) - PlatformIO 디버깅 
 - PlatformIO (5) - PlatformIO Unit Test
@@ -81,7 +81,7 @@ Hard realtime 을 요하는 환경에서는 real-time tracing 기능이 큰 장�
 간단히 말해서 platformio.ini 로 초기화를 잡아주고 CLI를 실행만 해주면 초기 틀이 잡혀지고, 
 여기에 코드만 작성하면 바로 빌드, 로딩, 실행, 디버깅이 가능하다는 것이다. 
 
-위와 같은 CLI 기능이 VSCode frontend 로 감싸진 형태라 VSCode 에 익숙한 개발자라면 큰 러닝 커브없이 임베디드 개발환경을 익힐 수 있다.
+위와 같은 CLI 기능이 VSCode frontend 로 감싸진 형태라 VSCode 에 익숙한 개발자라면 러닝 커브없이 임베디드 개발환경을 익힐 수 있다.
 
 ## VSCode Extension 설치하기
 
