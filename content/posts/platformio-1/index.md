@@ -33,7 +33,7 @@ ESP, Atmel, STM32 Cube, Nordic NRF52, Linux ARM, ... 등 다양한 플랫폼을 
 이번 연재에서는 다음과 같이 나누어 설명을 할 예정이다. 
 
 - PlatformIO (1) - 개요 및 특징
-- [PlatformIO (2) - STM32Cube Platform 개발]({{< ref "posts/platformio-2-stm32-cube">}})
+- PlatformIO (2) - STM32Cube Platform 개발
 - PlatformIO (3) - STM32Cube FreeRTOS 적용
 - PlatformIO (4) - PlatformIO 디버깅 
 - PlatformIO (5) - PlatformIO Unit Test
