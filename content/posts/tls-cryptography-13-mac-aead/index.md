@@ -30,7 +30,7 @@ DSA는 Alice의 공개키를 가진 다수의 사람이 검증을 위한 용도�
 
 MAC은 hash 함수만으로 구성하거나, AES-CBC 암호화 모드를 적용하거나, 뒤에서 설명한 GCM 모드를 적용하느냐에 따라서 각각 HMAC, CMAC, GMAC 등으로 구분하기도 한다.
 
-HMAC (Hash-based Message Authentication Code) 만 간단히 설명하면 [RFC 2104 HMAC](https://tools.ietf.org/html/rfc2104)로 정의되어 있고, 원리는 다음과 같은 단순하다.
+HMAC (Hash-based Message Authentication Code) 만 간단히 설명하면 [RFC 2104 HMAC](https://tools.ietf.org/html/rfc2104)로 정의되어 있고, 원리는 다음과 같이 단순하다.
 
 $$
 \begin{align*}
