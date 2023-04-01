@@ -15,7 +15,7 @@ name = "HummingLab"
 
 [params]
   # DoIt theme version
-  version = "0.2.X"
+  version = "0.3.X"
   
   [params.search]
     enable = false
@@ -67,7 +67,7 @@ name = "HummingLab"
     [params.page.toc]
       enable = true
       keepStatic = false
-      auto = false
+      auto = true
 
     [params.page.code]
       # whether to show the copy button of the code block
