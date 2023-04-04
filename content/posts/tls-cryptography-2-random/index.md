@@ -65,10 +65,10 @@ $$ \text{state}\_{n+1} = (1103515245 \cdot \text{state}\_n + 12345) \mod 2^{31} 
 
 Linux 의 경우 /dev/random, /dev/urandom 디바이스 드라이버를 이용하여 난수를 제공한다.
 
-기본적인 구조는 AMOSYS Security Blog의 [Linux RNG Architecture](https://blog.amossys.fr/linux-csprng-architecture.html) 를 보면 개괄적으로 이해할 수 있다.
+기본적인 구조는 AMOSYS Security Blog의 [Linux RNG Architecture](https://www.amossys.fr/fr/ressources/blog-technique/linux-csprng-architecture/) 를 보면 개괄적으로 이해할 수 있다.
 아래 그림은 이 블로그에 있는 그림이다.
 
-{{< figure src="https://blog.amossys.fr/content/images/article29/random.c.png" width="600px" height="auto" caption="Linux 5.4 CSPRNG Architecture">}}
+{{< figure src="random-c-950x713-c-f.webp" width="600px" height="auto" caption="Linux 5.4 CSPRNG Architecture (위 AMOSYS 링크 참조)">}}
 
 해당 커널 버전까지는 /dev/urandom 과 /dev/random 드라이버는 다른 경로로 난수를 얻는다.
 
