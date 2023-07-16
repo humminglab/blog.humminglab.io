@@ -1,7 +1,7 @@
 ---
 title: "PlatformIO (2) - STM32Cube Platform 개발"
-date: "2022-06-24T09:00:00+09:00"
-lastmod: "2022-06-24T09:00:00+09:00"
+date: "2022-06-25T09:00:00+09:00"
+lastmod: "2022-06-25T09:00:00+09:00"
 draft: false
 authors: ["YSLee"]
 tags: ["PlatformIO", "STM32", "SMT32Cube", "VSCode"]
