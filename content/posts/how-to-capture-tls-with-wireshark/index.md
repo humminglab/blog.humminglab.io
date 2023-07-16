@@ -53,11 +53,11 @@ Wireshark의 설정 -> RSA Keys 에 RSA private key를 등록하면 된다. 관�
 ### 웹 브라우저
 
 Firefox browser 의 경우 NSS (Network Security Services) 모듈에서 TLS 관련 기능을 처리한다.
-참고로 [NSS layer](https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/NSS_API_Guidelines)는 아래와 같은 레이어링을 제공한다.
+참고로 [NSS layer](https://firefox-source-docs.mozilla.org/security/nss/)는 아래와 같은 레이어링을 제공한다.
 
 {{< image src="nss-layer.gif" width="300px" height="auto" caption="NSS Layer">}}
 
-이 NSS 에서 디버깅을 위한 [NSS Key Log](https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/Key_Log_Format) 기능을 제공한다.
+이 NSS 에서 디버깅을 위한 [NSS Key Log](https://firefox-source-docs.mozilla.org/security/nss/) 기능을 제공한다.
 이 기능을 켜기 위하여는 환경 변수에 `SSLKEYLOGFILE` 로 로그를 저장할 파일을 지정해 주면 된다. Firefox 이외에도 Chrome 브라우저도 동일한 기능을 제공한다.
 
 아래 예는 mac 의 경우이고, linux 나 windows 도 동일한 방법으로 환경 변수를 설정해서 사용하면 된다. ([설정관련 참고](https://support.f5.com/csp/article/K50557518))
