@@ -1,7 +1,7 @@
 ---
 title: "Yocto 에서 Go 프로젝트 관리"
 date: "2023-08-16T12:00:00+09:00"
-lastmod: "2023-08-16T12:00:00+09:00"
+lastmod: "2023-08-16T16:00:00+09:00"
 draft: false
 authors: ["YSLee"]
 tags: ["Yocto", "Golang", "Go"]
