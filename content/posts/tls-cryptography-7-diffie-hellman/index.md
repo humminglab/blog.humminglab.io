@@ -1,7 +1,7 @@
 ---
 title: "TLS/암호 알고리즘 쉽게 이해하기(7) - Diffie-Hellman Key Exchange"
 date: "2022-03-10T16:00:00+09:00"
-lastmod: "2022-03-10T16:00:00+09:00"
+lastmod: "2022-08-19T10:00:00+09:00"
 draft: false
 authors: ["YSLee"]
 tags: ["Cryptography, Modulo, Diffie-Hellman, DHE, ECDHE"]
@@ -26,29 +26,28 @@ RSA와 같은 비대칭키를 이용하여 암호화 채널을 만든 후 이를
 
 지수 연산에서 다음과 같은 수식은 모두 동일하다.
 
-$$ {(a^m)}^n = a^{mn} = {(a^n)}^m $$
+$$ {(g^m)}^n = g^{mn} = {(g^n)}^m $$
 
 위 연산은 [이산대수-모듈로 연산]({{< ref "posts/tls-cryptography-6-math#모듈로-연산">}}) 에서 설명한 것과 같이 소수 모듈로 연산에서도 동일한 조건이 성립한다.
 
-$$ {(a^m)}^n = a^{mn} = {(a^n)}^m \mod k, (\text{k 는 소수})$$
+$$ {(g^m)}^n = g^{mn} = {(g^n)}^m \mod k, (\text{k 는 소수})$$
 
-둘의 차이는 일반 연산에서는 이의 역연산인 로그가 가능하지만, 모듈로 연산에서는 이산대수 문제인 역연산 자체가 어렵다는 것이다.
+둘의 차이는 일반 연산에서는 이의 역연산인 로그 연산이 가능하지만, 모듈로 연산에서는 이산대수 문제인 역연산 자체가 어렵다는 것이다.
 
 Diffie-Hellman의 기본 원리는 다음과 같다. Alice와 Bob이 키를 공유하려는 당사자들이고, Chuck는 이를 도청하는 사람이다.
-(TLS와 같이 일반적인 경우 서버에서 소수를 생성)
 
-- Bob 아주 큰 소수 $p$를 선택하고, 모듈로 $p$내의 수 중 적당한 수 $g$를 선택하여 Bob에게 전달.
+- Bob 아주 큰 소수 $p$ 를 선택하고, 모듈로 $p$ 내의 수 중 적당한 수 $g$ 를 선택하여 Alice 에게 전달.
   - $p$ 는 모듈로 연산에 사용하는 값이고, $g$ 는 지수연산의 밑인 기수(generator) 이다. $g$ 는 보통 작은 수인 2를 사용한다.
-- 모듈로 $p$내의 임의의 수를 각자 선정 (Bob 선정한 것은 $m$, Alice가 선정한 것은 $n$)
-- 자신이 가지고 있는 수로 모듈로 지수 연산한 결과를 상대방에게 전달.
+- 모듈로 $p$ 내의 임의의 수를 각자 선정 (Bob 선정한 것은 $m$, Alice가 선정한 것은 $n$)
+- 자신이 가지고 있는 수 로 모듈로 지수 연산한 결과를 상대방에게 전달.
 
 {{< mermaid >}}sequenceDiagram
 Participant Alice
 Participant Bob
 Note over Bob: 소수 p, g 선정, m 선정
-Bob ->> Alice: p, g, a^m mod k
+Bob ->> Alice: p, g, g^m mod k
 Note over Alice: n 선정
-Alice ->> Bob: a^n mod k
+Alice ->> Bob: g^n mod k
 {{< /mermaid >}}
 
 암호화 되지 않은 채널로 위와 같은 전달하면, 각각이 알고 있는 값은 다음과 같다.
@@ -57,11 +56,11 @@ Alice ->> Bob: a^n mod k
 - Alice: $n$
 - Bob: $m$
 
-여기서 결국 원하는 키는 $a^{mn} \mod k$ 의 결과 이다.
+여기서 결국 원하는 키는 $g^{mn} \mod k$ 의 결과 이다.
 
-- Alice는 $m$ 을 알고 있으므로 $(a^n)^m \mod k$ 로 결과를 알수 있음
-- Bob은 $n$ 을 알고 있으므로 $(a^m)^n \mod k$ 로 결과를 알수 있음
-- 이 채널을 도청한 Chuck은 $a^m, a^n \mod k$은 알고 있으나 이로는 $a^{mn} \mod k$를 알수 없다.
+- Alice는 $m$ 을 알고 있으므로 $(g^n)^m \mod k$ 로 결과를 알수 있음
+- Bob은 $n$ 을 알고 있으므로 $(g^m)^n \mod k$ 로 결과를 알수 있음
+- 이 채널을 도청한 Chuck은 $g^m, g^n \mod k$은 알고 있으나 이로는 $g^{mn} \mod k$를 알수 없다.
 
 알고보면 Diffie-Hellman 방식은 의외로 단순하다.
 
