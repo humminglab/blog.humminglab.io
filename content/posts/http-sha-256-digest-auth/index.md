@@ -6,6 +6,7 @@ draft: false
 authors: ["YSLee"]
 tags: ["SHA", "HTTP", "Authentication"]
 categories: ["Security"]
+aliases: [/posts/httd-sha-256-digest-auth//]
 ---
 
 일반 웹 환경에서는 이제는 사양화 되어 거의 사용하지는 않지만, 
