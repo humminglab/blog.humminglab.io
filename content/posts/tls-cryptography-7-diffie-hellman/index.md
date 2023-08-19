@@ -202,7 +202,7 @@ openssl genrsa 4096  0.23s user 0.00s system 98% cpu 0.233 total
 
 Safe prime을 찾는데 시간이 걸리는 이유는 큰 수에서 소수를 찾을 확률은 1/2000 정도 된다. 하지만 safe prime은 $(p-1)/2$ 도 소수인 경우를 찾아야 하므로 다시 1/2000 확률 이므로 찾을 확률이 1/2000 x 1/2000 가량 되기 때문이다.
 
-TLS web server 를 설정 시 DHE 키교환을 지원하는 경우 우와 같이 'openssl dhparam'을 이용하여 등록할 수 있다.
+TLS web server 를 설정 시 DHE 키교환을 지원하는 경우 위와 같이 'openssl dhparam'을 이용하여 등록할 수 있다.
 [Nginx](https://www.nginx.com/) 웹서버를 예로 들면 [ssl_dhparam](http://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_dhparam) 으로 등록하면 된다.
 
 라즈베리파이와 같은 저사양 기기에서는 DH param을 찾는데 수 시간이 소요될 수 있다. 이 경우에는 PC에서 생성하여 복사하거나, 아니면 [openssl dhparam -dsaparam](https://www.openssl.org/docs/man1.0.2/man1/dhparam.html) 옵션으로 만들면 safe prime 이 아니라 좀 더 빠르게 만들 수 있다.
