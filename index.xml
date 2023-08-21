@@ -1,4 +1,8 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>All about IoT</title><link>https://blog.humminglab.io/</link><description>All about IoT</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 16 Aug 2023 12:00:00 +0900</lastBuildDate><atom:link href="https://blog.humminglab.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Yocto 에서 Go 프로젝트 관리</title><link>https://blog.humminglab.io/posts/yocto-golang-recipe/</link><pubDate>Wed, 16 Aug 2023 12:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/yocto-golang-recipe/</guid><description>Yocto recipe를 작성하다 보면 대부분의 프로젝트가 C, C++ 로 작성된 것들이라 이들은 참조할 것들이 많다. 하지만 Go, Rust, NodeJS 로 작성된 프로젝트는 Yocto에 추가하려다 보면 참고할 자료가 많지는 않은 편이다. 이 글에서는 Go 언어로 작성된 프로젝트를 추가하는 방법을 정리한다.
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>All about IoT</title><link>https://blog.humminglab.io/</link><description>All about IoT</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 21 Aug 2023 16:00:00 +0900</lastBuildDate><atom:link href="https://blog.humminglab.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Yocto 에서 NPM 기반의 Javascript 패키지 관리</title><link>https://blog.humminglab.io/posts/yocto-npm-js-recipe/</link><pubDate>Mon, 21 Aug 2023 16:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/yocto-npm-js-recipe/</guid><description>Yocto에서 Go 프로젝트 관리에 추가하여 JavaScript 기반의 프로그램을 Yocto의 패키지로 관리하는 방법을 정리해 본다.
+관련 사항은 Yocto Wiki 의 NPM 기반 패키지 관리 방법에 간략하게 설명되어 있다.
+TipsAndTricks/NPM - Yocto Project Javascript 기반의 프로젝트도 Go 언어와 마찬가지로 패키지 관련한 문제가 있지만 이 부분은 어느정도 툴을 이용하여 해결된 상태이다.
+임베디드 환경에서 Javascript NPM 를 사용하는 경우를 크게 보면 다음 두 경우가 있을 수 있다.
+Node.js 기반의 프로젝트 Webpack/React와 같은 static page 생성 Node.</description></item><item><title>Yocto 에서 Go 프로젝트 관리</title><link>https://blog.humminglab.io/posts/yocto-golang-recipe/</link><pubDate>Wed, 16 Aug 2023 12:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/yocto-golang-recipe/</guid><description>Yocto recipe를 작성하다 보면 대부분의 프로젝트가 C, C++ 로 작성된 것들이라 이들은 참조할 것들이 많다. 하지만 Go, Rust, NodeJS 로 작성된 프로젝트는 Yocto에 추가하려다 보면 참고할 자료가 많지는 않은 편이다. 이 글에서는 Go 언어로 작성된 프로젝트를 추가하는 방법을 정리한다.
 Go Module우선 간단하게 Go 의 모듈 정책에 대해서 정리 해본다.
 2009년에 Go 가 처음 나왔을때는 모듈관리는 단순했다. Go 프로젝트에서 참고하는 모듈은 go get 으로 다운로드하면 $GOPATH/src 디렉토리에 해당 모듈이 설치된다. 하나의 예를 들면 다음과 같이 src 디렉토리에 모듈 경로를 포함해서 설치가 된다.</description></item><item><title>HTTP SHA-256 Digest Authentication</title><link>https://blog.humminglab.io/posts/http-sha-256-digest-auth/</link><pubDate>Sun, 23 Jul 2023 09:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/http-sha-256-digest-auth/</guid><description>일반 웹 환경에서는 이제는 사양화 되어 거의 사용하지는 않지만, CCTV 표준인 ONVIF나 관련 보안 인증에서는 아직까지 HTTP Digest Authentication 을 사용한다.
 이 글에서는 HTTP Digest Authentication의 전반적인 사항을 정리한다. 목차는 다음과 같다.
@@ -22,10 +26,4 @@ DSA는 Alice의 공개키를 가진 다수의 사람이 검증을 위한 용도�
 ECC vs. RSA공개키 암호화 방법으로 RSA와 비교하여 이야기 되나, 실제적으로 ECC는 RSA와 동일한 기능으로 사용하지는 않는다.
 정확히는 RSA가 아니라 이산대수 문제를 이용한 DH 나 DSA 용도로 사용한다고 말할 수 있다.
 RSA의 경우 아래와 같이 평문 $k$ 를 공개키 $e$로 모듈러 지수 연산을 하는 형식이다.
-$$ E = k^e \pmod{n} $$</description></item><item><title>TLS/암호 알고리즘 쉽게 이해하기(11) - Elliptic Curve Cryptography(ECC)</title><link>https://blog.humminglab.io/posts/tls-cryptography-11-ecc/</link><pubDate>Mon, 18 Apr 2022 10:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/tls-cryptography-11-ecc/</guid><description>타원 곡선(Elliptic Curve)는 일반적으로 생각하는 가로 세로비가 다른 길쭉한 원을 말하는 것이 아니라 다음과 같은 공식으로 구성된 곡선을 말한다.
-$$y^2 = x^3 + ax + b$$
-$a$ 와 $b$ 는 임의의 수로 특이점이 없도록 다음과 같은 조건을 만족하여야 한다.
-$$4 a^3 + 27b^2 \neq 0$$
-이와 같은 조건을 만족하는 곡선은 다음과 같은 모양을 가진다.
-b=1, a=2~-3 일 때의 모양
-만일 위 조건을 만족하지 않는 경우는 아래와 같이 첨 점이거나 교차하는 특이점이 있다.</description></item></channel></rss>
+$$ E = k^e \pmod{n} $$</description></item></channel></rss>

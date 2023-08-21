@@ -1,0 +1,5 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>NPM - Tag - All about IoT</title><link>https://blog.humminglab.io/tags/npm/</link><description>NPM - Tag - All about IoT</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 21 Aug 2023 16:00:00 +0900</lastBuildDate><atom:link href="https://blog.humminglab.io/tags/npm/" rel="self" type="application/rss+xml"/><item><title>Yocto 에서 NPM 기반의 Javascript 패키지 관리</title><link>https://blog.humminglab.io/posts/yocto-npm-js-recipe/</link><pubDate>Mon, 21 Aug 2023 16:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/yocto-npm-js-recipe/</guid><description>Yocto에서 Go 프로젝트 관리에 추가하여 JavaScript 기반의 프로그램을 Yocto의 패키지로 관리하는 방법을 정리해 본다.
+관련 사항은 Yocto Wiki 의 NPM 기반 패키지 관리 방법에 간략하게 설명되어 있다.
+TipsAndTricks/NPM - Yocto Project Javascript 기반의 프로젝트도 Go 언어와 마찬가지로 패키지 관련한 문제가 있지만 이 부분은 어느정도 툴을 이용하여 해결된 상태이다.
+임베디드 환경에서 Javascript NPM 를 사용하는 경우를 크게 보면 다음 두 경우가 있을 수 있다.
+Node.js 기반의 프로젝트 Webpack/React와 같은 static page 생성 Node.</description></item></channel></rss>
