@@ -44,7 +44,7 @@ SDK 에는 다음과 같은 것들이 포함되어 있다.
 
 - Cross-toolchain
 - Header & libraries
-- Debuggig & tracing tools
+- Debugging & tracing tools
 - System utilities 
 - Package configuration tools
 - Documentation
@@ -54,7 +54,7 @@ SDK 에는 다음과 같은 것들이 포함되어 있다.
 빌드 방법은 아래 처럼 사용하는 이미지에 `populate_sdk` task로 빌드할 수 있다. 
 
 ```shell
-$ bitbake core-image-miniaml -c populate_sdk
+$ bitbake core-image-minimal -c populate_sdk
 ```
 
 반면에 eSDK(Extensible Software Development Kit)는 C, C++ 프로그램 개발자가 아니라, 
@@ -68,7 +68,7 @@ Yocto package 개발자를 위한 것이라고 볼 수 있다.
 빌드 방법은 SDK와 유사하지만 실제 사용방법은 그리 쉽지는 않다.
 
 ```shell
-$ bitbake core-image-miniaml -c populate_sdk_ext
+$ bitbake core-image-minimal -c populate_sdk_ext
 ```
 
 eSDK는 2016년에 릴리즈된 [Yocto Krogoth (2.1)](https://wiki.yoctoproject.org/wiki/Extensible_SDK) 부터 정식으로 포함되었고, 여기에 포함된 툴 중의 하나가 devtool 이다. 
@@ -100,7 +100,7 @@ NOTE: Tasks Summary: Attempted 2 tasks of which 0 didn't need to be rerun and al
 NOTE: Checking if npm is available ...
 NOTE: Generating shrinkwrap file ...
 NOTE: Fetching npm dependencies ...
-NOTE: Handling licences ...
+NOTE: Handling licenses ...
 ...
 ```
 
@@ -162,8 +162,8 @@ LICENSE:${PN}-vary = "MIT"
 
 이렇게 되면 [Reproducible Builds](https://docs.yoctoproject.org/test-manual/reproducible-builds.html) 를 보장할 수 있고, 라이센스도 관리할 수 있다.
 
-`appends/cute-files_git.append` 를 보면 externsrc를 이용하여 로컬 소스로 빌드가 가능하도록 설정되어 있다. 
-Exteralsrc 에 대해서는 이전에 정리한 [Yocto Project 개발하기(3) - 개발 시 로컬 패키지 관리하기]({{< ref "posts/yocto-project-on-orange-pi-3">}})를 참고할 수 있다.
+`appends/cute-files_git.append` 를 보면 externalsrc를 이용하여 로컬 소스로 빌드가 가능하도록 설정되어 있다. 
+Externalsrc 에 대해서는 이전에 정리한 [Yocto Project 개발하기(3) - 개발 시 로컬 패키지 관리하기]({{< ref "posts/yocto-project-on-orange-pi-3">}})를 참고할 수 있다.
 
 ```
 inherit externalsrc

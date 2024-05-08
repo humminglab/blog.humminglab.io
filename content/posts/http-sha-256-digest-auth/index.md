@@ -6,7 +6,7 @@ draft: false
 authors: ["YSLee"]
 tags: ["SHA", "HTTP", "Authentication"]
 categories: ["Security"]
-aliases: [/posts/httd-sha-256-digest-auth//]
+aliases: [/posts/http-sha-256-digest-auth//]
 ---
 
 일반 웹 환경에서는 이제는 사양화 되어 거의 사용하지는 않지만, 
@@ -73,7 +73,7 @@ sequenceDiagram
 
 
 2015년에 RFC 7616 으로 버전업을 하면서 가장 큰 변경 사항은 Digest 인증 시 필수 방식 이 MD5 에서 SHA-2 (SHA-256) 로 변경된 것이다.
-Proxy, [Authenticateion-Info](https://datatracker.ietf.org/doc/html/rfc2617#section-3.2.3) 나 UTF-8 지원 등 변경된 것들이 있지만, 어쨋든 사람들이 일반적으로 말하는 기준으로 보면 RFC2617은 MD5 Digest 인증이고, RFC7616은 SHA-256 Digest 인증이라고 볼 수 있다.
+Proxy, [Authentication-Info](https://datatracker.ietf.org/doc/html/rfc2617#section-3.2.3) 나 UTF-8 지원 등 변경된 것들이 있지만, 어쨋든 사람들이 일반적으로 말하는 기준으로 보면 RFC2617은 MD5 Digest 인증이고, RFC7616은 SHA-256 Digest 인증이라고 볼 수 있다.
 
 참고로 이외에도 표준으로 정의된 다양한 인증방식이 있다. IANA에서는 아래 링크로 등록된 authentication scheme을 관리한다. 
 - [HTTP Authentication Scheme Registry](https://www.iana.org/assignments/http-authschemes/http-authschemes.xhtml)
@@ -132,7 +132,7 @@ Authorization: Digest username="Mufasa",
 - A1 = "Mufasa:http-auth@example.org:Circle of Life"
 - A2 = "GET:/dir/index.html"
 
-A1 과 A2를 각각 hash 함수를 돌려서 소문자 hexdecimal로 표현한 것을 각각 HA1, HA2 라고 하자. 
+A1 과 A2를 각각 hash 함수를 돌려서 소문자 hexadecimal로 표현한 것을 각각 HA1, HA2 라고 하자. 
 이를 다시 다음과 같이 문자열로 만들어서 hash 한 것이 최종 digest 값이다. 
 
 - Digest_Input = HA1:nonce:nc:cnonce:qop:HA2
@@ -199,7 +199,7 @@ HTTP Digest Authentication이 이렇게 사양화 된 이유는 크게 다음과
 
 반드시 구현을 하여야 한다면 XMLHttpRequest 나 fetch API를 이용한 비동기 방식으로 구현하여야 한다. React와 같은 client side rendering 방식으로 구현 시 static data(HTML, CSS, javascript)는 별도의 인증없이 받아오고, 비동기로 얻어오는 RESTful API 에 대해서만 인증을 하는 방식으로 하면 된다.
 
-하지만 실제로 구현을 해보면 401 Unauthorized 메시지를 javasript가 hooking 할 수 있는 방법이 없다. 
+하지만 실제로 구현을 해보면 401 Unauthorized 메시지를 javascript가 hooking 할 수 있는 방법이 없다. 
 
 ```javascript
 var DigestAuthRequest = function(method, url) {
@@ -226,7 +226,7 @@ var DigestAuthRequest = function(method, url) {
 이를 회피하기 위하여는 다음과 같은 방법 중 하나로 서버에서 수정을 해주어야 한다. 
 
 - 401 Unauthorized 가 아니라 400 등의 다른 오류코드로 변경
-- `www-authenticate`가 아니라 `x-www-authenticate` 처럼 header 이름을 변경하거나, `www-authentiate` 필드 digest scheme을 `xdigest`와 같이 비표준으로 변경 
+- `www-authenticate`가 아니라 `x-www-authenticate` 처럼 header 이름을 변경하거나, `www-authenticate` 필드 digest scheme을 `xdigest`와 같이 비표준으로 변경 
 
 이렇게 하면 브라우저에서 별도의 처리를하지 않아, 위 코드와 같은 방식으로 구현이 가능하다. 
 
@@ -238,6 +238,6 @@ var DigestAuthRequest = function(method, url) {
   - 이렇게 하면 SHA-256 digest 인증을 지원하지 않는 browser는 인증창을 별도로 띄우지 않고, 에러 처리를 하므로 javascript에서 처리 할 수 있다. Firefox를 제외한 대부분의 브라우저가 해당된다.
 - SHA-256 digest를 지원하는 Firefox 에서는 인증창을 띄우지 않도록 url 에 사용자 정보를 임베딩하여 보낸다. 
   - [URI](https://datatracker.ietf.org/doc/html/rfc3986) 에는 `http://username:password@hostname` 와 같이 사용자 정보를 포함할 수 있다. Fetch API 에서는 이 방식이 지원하지 않지만, XMLHttpRequest 는 이와 같은 사용자 정보를 URL에 추가하는 것이 가능하다. 
-  - 해당 기능은 brwoser마다 동작 특성이 다르지만 chrome, firefox 에서는 URL 에 포함된 사용자 정보로 digest 인증을 시도하고 에러를 리턴한다. 하지만 safari 브라우저 에서는 기존 방식처럼 브라우저 자체의 인증창을 띄우게 된다. 
+  - 해당 기능은 browser마다 동작 특성이 다르지만 chrome, firefox 에서는 URL 에 포함된 사용자 정보로 digest 인증을 시도하고 에러를 리턴한다. 하지만 safari 브라우저 에서는 기존 방식처럼 브라우저 자체의 인증창을 띄우게 된다. 
 
 브라우저의 인증창을 열리고, 이곳에 사용자가 정보를 입력하게 되면 이 정보는 javascript에서는 엑세스가 블가능하므로 사용자 인증 절차가 꼬이게 되므로 충분한 검증을 하여야 할 것이다. 브라우저 종류나 버전마다 특성이 달라질 수 있어, 동작을 보장하기 위하여는 충분한 시험을 하여 검증 할 필요가 있다.

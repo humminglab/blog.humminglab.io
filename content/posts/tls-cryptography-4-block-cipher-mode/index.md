@@ -73,7 +73,7 @@ $ hexdump -v input.bin
 ```
 
 - 이를 openssl CLI를 이용하여 AES-128 ECB 모드로 암호화 한다.
-  - AES-128 은 128bit 키를 사용하고, 여기에서는 hexdecimal 로 "000102030405060708090a0b0c0d0e0f" 로 입력하였다.
+  - AES-128 은 128bit 키를 사용하고, 여기에서는 hexadecimal 로 "000102030405060708090a0b0c0d0e0f" 로 입력하였다.
   - '-nopad' 로 추가적인 패딩을 하지 않도록 함.
 
 ```shell

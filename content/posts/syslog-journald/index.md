@@ -4,7 +4,7 @@ date: "2022-05-27T09:00:00+09:00"
 lastmod: "2022-05-28T09:00:00+09:00"
 draft: false
 authors: ["YSLee"]
-tags: ["Yocto", "syslog", "rsyslogs", "systemd", "journald"]
+tags: ["Yocto", "syslog", "rsyslog", "systemd", "journald"]
 categories: ["Development"]
 ---
 
@@ -237,7 +237,7 @@ $ journalctl -o json-pretty
   - 위 JSON 의 key value로 검색 가능
 
 ```shell
-$ jorunalctl _SYSTEMD_UNIT=apache2.service
+$ journalctl _SYSTEMD_UNIT=apache2.service
 # _SYSTEMD_UNIT 는 -u 옵션과 동일
 $ journalctl -u apache2
 ```

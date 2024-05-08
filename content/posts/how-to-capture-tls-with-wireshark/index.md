@@ -144,7 +144,7 @@ IoT 기기의 경우 가벼운 mbedTLS 를 주로 사용하여 OpenSSL을 이용
 지금까지 Master Secret을 얻어서 패킷을 디코딩 하는 방법을 정리하였다.
 
 물론 이와 같이 Master Secret을 구해서 디코딩 하지 않고, Web Proxy tool을 이용하여 중간에서 패킷을 가로채서 확인하는 방법도 있고, 상황에 따라서는 이 방법이 더 편리할 수도 있다.
-유명한 툴로는 [Burp Suite](https://portswigger.net/burp)가 있고, 검색을 해보면 [mtimproxy](https://mitmproxy.org)와 같은 오픈소스 툴들도 있다.
+유명한 툴로는 [Burp Suite](https://portswigger.net/burp)가 있고, 검색을 해보면 [mitmproxy](https://mitmproxy.org)와 같은 오픈소스 툴들도 있다.
 이들 툴은 HTTPS 프로토콜만을 대상으로 하고 있어 MQTT over TLS 와 같은 다른 프로그램은 분석이 불가능하다.
 
 시험 타겟이 HTTP proxy 기능 지원 여부에 따라서 다음과 같이 모니터링이 가능하다.

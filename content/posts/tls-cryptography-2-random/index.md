@@ -160,7 +160,7 @@ Linux 의 경우 이런 경우를 보완하기 위하여 init script 에서 다�
 
 이와 같이 잘못된 seed를 사용하게 되면 보안성도 크게 떨어지는 문제가 발생하기도 하지만, 제품의 동작에서 문제가 발생할 가능성도 있다.
 
-예를 들어 부팅 시 동일한 seed를 사용하는 기기가 있고, 부팅 직후 지정된 서버로 TCP 연결을 수행한다고 하면, 이때 사용하는 local port, TCP initial sequence number, applicaiton의 transaction ID 등도 매번 동일한 값이 될 수 있다.
+예를 들어 부팅 시 동일한 seed를 사용하는 기기가 있고, 부팅 직후 지정된 서버로 TCP 연결을 수행한다고 하면, 이때 사용하는 local port, TCP initial sequence number, application의 transaction ID 등도 매번 동일한 값이 될 수 있다.
 이 경우 중간에 패킷을 필터링하는 NAT/방화벽이나 transaction을 관리하는 서버측에서 이전 세션과 구분을 못하여 오동작을 할 가능성이 생길 수 있다.
 
 임베디드 제품을 개발하게 된다면 초기 seed 가 적절한 방법으로 설정되는지를 반드시 한번은 짚고 넘어가야 한다.

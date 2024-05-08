@@ -18,14 +18,14 @@ IPv4 주소만 제공하는 가정용 인터넷이나 LTE 망에서
 
 ## 다른 방법들
 
-공인 IPv6 를 할당받는 가장 쉬운 방법은 IPv6 [TunnelBrokwer](https://datatracker.ietf.org/doc/html/rfc3053) 를 이용하는 것이다.
+공인 IPv6 를 할당받는 가장 쉬운 방법은 IPv6 [TunnelBroker](https://datatracker.ietf.org/doc/html/rfc3053) 를 이용하는 것이다.
 미국 ISP 업체인 Hurricane Electric 에서 제공하는 Tunnel Broker는 아래 주소로 접속하여 가입하면 무료로 IPv6 주소를 할당 받아 사용할 수 있다.
 
 - https://tunnelbroker.net/
 
 이곳은 [6in4](https://en.wikipedia.org/wiki/6in4) tunnel 방식인데, 사용하려는 NAT 환경 에서는 문제가 있어 포기하였다. 관련 사항은 [HE FAQ](https://ipv6.he.net/certification/faq.php) 에서 확인할 수 있다.
 
-[Wikipedia TunnerBroker 서비스 목록](https://en.wikipedia.org/wiki/List_of_IPv6_tunnel_brokers) 중 [6project](https://6project.org/) 와 같은 경우는 OpenVPN을 제공한다고 하여 시도는 해보았으나, 국내 신용카드로는 Donation 결제가 안되어 이곳도 포기하였다.
+[Wikipedia TunnelBroker 서비스 목록](https://en.wikipedia.org/wiki/List_of_IPv6_tunnel_brokers) 중 [6project](https://6project.org/) 와 같은 경우는 OpenVPN을 제공한다고 하여 시도는 해보았으나, 국내 신용카드로는 Donation 결제가 안되어 이곳도 포기하였다.
 
 그래서 2개 까지 무료 인스턴스를 제공하는 [OCI](https://www.oracle.com/kr/cloud/)의 가상머신에 [WireGuard](https://www.wireguard.com/)
 VPN 을 이용하여 공인 IPv6 망을 구성하기로 하고, 이 설정 방법을 정리한다.
@@ -35,21 +35,21 @@ VPN 을 이용하여 공인 IPv6 망을 구성하기로 하고, 이 설정 방�
 설정은 다음과 같은 절차로 수행한다.
 
 - VM instance 설치하고, IPv6 할당하기
-- Wiregaurd 설치
+- Wireguard 설치
 - IP Masquerade로 가상 IPv4, IPv6 VPN tunneling 설정
 - Macbook에 WireGuard Peer 설치
 - Private IPv6 tunneling 동작 확인
 - Public IPv6 tunneling으로 설정 변경
 - Public IPv6 동작 확인
 
-## OCI Ubntu 설치
+## OCI Ubuntu 설치
 
 OCI Compute VM 에 Ubuntu 20.4 를 설치하다. OCI의 경우 IPv6 가 자동으로 할당되지 않아 설치 후 VCN(Virtual Cloud Networks)에 IPv6를 할당하여야 한다.
 
 설치 과정은 다음과 같은 문서를 참고할 수 있다.
 
 - [Free Tier: Install Apache and PHP on an Ubuntu Instance](https://docs.oracle.com/en-us/iaas/developer-tutorials/tutorials/apache-on-ubuntu/01oci-ubuntu-apache-summary.htm)
-- [Enable IPv6 on Oracle Cloud Infrastructure & Asiign it to CentOS](https://blog.51sec.org/2021/09/enable-ipv6-on-oracle-cloud.html)
+- [Enable IPv6 on Oracle Cloud Infrastructure & Assign it to CentOS](https://blog.51sec.org/2021/09/enable-ipv6-on-oracle-cloud.html)
 
 다음과 같은 절차로 설치한다.
 
@@ -65,7 +65,7 @@ OCI Compute VM 에 Ubuntu 20.4 를 설치하다. OCI의 경우 IPv6 가 자동�
 - **Compute** -> **Instances** -> Instance -> **Attached VNIC** -> **IPv6 Address** 항목에서 생성한 Ubuntu Instances 에 IPv6 주소를 할당한다.
   - `2603:cafe:cafe:ca01::1001` 와 같이 적절한 IP를 설정한다.
 
-위와 같은 과정을 거치면 IPv4, IPv6가 설정된 intance를 생성할 수 있다. 세부 과정은 위 링크를 참고하면 도움이 된다.
+위와 같은 과정을 거치면 IPv4, IPv6가 설정된 instance를 생성할 수 있다. 세부 과정은 위 링크를 참고하면 도움이 된다.
 
 절차를 정리해 보면 다음과 같다.
 
@@ -84,7 +84,7 @@ Ubuntu VM에 IPv6 주소는 `2603:cafe:cafe:ca01::1001` 와 같이 하나의 주
 
 - [How To Set Up WireGuard on Ubuntu 20.04](https://www.digitalocean.com/community/tutorials/how-to-set-up-wireguard-on-ubuntu-20-04)
 
-위 설치 과정에서는 ufw linux filewall을 설정하지만, OCI에서는 iptables로 기본 패킷 필터링이 설정되어 있어, ufw를 이용치 않고, 그냥 iptables로 설정을 변경한다.
+위 설치 과정에서는 ufw linux firewall을 설정하지만, OCI에서는 iptables로 기본 패킷 필터링이 설정되어 있어, ufw를 이용치 않고, 그냥 iptables로 설정을 변경한다.
 
 다음과 같은 절차로 설치한다.
 
@@ -166,7 +166,7 @@ $ sudo sysctl -p
 
 - OCI의 subnet에도 UDP 51820 포트가 수신되도록 설정한다.
 
-  - **Networking** -> **Virtual Cloud Netowrks** -> vcn -> subnet -> security list -> **Ingress Rules**
+  - **Networking** -> **Virtual Cloud Networks** -> vcn -> subnet -> security list -> **Ingress Rules**
     - CIDR, 0.0.0.0/0, UDP, Dest Port: 51820
 
 - wg0.conf 에 대한 데모을 enable 하고 실행한다.
@@ -351,7 +351,7 @@ $ sudo ip -6 neigh add proxy 2603:cafe:cafe:ca01::2002 dev ens3
 
 패킷을 수신받기 위하여 다음과 같이 설정한다.
 
-- OCI 설정에서 Ubuntu VM에 `2603:cafe:cafe:ca01::2002` IP를 추가 등록. Uubntu는 `2603:cafe:cafe:ca01::1001`과 2개의 IPv6를 가짐
+- OCI 설정에서 Ubuntu VM에 `2603:cafe:cafe:ca01::2002` IP를 추가 등록. Ubuntu는 `2603:cafe:cafe:ca01::1001`과 2개의 IPv6를 가짐
 
   - **Compute** -> **Instances** -> Instance -> **Attached VNICs** -> vnic -> **IPv6 Address**
 
@@ -365,7 +365,7 @@ $ sudo ip -6 neigh add proxy 2603:cafe:cafe:ca01::2002 dev ens3
 $ sudo systemctl stop wg-quick@wg0.service
 ```
 
-- /etc/wirdguard/wg0.conf 수정
+- /etc/wireguard/wg0.conf 수정
   - Address를 임의의 주소로 변경. Subnet은 범위를 줄임
   - 기존 IPv6 masquerade 설정 삭제
   - DHCP client를 강제 종료하고, 2603:cafe:cafe:ca01::2002 는 삭제

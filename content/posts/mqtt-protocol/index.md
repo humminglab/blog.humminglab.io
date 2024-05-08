@@ -27,7 +27,7 @@ MQTT 프로토콜에서 사용자 인증을 제공한다. 하지만 이를 위�
 
 MQTT는 client-server protocol로, client는 센서 장치 또는 모니터링 장비(PC, 스마트 기기)가 될 수 있고, server는 broker라고 칭한다. Broker는 연결된 client 와의 session을 관리하고, 다른 broker와 연결하기도 한다. 초기 세션 수립은 client에서 broker로 MQTT CONNECT 메시지를 전송하여 이루어진다. 이후 이 TCP 세션은 client가 사용을 중단할 때까지 유지하여 메시지를 주고 받는 용도로 사용한다.
 
-### Exteremely Lightweight Publish / Subscribe Messaging Protocol
+### Extremely Lightweight Publish / Subscribe Messaging Protocol
 
 메시지 큐 프로토콜은 채팅과 유사한 개념이라고 생각하면 된다. IRC 채팅 개념과 비교하면 아래와 같다.
 

@@ -71,7 +71,7 @@ class Iterator(object):
 
 위 예는 짝수를 리턴하는 iterator이다. 
 
-실제 확인은 itertor object를 얻는 builtin `iter()` 함수와, 이 iterator object에서 다음 값을 얻는 builtin `next()` 함수를 사용할 수 있다.
+실제 확인은 iterator object를 얻는 builtin `iter()` 함수와, 이 iterator object에서 다음 값을 얻는 builtin `next()` 함수를 사용할 수 있다.
 ```python
 >>> c = Counter()
 >>> i = iter(c)
@@ -334,7 +334,7 @@ Coroutine은 generator와 yield 에서 값을 받을 수 있다는 것을 제외
 이를 지원하기 위하여 다음과 같은 사항이 추가되었다. 
 
 - generator에서 yield문은 try-finally로 감쌀 수 없었으나, python 2.5부터는 이를 지원한다. 이렇게 되면 coroutine->caller 로의 예외 전달은 모두 지원하게 된다. 
-- Caller에서 yield(또는 생성 직후)로 멈춰있는 coroutine에 excetion 전달 지원. `send()`와 비슷한 방법으로 `throw(type, value, traceback)` 처럼 exception을 coroutine에 전달할 수 있다. Parameter는 raise의 parameter와 동일하다. 
+- Caller에서 yield(또는 생성 직후)로 멈춰있는 coroutine에 exception 전달 지원. `send()`와 비슷한 방법으로 `throw(type, value, traceback)` 처럼 exception을 coroutine에 전달할 수 있다. Parameter는 raise의 parameter와 동일하다. 
 - Caller에서 coroutine을 종료 시킬 수 있는 `close()` 도 추가하였다. 이를 위하여 GeneratorExit exception이 추가되었고, `close()`는 `throw()`를 이용하여 GeneratorExit exception을 coroutine에 전달한다. 
 
 위와 같이 exception과 종료가 추가되어서, 비동기 방식의 프로그래밍을 위한 부분이 완료된 셈이다. 
@@ -470,9 +470,9 @@ def coroutine():
 ```
 
 하지만 여기서 부터 혼동이 될 수 있는데, `sum()` 과 같은 sub-coroutine에서 yield로 주는 값과, return 되는 값은 용도가 다르다는 것이다. `yield tot`로 전달한 것은 iterator 중간 값을 caller에서 받는다. 하지만 `yield from`으로 받는 값은 caller 가 아니라 중간의 parent coroutine에서 받는 것이다. 즉, 두가지는 사용하는 용도가 다르다. 
-yield tot 와 같이 coroutine에서 값을 parent로 전달하는 것은 iterator의 확장이라고 볼수 있다. 하지만 보통 coroutine 기반으로 lightweigth thread를 작성하는 경우 이와 같이 중간값 보다는 다른 coroutine과 같이 돌다가 최종 결과를 받기를 원하는 경우이다. 이때 yield from의 return값을 사용하게 된다. 
+yield tot 와 같이 coroutine에서 값을 parent로 전달하는 것은 iterator의 확장이라고 볼수 있다. 하지만 보통 coroutine 기반으로 lightweight thread를 작성하는 경우 이와 같이 중간값 보다는 다른 coroutine과 같이 돌다가 최종 결과를 받기를 원하는 경우이다. 이때 yield from의 return값을 사용하게 된다. 
 
-다음 장에서 나오게 될 asynio의 eventloop로 돌아가는 coroutine에서 yield from의 리턴값을 제대로 사용하게 된다. asyncio는 비동기로 모든 함수들이 실행된다. 특정 이벤트에 따라서 호출되는 것은 일반 callback 함수 일 수 있고, coroutine 일 수 있다. Coroutine은 위와 같이 yield from으로 다른 coroutine을 호출하여 결과를 비동기로 받을 수 있다 (하지만 코드를 보면 yield from 이라는 문장만 있지 생긴것은 sequential하게 되는 셈이고, 예외 처리도 sequential한 코드와 동일한 방식으로 처리가 가능하다).
+다음 장에서 나오게 될 asyncio의 eventloop로 돌아가는 coroutine에서 yield from의 리턴값을 제대로 사용하게 된다. asyncio는 비동기로 모든 함수들이 실행된다. 특정 이벤트에 따라서 호출되는 것은 일반 callback 함수 일 수 있고, coroutine 일 수 있다. Coroutine은 위와 같이 yield from으로 다른 coroutine을 호출하여 결과를 비동기로 받을 수 있다 (하지만 코드를 보면 yield from 이라는 문장만 있지 생긴것은 sequential하게 되는 셈이고, 예외 처리도 sequential한 코드와 동일한 방식으로 처리가 가능하다).
 
 
 ## 중간 정리 

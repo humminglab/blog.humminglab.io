@@ -44,7 +44,7 @@ ESP, Atmel, STM32 Cube, Nordic NRF52, Linux ARM, ... 등 다양한 플랫폼을 
 
 위의 캡쳐 이미지와 같이 홈페이지에서 PlatformIO를 다음과 같이 소개 하고 있다. 
 
-- Prefessional collaborative platform for embedded development
+- Professional collaborative platform for embedded development
     - A place where Developers and Teams have true Freedom!
     - No more vendor lock-in!
 
@@ -75,7 +75,7 @@ Hard realtime 을 요하는 환경에서는 real-time tracing 기능이 큰 장�
 - Library Dependency Finder(LDF) 기능으로 소스 파일의 include를 참고하여 자동으로 의존성 있는 라이브러리 빌드
 - J-Link 등 다양한 디버깅 툴을 이용한 다운로드, 디버깅 지원
 - Serial Monitor 기능 제공하여 시리얼 디버깅 콘솔 출력 기능
-- Unit Test 지원하여 host/target hibrid unit test 환경 제공 
+- Unit Test 지원하여 host/target hybrid unit test 환경 제공 
 - 위의 사항을 조합한 통합 개발 환경
 
 간단히 말해서 platformio.ini 로 초기화를 잡아주고 CLI를 실행만 해주면 초기 틀이 잡혀지고, 
