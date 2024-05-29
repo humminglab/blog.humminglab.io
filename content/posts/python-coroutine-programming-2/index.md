@@ -55,7 +55,7 @@ if __name__ == '__main__':
     main()
 ```
 
-- `excutor.submit()`으로 thread pool에서 돌릴 함수를 등록하면 future를 리턴한다. 등록된 함수는 thread pool에서 비동기로 실행된다. 
+- `executor.submit()`으로 thread pool에서 돌릴 함수를 등록하면 future를 리턴한다. 등록된 함수는 thread pool에서 비동기로 실행된다. 
 - `futures.as_completed()` 처럼 결과가 완료된 순서되로 리턴되는 generator를 리턴 받을 수 있다. 위와 같이 for..in 에 넣어 loop를 돌릴 수 있다. 완료되거나 비정상 종료된 future가 차례대로 나오게 된다. 
 - `future.result()`로 결과를 받을 수 있다. 만일 future내의 함수(`load_url()`)에서 exception이 발생한 것도 future를 통하여 호출한 thread에서 받을 수 있게 된다. 위 예제와 같이 `future.result()`가 try..except 문으로 감싸서 해당 작업에서 발생한 예외도 받을 수 있다.
 
@@ -87,7 +87,7 @@ func = dec1(func)
 ```
 
 즉 decorator도 함수이다. 함수를 parameter로 받아서 다시 함수를 리턴하는 함수이다. 기존 함수를 변형하는 용도로 사용한다. 예를 들어 기존 함수를 이와 같은 decorator를 이용하여 함수의 입출력을 바꾸거나, trace등을 할 수 있다.
-`@asyncio.coroutine`도 이런 decorator이다. 하지만 이 decoreator는 실제로 특별한 기능은 수행치 않고, asyncio와 같이 사용하는 coroutine이라고 표기하는 documentation 목적이다. 즉, 빼고 사용해도 특별히 문제될 것은 없다.
+`@asyncio.coroutine`도 이런 decorator이다. 하지만 이 decorator는 실제로 특별한 기능은 수행치 않고, asyncio와 같이 사용하는 coroutine이라고 표기하는 documentation 목적이다. 즉, 빼고 사용해도 특별히 문제될 것은 없다.
 
 Coroutine은 일반적으로 호출 함수(caller)에서 반복적으로 `next()`, `send()`를 이용하여 yield에 멈추어 있는 coroutine을 재개 시킨다. Coroutine(coroutine A)에서는 내부 적으로 다시 coroutine(coroutine B)을 호출 할 수 있다. 이때는 편리하게 yield from 으로 호출하면 호출된 coroutine B가 yield가 반복되어 최종 리턴될 때 까지 coroutine A는 기다리게 된다. Caller, coroutine A, coroutine B를 같이 놓고 보면 Caller 가 `send()`를 호출 될 때마다 coroutine B의 yield가 풀리는 셈이 된다. 
 
@@ -97,7 +97,7 @@ Coroutine은 일반적으로 호출 함수(caller)에서 반복적으로 `next()
 
 이정도면 asyncio에 추가된 coroutine의 개념은 정리된 셈이다.
 
-Asyncio를 사용한 예제는 [asyncio.readthedocs.io](http://asyncio.readthedocs.io/) 를 참조하면 다양한 사용 예제가 있어 이해하기 편하다. 다음절에서 설명하는 async/await를 사용치 않고 python 3.4 기능만으로 사용한다면 callback, coroutine을 혼용하여 사용하는 예는 다음과 같다.
+Asyncio를 사용한 예제는 [asyncio-doc](https://github.com/asyncio-docs/asyncio-doc) 을 참조하면 다양한 사용 예제가 있어 이해하기 편하다. 다음절에서 설명하는 async/await를 사용치 않고 python 3.4 기능만으로 사용한다면 callback, coroutine을 혼용하여 사용하는 예는 다음과 같다.
 
 ```python
 import asyncio
@@ -136,7 +136,7 @@ loop.close()
 일반 함수와 generator의 차이점, 그리고 event loop에서 일반 함수 callback 처리와, coroutine의 반복적인 실행 처리의 차이점만 정확히 이해한다면 asyncio에서 제공하는 다른 network나 동기화 관련 nonbocking 함수들에 대해서 쉽게 이해할 수 있을 것이다.
 
 ## async, await 
-Python 3.5에서는 coroutine을 명시적으로 지정하는 async와 yield를 대체하는 await keyword가 추가 되었다 ([PEP 492 -- Coroutines with async and await syntax](https://www.python.org/dev/peps/pep-0492/)). 이를 기존의 yield를 하는 generator based corourinte과 비교하기 위하여 native coroutine이라고 한다. 앞 절에서 설명한 것과 같이 python의 coroutine (generator based coroutine)은 iterator부터 시작하여 generator를 확장한 것이라, 그 자체가 history를 정확히 모르면 기능 자체가 모호해질 수 밖에 없다. 이를 명확히 정리하고자 새로 native coroutine을 정의한 것 이라고 보면 된다.
+Python 3.5에서는 coroutine을 명시적으로 지정하는 async와 yield를 대체하는 await keyword가 추가 되었다 ([PEP 492 -- Coroutines with async and await syntax](https://www.python.org/dev/peps/pep-0492/)). 이를 기존의 yield를 하는 generator based coroutine 비교하기 위하여 native coroutine이라고 한다. 앞 절에서 설명한 것과 같이 python의 coroutine (generator based coroutine)은 iterator부터 시작하여 generator를 확장한 것이라, 그 자체가 history를 정확히 모르면 기능 자체가 모호해질 수 밖에 없다. 이를 명확히 정리하고자 새로 native coroutine을 정의한 것 이라고 보면 된다.
 
 기존 generator based coroutine은 함수 내에 yield의 유무로 결정되나, native coroutine은 함수 앞에 async def 키워드를 붙여서 사용한다.
 ```python
