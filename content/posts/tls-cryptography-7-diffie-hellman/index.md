@@ -41,13 +41,14 @@ Diffie-Hellman의 기본 원리는 다음과 같다. Alice와 Bob이 키를 공�
 - 모듈로 $p$ 내의 임의의 수를 각자 선정 (Bob 선정한 것은 $m$, Alice가 선정한 것은 $n$)
 - 자신이 가지고 있는 수 로 모듈로 지수 연산한 결과를 상대방에게 전달.
 
-{{< mermaid >}}sequenceDiagram
-Participant Alice
-Participant Bob
-Note over Bob: 소수 p, g 선정, m 선정
-Bob ->> Alice: p, g, g^m mod k
-Note over Alice: n 선정
-Alice ->> Bob: g^n mod k
+{{< mermaid >}}
+sequenceDiagram
+  Participant Alice
+  Participant Bob
+  Note over Bob: 소수 p, g 선정, m 선정
+  Bob ->> Alice: p, g, g^m mod k
+  Note over Alice: n 선정
+  Alice ->> Bob: g^n mod k
 {{< /mermaid >}}
 
 암호화 되지 않은 채널로 위와 같은 전달하면, 각각이 알고 있는 값은 다음과 같다.
