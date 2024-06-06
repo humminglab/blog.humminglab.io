@@ -5,8 +5,6 @@ lastmod: "2024-05-08T09:00:00+09:00"
 draft: false
 authors: ["sungyong"]
 tags: ["DevOps", "gitlab", "gitlab-runner", "self-hosting"]
-categories: ["DevOps"]
-series: ["DevOps"]
 ---
 
 gitlab-runner 셀프호스팅으로 SaaS 비용 아끼기
