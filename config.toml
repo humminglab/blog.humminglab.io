@@ -9,14 +9,19 @@ enableRobotsTXT = true
 # Change the default theme to be use when building the site with Hugo
 theme = "DoIt"
 
-[author]
-link = "https://www.humminglab.io"
-name = "HummingLab"
+# [author]
+# link = "https://www.humminglab.io"
+# name = "HummingLab"
 
 [params]
   # DoIt theme version
   version = "0.3.X"
-  
+
+  [params.author]
+    name = "HummingLab"
+    email = "info@humminglab.io"
+    link = "https://www.humminglab.io"
+
   [params.search]
     enable = false
     type = "fuse"
@@ -59,7 +64,7 @@ name = "HummingLab"
   [params.page]
     ruby = true
     fraction = true
-    fontawesome = true
+    # fontawesome = true
     linkToMarkdown = true
     linkToEdit = false
     seriesNavigation = true
