@@ -1,3 +1,13 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Cryptography, ElGamal, DSA, RSA - Tag - All about IoT</title><link>https://blog.humminglab.io/tags/cryptography-elgamal-dsa-rsa/</link><description>Cryptography, ElGamal, DSA, RSA - Tag - All about IoT</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 12 Apr 2022 09:00:00 +0900</lastBuildDate><atom:link href="https://blog.humminglab.io/tags/cryptography-elgamal-dsa-rsa/" rel="self" type="application/rss+xml"/><item><title>TLS/암호 알고리즘 쉽게 이해하기(9) - Digital Signature</title><link>https://blog.humminglab.io/posts/tls-cryptography-9-dsa/</link><pubDate>Tue, 12 Apr 2022 09:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/tls-cryptography-9-dsa/</guid><description>DSA는 Digital Signature Algorothm 의 약자로, 미국 NIST 에서 제정한 디지털 서명 알고리즘이다.
-이번 글에서는 이와 같은 디지털 서명에 관한 전반적인 사항을 다음과 같은 순서로 정리한다.
-RSA 서명 알고리즘 ElGamal 서명 알고리즘 DSA 서명 알고리즘 OpenSSL 을 이용한 동작 확인 RSA SignatureRSA 서명 방식은 앞의 RSA 글에서 언급한 것과 같이 개인키로 문서의 Hash 값을 암호화 하는 것으로 RSA의 동작 원리를 알고 있으면 직관적이다. 관련 표준은 PKCS#1의 8장 을 보면 된다.</description></item></channel></rss>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Cryptography, ElGamal, DSA, RSA - Tag - All about IoT</title><link>https://blog.humminglab.io/tags/cryptography-elgamal-dsa-rsa/</link><description>Cryptography, ElGamal, DSA, RSA - Tag - All about IoT</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>info@humminglab.io (HummingLab)</managingEditor><webMaster>info@humminglab.io (HummingLab)</webMaster><lastBuildDate>Tue, 12 Apr 2022 09:00:00 +0900</lastBuildDate><atom:link href="https://blog.humminglab.io/tags/cryptography-elgamal-dsa-rsa/" rel="self" type="application/rss+xml"/><item><title>TLS/암호 알고리즘 쉽게 이해하기(9) - Digital Signature</title><link>https://blog.humminglab.io/posts/tls-cryptography-9-dsa/</link><pubDate>Tue, 12 Apr 2022 09:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/tls-cryptography-9-dsa/</guid><description><![CDATA[<p>DSA는 Digital Signature Algorothm 의 약자로, 미국 NIST 에서 제정한 디지털 서명 알고리즘이다.</p>
+<p>이번 글에서는 이와 같은 디지털 서명에 관한 전반적인 사항을 다음과 같은 순서로 정리한다.</p>
+<ul>
+<li>RSA 서명 알고리즘</li>
+<li>ElGamal 서명 알고리즘</li>
+<li>DSA 서명 알고리즘</li>
+<li>OpenSSL 을 이용한 동작 확인</li>
+</ul>
+<h2 id="rsa-signature" class="headerLink">
+    <a href="#rsa-signature" class="header-mark"></a>RSA Signature</h2><p>RSA 서명 방식은 앞의 <a href="https://blog.humminglab.io/posts/tls-cryptography-8-rsa/" rel="">RSA</a> 글에서 언급한 것과 같이
+개인키로 문서의 Hash 값을 암호화 하는 것으로 RSA의 동작 원리를 알고 있으면 직관적이다.
+관련 표준은 <a href="https://tools.ietf.org/html/rfc8017" target="_blank" rel="noopener noreferrer">PKCS#1</a>의 8장 을 보면 된다.</p>
+<p>서명 절차는 아래와 같다.</p>]]></description></item></channel></rss>

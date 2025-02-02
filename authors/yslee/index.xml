@@ -1,29 +1,118 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>YSLee - Author - All about IoT</title><link>https://blog.humminglab.io/authors/yslee/</link><description>YSLee - Author - All about IoT</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 21 Aug 2023 16:00:00 +0900</lastBuildDate><atom:link href="https://blog.humminglab.io/authors/yslee/" rel="self" type="application/rss+xml"/><item><title>Yocto 에서 NPM 기반의 Javascript 패키지 관리</title><link>https://blog.humminglab.io/posts/yocto-npm-js-recipe/</link><pubDate>Mon, 21 Aug 2023 16:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/yocto-npm-js-recipe/</guid><description>Yocto에서 Go 프로젝트 관리에 추가하여 JavaScript 기반의 프로그램을 Yocto의 패키지로 관리하는 방법을 정리해 본다.
-관련 사항은 Yocto Wiki 의 NPM 기반 패키지 관리 방법에 간략하게 설명되어 있다.
-TipsAndTricks/NPM - Yocto Project Javascript 기반의 프로젝트도 Go 언어와 마찬가지로 패키지 관련한 문제가 있지만 이 부분은 어느정도 툴을 이용하여 해결된 상태이다.
-임베디드 환경에서 Javascript NPM 를 사용하는 경우를 크게 보면 다음 두 경우가 있을 수 있다.
-Node.js 기반의 프로젝트 Webpack/React와 같은 static page 생성 Node.</description></item><item><title>Yocto 에서 Go 프로젝트 관리</title><link>https://blog.humminglab.io/posts/yocto-golang-recipe/</link><pubDate>Wed, 16 Aug 2023 12:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/yocto-golang-recipe/</guid><description>Yocto recipe를 작성하다 보면 대부분의 프로젝트가 C, C++ 로 작성된 것들이라 이들은 참조할 것들이 많다. 하지만 Go, Rust, NodeJS 로 작성된 프로젝트는 Yocto에 추가하려다 보면 참고할 자료가 많지는 않은 편이다. 이 글에서는 Go 언어로 작성된 프로젝트를 추가하는 방법을 정리한다.
-Go Module우선 간단하게 Go 의 모듈 정책에 대해서 정리 해본다.
-2009년에 Go 가 처음 나왔을때는 모듈관리는 단순했다. Go 프로젝트에서 참고하는 모듈은 go get 으로 다운로드하면 $GOPATH/src 디렉토리에 해당 모듈이 설치된다. 하나의 예를 들면 다음과 같이 src 디렉토리에 모듈 경로를 포함해서 설치가 된다.</description></item><item><title>HTTP SHA-256 Digest Authentication</title><link>https://blog.humminglab.io/posts/http-sha-256-digest-auth/</link><pubDate>Sun, 23 Jul 2023 09:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/http-sha-256-digest-auth/</guid><description>일반 웹 환경에서는 이제는 사양화 되어 거의 사용하지는 않지만, CCTV 표준인 ONVIF나 관련 보안 인증에서는 아직까지 HTTP Digest Authentication 을 사용한다.
-이 글에서는 HTTP Digest Authentication의 전반적인 사항을 정리한다. 목차는 다음과 같다.
-HTTP MD5, SHA-2 (SHA-256) Digest 인증 절차 Digest Authentication 웹 환경에서 더이상 사용하지 않는 이유 브라우저에서 SHA-256 Digest Authentication 구현 방법 HTTP MD5, SHA-2 (SHA-256) Digest 인증 절차HTTP Authentication은 RFC 표준으로 다음과 같이 정의 되어 있다.
-RFC 2617 - HTTP Authentication: Basic and Digest Access Authentication RFC 7616 - HTTP Digest Access Authentication 웹 초창기에 사용자 인증이 필요한 페이지를 위하여 RFC 2617 로 표준이 정의 되었다.</description></item><item><title>TLS/암호 알고리즘 쉽게 이해하기(14) - PKI and X.509</title><link>https://blog.humminglab.io/posts/tls-cryptography-14-x509/</link><pubDate>Sun, 02 Apr 2023 20:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/tls-cryptography-14-x509/</guid><description>이전글 에서 설명한 Digital Signature 를 사용하면 문서의 서명을 검증할 수 있다. 이 서명을 체이닝으로 이어 나가면 3자 인증 기반의 PKI(Public Key Infrastructure)를 구성할 수 있다. X.509 는 ITU-T 에서 정의한 PKI 표준이다. 우리가 흔히 사용하는 인증서는 X.509 표준을 따른다.
-인증의 기본적인 방법은 다음과 같은 절차이다.
-Root 인증 기관(Certificate Authority, CA)가 있다고 하자. Root CA는 자신의 public key 를 별도의 방법으로 공개를 한다. 일반적인 PC 환경에서는 웹브라우저나 OS에 검증된 CA 인증서들이 내장되어 있다.</description></item><item><title>PlatformIO (2) - STM32Cube Platform 개발</title><link>https://blog.humminglab.io/posts/platformio-2-stm32-cube/</link><pubDate>Sat, 25 Jun 2022 09:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/platformio-2-stm32-cube/</guid><description><![CDATA[이전 글에 이어 PlatformIO를 이용하여 STM32Cube SDK 로 개발환경을 구성하는 것을 정리해 본다.
-PlatformIO (1) - 개요 및 특징 PlatformIO (2) - STM32Cube Platform 개발 PlatformIO (3) - STM32Cube FreeRTOS 적용 PlatformIO (4) - PlatformIO 디버깅 PlatformIO (5) - PlatformIO Unit Test PlatformIO로 STM32 platform 설치하기VSCode에서 아래와 같이 PlatformIO Home을 연다.
-New Project 선택하여 다음과 같이 설정
-Name은 stm32test 와 같이 적절히 설정 Board는 &ldquo;ST Nucleo F103RB&rdquo; 선택 Framework는 &ldquo;STM32Cube&rdquo; 선택 Finish 로 생성 우선 동작이 되는지만 확인키 위하여 다음과 같이 src/main.]]></description></item><item><title>PlatformIO (1) - 개요 및 특징</title><link>https://blog.humminglab.io/posts/platformio-1/</link><pubDate>Fri, 24 Jun 2022 09:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/platformio-1/</guid><description>Cortex-M series 급을 이용한 임베디드 시스템 개발을 하다 보면, 지속적으로 사용할 수 있는 통합 개발 환경이 마땅치 않다는 문제가 있다. Windows 나 Linux 라면 한번 익혀 두면 수년은 두고 두고 쓸수 있는 개발 환경들이 있지만 임베디드 개발 환경의 경우 MCU 가 바뀔 때마다 개발환경을 바꾸어야만 하는 경우가 생긴다. 개발 환경의 범위를 최소 셋인 컴파일, 다운로드 만이 아닌 디버깅, unit test 까지로 고려한다면 범위가 더 좁아 질 수 밖에 없다.
-지금까지는 대부분의 프로젝트는 임베디드 Linux 와 마찬가지로 gcc, binutils, gdb, OpenOCD 을 이용하여 개발하였고, 디버깅을 지원하는 통합 개발 환경으로는 emacs를 사용하였다.</description></item><item><title>Systemd의 특징과 Yocto에 적용하기</title><link>https://blog.humminglab.io/posts/yocto-systemd/</link><pubDate>Tue, 07 Jun 2022 09:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/yocto-systemd/</guid><description>Yocto project에서 기본 설정으로 빌드하면 SysV Init를 사용한다. 개발하는 제품이 이더넷 네트워크로 연결되고, 부팅 이후에는 네트워크 환경이 변하지 않는다면 SysV Init를 이용하는 것이 구조도 단순해서 더 좋을 수 있다.
-하지만 다음과 같은 사항을 고려하고 있다면 systemd를 적용하는 것을 검토해 볼 수 있다.
-Daemon 이 죽는 경우를 검출하여 재시작 관리가 필요한 경우 Wi-Fi 와 같이 동적으로 변경될 수 있는 네트워크 관리가 필요한 경우 불규칙하게 네트워크가 끊길 수 있는 조건에서 시간 동기화가 필요한 경우 프로그램에 CPU 또는 메모리 자원을 제한하기 위하여 cgroups를 사용하려는 경우 효과적인 로그 관리를 위하여 journald를 사용하고 싶은 경우 부팅 직후 초기 프로세스의 실행 시간을 줄여 보려는 경우 물론 위의 기능을 사용하기 위해서 systemd만 가능한 것은 아니지만, systemd를 사용하는 경우 별도의 프로그램 없이 위 기능을 쉽게 적용할 수 있다.</description></item><item><title>Syslog and Journald</title><link>https://blog.humminglab.io/posts/syslog-journald/</link><pubDate>Fri, 27 May 2022 09:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/syslog-journald/</guid><description>대부분의 최신 linux 배포본에서 systemd를 적용하면서 로그 시스템도 syslog 에서 systemd 의 journald로 변경되었다.
-PC급 이상의 linux 배포본에서는 journald와 기존 호환성을 고려하여 syslog 데몬이 같이 사용하도록 기본 설정되어 있고, 상대적으로 광활한 저장장치과 메모리를 가지고 있고, 적절한 용량 선에서 log rotate가 되도록 설정되어 있어, 사용자가 설치 후 로그에 대해서는 신경을 쓸 필요가 거의 없다.
-하지만 용량이 작은 저장장치와 메모리를 가진 embedded linux 제품을 개발하는 경우에는 시스템 로그를 어떤 식으로 관리 할지 충분히 고민하고 설정하여야 한다.</description></item><item><title>TLS/암호 알고리즘 쉽게 이해하기(13) - MAC, AE, AEAD</title><link>https://blog.humminglab.io/posts/tls-cryptography-13-mac-aead/</link><pubDate>Sat, 30 Apr 2022 09:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/tls-cryptography-13-mac-aead/</guid><description>지금까지 설명한 암호화 알고리즘을 조합하여 확장을 해보기로 한다.
-이 글에서 설명할 내용은 다음과 같다.
-MAC(Message Authentication Code) AE(Authenticated Encryption) AEAD(Authenticated Encryption with Associated Data) MAC (Message Authentication Code)MAC은 한마디로 정리하면 Hash에 비밀키를 추가한 버전이라고 볼 수 있다.
-키를 사용한다는 것으로 보면 DSA 디지털 서명과 비슷한 기능을 수행하지만, 공유키를 사용한다는 것이 다르다.
-DSA는 Alice의 공개키를 가진 다수의 사람이 검증을 위한 용도이고, MAC은 키를 공유한 사람 간에 검증을 하기 위한 용도이다. 물론 연산량도 DSA와 비교하여 더 적고 빠르다.</description></item><item><title>TLS/암호 알고리즘 쉽게 이해하기(12) - ECDH, ECDSA</title><link>https://blog.humminglab.io/posts/tls-cryptography-12-ecc2/</link><pubDate>Tue, 19 Apr 2022 13:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/tls-cryptography-12-ecc2/</guid><description>이전 글 Elliptic Curve Cryptography(ECC)에서는 타원곡선 암호의 특징 및 알고리즘을 알아보았다.
-이번에는 이를 활용한 암호화 응용과 실제 사용 예를 살펴보기로 한다.
-ECC vs. RSA공개키 암호화 방법으로 RSA와 비교하여 이야기 되나, 실제적으로 ECC는 RSA와 동일한 기능으로 사용하지는 않는다.
-정확히는 RSA가 아니라 이산대수 문제를 이용한 DH 나 DSA 용도로 사용한다고 말할 수 있다.
-RSA의 경우 아래와 같이 평문 $k$ 를 공개키 $e$로 모듈러 지수 연산을 하는 형식이다.
-$$ E = k^e \pmod{n} $$</description></item></channel></rss>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>YSLee - Author - All about IoT</title><link>https://blog.humminglab.io/authors/yslee/</link><description>YSLee - Author - All about IoT</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>info@humminglab.io (HummingLab)</managingEditor><webMaster>info@humminglab.io (HummingLab)</webMaster><lastBuildDate>Mon, 21 Aug 2023 16:00:00 +0900</lastBuildDate><atom:link href="https://blog.humminglab.io/authors/yslee/" rel="self" type="application/rss+xml"/><item><title>Yocto 에서 NPM 기반의 Javascript 패키지 관리</title><link>https://blog.humminglab.io/posts/yocto-npm-js-recipe/</link><pubDate>Mon, 21 Aug 2023 16:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/yocto-npm-js-recipe/</guid><description><![CDATA[<p><a href="https://blog.humminglab.io/posts/yocto-golang-recipe/" rel="">Yocto에서 Go 프로젝트 관리</a>에 추가하여 JavaScript 기반의 프로그램을 Yocto의 패키지로 관리하는 방법을 정리해 본다.</p>
+<p>관련 사항은 Yocto Wiki 의 NPM 기반 패키지 관리 방법에 간략하게 설명되어 있다.</p>
+<ul>
+<li><a href="https://wiki.yoctoproject.org/wiki/TipsAndTricks/NPM" target="_blank" rel="noopener noreferrer">TipsAndTricks/NPM - Yocto Project</a></li>
+</ul>
+<p>Javascript 기반의 프로젝트도 Go 언어와 마찬가지로 패키지 관련한 문제가 있지만 이 부분은 어느정도 툴을 이용하여 해결된 상태이다.</p>
+<p>임베디드 환경에서 Javascript NPM 를 사용하는 경우를 크게 보면 다음 두 경우가 있을 수 있다.</p>
+<ul>
+<li>Node.js 기반의 프로젝트</li>
+<li>Webpack/React와 같은 static page 생성</li>
+</ul>
+<p>Node.js와 같은 프로젝트는 빌드 시 <code>nodejs-native</code> 도 필요하지만 target에서 동작하는 <code>nodejs</code>도 필요하다.
+하지만 webpack과 같은 경우에는 <code>nodejs-native</code>만 있어서 configure, compile task에서 이를 이용하여 페이지를 생성하면 되고, 별도로 target에 <code>nodejs</code>를 설치할 필요가 없다.</p>]]></description></item><item><title>Yocto 에서 Go 프로젝트 관리</title><link>https://blog.humminglab.io/posts/yocto-golang-recipe/</link><pubDate>Wed, 16 Aug 2023 12:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/yocto-golang-recipe/</guid><description><![CDATA[<p>Yocto recipe를 작성하다 보면 대부분의 프로젝트가 C, C++ 로 작성된 것들이라 이들은 참조할 것들이 많다.
+하지만 Go, Rust, NodeJS 로 작성된 프로젝트는 Yocto에 추가하려다 보면 참고할 자료가 많지는 않은 편이다.
+이 글에서는 Go 언어로 작성된 프로젝트를 추가하는 방법을 정리한다.</p>
+<h2 id="go-module" class="headerLink">
+    <a href="#go-module" class="header-mark"></a>Go Module</h2><p>우선 간단하게 Go 의 모듈 정책에 대해서 정리 해본다.</p>
+<p>2009년에 Go 가 처음 나왔을때는 모듈관리는 단순했다.
+Go 프로젝트에서 참고하는 모듈은 <code>go get</code> 으로 다운로드하면 $GOPATH/src 디렉토리에 해당 모듈이 설치된다.
+하나의 예를 들면 다음과 같이 src 디렉토리에 모듈 경로를 포함해서 설치가 된다.</p>]]></description></item><item><title>HTTP SHA-256 Digest Authentication</title><link>https://blog.humminglab.io/posts/http-sha-256-digest-auth/</link><pubDate>Sun, 23 Jul 2023 09:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/http-sha-256-digest-auth/</guid><description><![CDATA[<p>일반 웹 환경에서는 이제는 사양화 되어 거의 사용하지는 않지만,
+CCTV 표준인 <a href="https://www.onvif.org" target="_blank" rel="noopener noreferrer">ONVIF</a>나 관련 보안 인증에서는 아직까지 HTTP Digest Authentication 을 사용한다.</p>
+<p>이 글에서는 HTTP Digest Authentication의 전반적인 사항을 정리한다.
+목차는 다음과 같다.</p>
+<ul>
+<li>HTTP MD5, SHA-2 (SHA-256) Digest 인증 절차</li>
+<li>Digest Authentication</li>
+<li>웹 환경에서 더이상 사용하지 않는 이유</li>
+<li>브라우저에서 SHA-256 Digest Authentication 구현 방법</li>
+</ul>
+<h2 id="http-md5-sha-2-sha-256-digest-인증-절차" class="headerLink">
+    <a href="#http-md5-sha-2-sha-256-digest-%ec%9d%b8%ec%a6%9d-%ec%a0%88%ec%b0%a8" class="header-mark"></a>HTTP MD5, SHA-2 (SHA-256) Digest 인증 절차</h2><p>HTTP Authentication은 RFC 표준으로 다음과 같이 정의 되어 있다.</p>
+<ul>
+<li><a href="https://datatracker.ietf.org/doc/html/rfc2617" target="_blank" rel="noopener noreferrer">RFC 2617 - HTTP Authentication: Basic and Digest Access Authentication</a></li>
+<li><a href="https://datatracker.ietf.org/doc/html/rfc7616" target="_blank" rel="noopener noreferrer">RFC 7616 - HTTP Digest Access Authentication</a></li>
+</ul>
+<p>웹 초창기에 사용자 인증이 필요한 페이지를 위하여  RFC 2617 로 표준이 정의 되었다.
+이 표준안에는 다음과 같은 2가지 인증을 정의한다.</p>]]></description></item><item><title>TLS/암호 알고리즘 쉽게 이해하기(14) - PKI and X.509</title><link>https://blog.humminglab.io/posts/tls-cryptography-14-x509/</link><pubDate>Sun, 02 Apr 2023 20:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/tls-cryptography-14-x509/</guid><description><![CDATA[<p>이전글 에서 설명한 <a href="https://blog.humminglab.io/posts/tls-cryptography-9-dsa/" rel="">Digital Signature</a> 를 사용하면 문서의 서명을 검증할 수 있다. 이 서명을 체이닝으로 이어 나가면 3자 인증 기반의 PKI(Public Key Infrastructure)를 구성할 수 있다. <a href="https://www.itu.int/rec/T-REC-X.509" target="_blank" rel="noopener noreferrer">X.509</a> 는 ITU-T 에서 정의한 PKI 표준이다. 우리가 흔히 사용하는 인증서는 X.509 표준을 따른다.</p>
+<p>인증의 기본적인 방법은 다음과 같은 절차이다.</p>
+<ul>
+<li>Root 인증 기관(Certificate Authority, CA)가 있다고 하자. Root CA는 자신의 public key 를 별도의 방법으로 공개를 한다. 일반적인 PC 환경에서는 웹브라우저나 OS에 검증된 CA 인증서들이 내장되어 있다.</li>
+<li>Alice는 자신의 정보와 public key를 포함한 문서를 만들어서 Root CA에게 별도의 방법으로 제출(CSR, Certificate Signing Request)하여 root CA의 private key로 서명을 받아온다.</li>
+<li>다른 사용자 Bob은 Alice와 통신 시 먼저 인증서를 요청하면 Alice는 자신의 인증서를 보낸다.</li>
+<li>Bob은 Alice의 인증서를 Root CA의 public key로 서명 검증한다.</li>
+<li>Bob이 Alias에게 임의의 랜덤한 문자열을 보내어 서명을 요청하면 Alias는 자신의 private key로 서명을 하여 Bob에게 보낸다.</li>
+<li>Bob은 Alias의 public key로 서명을 검증해 보면 Alias private key를 들고 있는 Alias 본인임을 알 수 있다.</li>
+</ul>
+<pre class="mermaid">sequenceDiagram
+    participant Root CA
+    participant Alias
+    participant Bob
+    Root CA-->>Bob: Root CA public key 전달
+    Alias-->>Root CA: 자신의 정보와 public key를 포함한 문서 전달
+    Root CA-->>Alias: Root CA private key로 서명하여 전달
+    Bob->>Alias: Alias 인증서 요청
+    Alias->>Bob: Alias 인증서 전달
+    note over Bob: Alias 인증서를 root CA publickey로 검증
+    Bob->>Alias: 임의의 랜덤한 문자열 전달
+    Alias->>Bob: 문자열을 Alias private key로 서명하여 전달
+    note over Bob: Alias public key로 서명 검증
+</pre><p>위와 같은 절차가 PKI를 이용하여 서버 검증을 하는 기본적인 방법이다. 사전에 Root CA 인증서만 있으면, 이 Root CA 가 서명한 인증서를 검증할 수 있다. 이와 깉은 인증 체인을 2단계, 3단계 이상으로 체인으로 연결하여 구성할 수도 있다.</p>]]></description></item><item><title>PlatformIO (2) - STM32Cube Platform 개발</title><link>https://blog.humminglab.io/posts/platformio-2-stm32-cube/</link><pubDate>Sat, 25 Jun 2022 09:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/platformio-2-stm32-cube/</guid><description><![CDATA[<p>이전 글에 이어 PlatformIO를 이용하여 STM32Cube SDK 로 개발환경을 구성하는 것을 정리해 본다.</p>
+<ul>
+<li><a href="https://blog.humminglab.io/posts/platformio-1/" rel="">PlatformIO (1) - 개요 및 특징</a></li>
+<li><strong>PlatformIO (2) - STM32Cube Platform 개발</strong></li>
+<li>PlatformIO (3) - STM32Cube FreeRTOS 적용</li>
+<li>PlatformIO (4) - PlatformIO 디버깅</li>
+<li>PlatformIO (5) - PlatformIO Unit Test</li>
+</ul>
+<h2 id="platformio로-stm32-platform-설치하기" class="headerLink">
+    <a href="#platformio%eb%a1%9c-stm32-platform-%ec%84%a4%ec%b9%98%ed%95%98%ea%b8%b0" class="header-mark"></a>PlatformIO로 STM32 platform 설치하기</h2><p>VSCode에서 아래와 같이 PlatformIO Home을 연다.</p>
+<a class="lightgallery" href="/posts/platformio-2-stm32-cube/pio-01.png" title="" data-thumbnail="/posts/platformio-2-stm32-cube/pio-01.png"><img  loading="lazy" src=https://blog.humminglab.io/posts/platformio-2-stm32-cube/pio-01.png    height="auto" width="600px"></a>
+<p>New Project 선택하여 다음과 같이 설정</p>
+<ul>
+<li>Name은 stm32test 와 같이 적절히 설정</li>
+<li>Board는 &ldquo;ST Nucleo F103RB&rdquo; 선택</li>
+<li>Framework는 &ldquo;STM32Cube&rdquo; 선택</li>
+<li>Finish 로 생성</li>
+</ul>
+<a class="lightgallery" href="/posts/platformio-2-stm32-cube/pio-02.png" title="" data-thumbnail="/posts/platformio-2-stm32-cube/pio-02.png"><img  loading="lazy" src=https://blog.humminglab.io/posts/platformio-2-stm32-cube/pio-02.png    height="auto" width="400px"></a>
+<p>우선 동작이 되는지만 확인키 위하여 다음과 같이 src/main.c 로 main() 함수를 만든다.</p>]]></description></item><item><title>PlatformIO (1) - 개요 및 특징</title><link>https://blog.humminglab.io/posts/platformio-1/</link><pubDate>Fri, 24 Jun 2022 09:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/platformio-1/</guid><description>&lt;p>Cortex-M series 급을 이용한 임베디드 시스템 개발을 하다 보면, 지속적으로 사용할 수 있는 통합 개발 환경이 마땅치 않다는 문제가 있다.
+Windows 나 Linux 라면 한번 익혀 두면 수년은 두고 두고 쓸수 있는 개발 환경들이 있지만 임베디드 개발 환경의 경우 MCU 가 바뀔 때마다 개발환경을 바꾸어야만 하는 경우가 생긴다.
+개발 환경의 범위를 최소 셋인 컴파일, 다운로드 만이 아닌 디버깅, unit test 까지로 고려한다면 범위가 더 좁아 질 수 밖에 없다.&lt;/p>
+&lt;p>지금까지는 대부분의 프로젝트는 임베디드 Linux 와 마찬가지로 gcc, binutils, gdb, OpenOCD 을 이용하여 개발하였고, 디버깅을 지원하는 통합 개발 환경으로는 emacs를 사용하였다.&lt;/p></description></item><item><title>Systemd의 특징과 Yocto에 적용하기</title><link>https://blog.humminglab.io/posts/yocto-systemd/</link><pubDate>Tue, 07 Jun 2022 09:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/yocto-systemd/</guid><description><![CDATA[<p>Yocto project에서 기본 설정으로 빌드하면 SysV Init를 사용한다.
+개발하는 제품이 이더넷 네트워크로 연결되고, 부팅 이후에는 네트워크 환경이 변하지 않는다면 SysV Init를 이용하는 것이 구조도 단순해서 더 좋을 수 있다.</p>
+<p>하지만 다음과 같은 사항을 고려하고 있다면 systemd를 적용하는 것을 검토해 볼 수 있다.</p>
+<ul>
+<li>Daemon 이 죽는 경우를 검출하여 재시작 관리가 필요한 경우</li>
+<li>Wi-Fi 와 같이 동적으로 변경될 수 있는 네트워크 관리가 필요한 경우</li>
+<li>불규칙하게 네트워크가 끊길 수 있는 조건에서 시간 동기화가 필요한 경우</li>
+<li>프로그램에 CPU 또는 메모리 자원을 제한하기 위하여 <a href="https://www.kernel.org/doc/Documentation/cgroup-v1/cgroups.txt" target="_blank" rel="noopener noreferrer">cgroups</a>를 사용하려는 경우</li>
+<li>효과적인 로그 관리를 위하여 journald를 사용하고 싶은 경우</li>
+<li>부팅 직후 초기 프로세스의 실행 시간을 줄여 보려는 경우</li>
+</ul>
+<p>물론 위의 기능을 사용하기 위해서 systemd만 가능한 것은 아니지만, systemd를 사용하는 경우 별도의 프로그램 없이 위 기능을 쉽게 적용할 수 있다.</p>]]></description></item><item><title>Syslog and Journald</title><link>https://blog.humminglab.io/posts/syslog-journald/</link><pubDate>Fri, 27 May 2022 09:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/syslog-journald/</guid><description><![CDATA[<p>대부분의 최신 linux 배포본에서 systemd를 적용하면서 로그 시스템도 syslog 에서 systemd 의 journald로 변경되었다.</p>
+<p>PC급 이상의 linux 배포본에서는 journald와 기존 호환성을 고려하여 syslog 데몬이 같이 사용하도록 기본 설정되어 있고,
+상대적으로 광활한 저장장치과 메모리를 가지고 있고, 적절한 용량 선에서 log rotate가 되도록 설정되어 있어,
+사용자가 설치 후 로그에 대해서는 신경을 쓸 필요가 거의 없다.</p>
+<p>하지만 용량이 작은 저장장치와 메모리를 가진 embedded linux 제품을 개발하는 경우에는 시스템 로그를 어떤 식으로 관리 할지 충분히 고민하고 설정하여야 한다.
+그렇지 않다면 저장장치나 메모리가 로그로 가득차 버려서 더이상 동작을 하지 못하는 문제가 발생할 수 있다.
+Flash memory를 저장장치로 사용하는 경우에는 제품 수명 보다 저장장치의 수명이 길 수 있도록 erase 횟수도 감안하여 고려하여야 한다.</p>]]></description></item><item><title>TLS/암호 알고리즘 쉽게 이해하기(13) - MAC, AE, AEAD</title><link>https://blog.humminglab.io/posts/tls-cryptography-13-mac-aead/</link><pubDate>Sat, 30 Apr 2022 09:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/tls-cryptography-13-mac-aead/</guid><description><![CDATA[<p>지금까지 설명한 암호화 알고리즘을 조합하여 확장을 해보기로 한다.</p>
+<p>이 글에서 설명할 내용은 다음과 같다.</p>
+<ul>
+<li>MAC(Message Authentication Code)</li>
+<li>AE(Authenticated Encryption)</li>
+<li>AEAD(Authenticated Encryption with Associated Data)</li>
+</ul>
+<h2 id="mac-message-authentication-code" class="headerLink">
+    <a href="#mac-message-authentication-code" class="header-mark"></a>MAC (Message Authentication Code)</h2><p>MAC은 한마디로 정리하면 <a href="https://blog.humminglab.io/posts/tls-cryptography-10-hash/" rel="">Hash</a>에 비밀키를 추가한 버전이라고 볼 수 있다.</p>
+<p>키를 사용한다는 것으로 보면 <a href="https://blog.humminglab.io/posts/tls-cryptography-9-dsa/" rel="">DSA</a> 디지털 서명과 비슷한 기능을 수행하지만, 공유키를 사용한다는 것이 다르다.</p>
+<p>DSA는 Alice의 공개키를 가진 다수의 사람이 검증을 위한 용도이고, MAC은 키를 공유한 사람 간에 검증을 하기 위한 용도이다. 물론 연산량도 DSA와 비교하여 더 적고 빠르다.</p>]]></description></item><item><title>TLS/암호 알고리즘 쉽게 이해하기(12) - ECDH, ECDSA</title><link>https://blog.humminglab.io/posts/tls-cryptography-12-ecc2/</link><pubDate>Tue, 19 Apr 2022 13:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/tls-cryptography-12-ecc2/</guid><description><![CDATA[<p>이전 글 <a href="https://blog.humminglab.io/posts/tls-cryptography-11-ecc/" rel="">Elliptic Curve Cryptography(ECC)</a>에서는 타원곡선 암호의 특징 및 알고리즘을 알아보았다.</p>
+<p>이번에는 이를 활용한 암호화 응용과 실제 사용 예를 살펴보기로 한다.</p>
+<h2 id="ecc-vs-rsa" class="headerLink">
+    <a href="#ecc-vs-rsa" class="header-mark"></a>ECC vs. RSA</h2><p>공개키 암호화 방법으로 <a href="https://blog.humminglab.io/posts/tls-cryptography-8-rsa/" rel="">RSA</a>와 비교하여 이야기 되나, 실제적으로 ECC는 RSA와 동일한 기능으로 사용하지는 않는다.</p>
+<p>정확히는 RSA가 아니라 이산대수 문제를 이용한 <a href="https://blog.humminglab.io/posts/tls-cryptography-7-diffie-hellman/" rel="">DH</a> 나
+<a href="https://blog.humminglab.io/posts/tls-cryptography-9-dsa/" rel="">DSA</a> 용도로 사용한다고 말할 수 있다.</p>
+<p>RSA의 경우 아래와 같이 평문 $k$ 를 공개키 $e$로 모듈러 지수 연산을 하는 형식이다.</p>
+<p>$$ E = k^e \pmod{n} $$</p>
+<p>ECC의 경우 평문이 아닌 순환되는 subgroup 이 좋은 generator $G$를 선정하여 이를 키 $e$ 로 곱하는 것이다.
+$$ E = eG \pmod{p} $$</p>]]></description></item></channel></rss>

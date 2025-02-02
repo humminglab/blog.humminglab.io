@@ -1,4 +1,10 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Cryptography, MD5, SHA, BLAKE2 - Tag - All about IoT</title><link>https://blog.humminglab.io/tags/cryptography-md5-sha-blake2/</link><description>Cryptography, MD5, SHA, BLAKE2 - Tag - All about IoT</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 16 Apr 2022 09:00:00 +0900</lastBuildDate><atom:link href="https://blog.humminglab.io/tags/cryptography-md5-sha-blake2/" rel="self" type="application/rss+xml"/><item><title>TLS/암호 알고리즘 쉽게 이해하기(10) - Hash</title><link>https://blog.humminglab.io/posts/tls-cryptography-10-hash/</link><pubDate>Sat, 16 Apr 2022 09:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/tls-cryptography-10-hash/</guid><description>Hash 함수란 임의의 길이의 데이타를 축약하여 고정된 길이의 데이타로 매핑하는 함수를 말한다.
-데이타 검색을 위한 hash 함수, 데이타 손상을 검출하기 위한 CRC32 도 hash 함수 이지만, 이 글에서 언급하는 것은 암호화 해시 함수이다.
-각 용도에 따라서 해시 함수의 특성은 다음처럼 다를 수 있다.
-데이터 검색용: 모든 입력 데이타에 대해서 hash 결과값이 균등 분포를 가져야 한다. 데이타 손상 검출용: 원하는 비트 개수 까지의 오류에 대해서 정확히 검출되어야 하고, 알고리즘에 따라서 제한된 비트 개수 까지 오류 복원이 가능하여야 한다.</description></item></channel></rss>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Cryptography, MD5, SHA, BLAKE2 - Tag - All about IoT</title><link>https://blog.humminglab.io/tags/cryptography-md5-sha-blake2/</link><description>Cryptography, MD5, SHA, BLAKE2 - Tag - All about IoT</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>info@humminglab.io (HummingLab)</managingEditor><webMaster>info@humminglab.io (HummingLab)</webMaster><lastBuildDate>Sat, 16 Apr 2022 09:00:00 +0900</lastBuildDate><atom:link href="https://blog.humminglab.io/tags/cryptography-md5-sha-blake2/" rel="self" type="application/rss+xml"/><item><title>TLS/암호 알고리즘 쉽게 이해하기(10) - Hash</title><link>https://blog.humminglab.io/posts/tls-cryptography-10-hash/</link><pubDate>Sat, 16 Apr 2022 09:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/tls-cryptography-10-hash/</guid><description><![CDATA[<p>Hash 함수란 임의의 길이의 데이타를 축약하여 고정된 길이의 데이타로 매핑하는 함수를 말한다.</p>
+<p>데이타 검색을 위한 hash 함수, 데이타 손상을 검출하기 위한 CRC32 도 hash 함수 이지만, 이 글에서 언급하는 것은 암호화 해시 함수이다.</p>
+<p>각 용도에 따라서 해시 함수의 특성은 다음처럼 다를 수 있다.</p>
+<ul>
+<li>데이터 검색용: 모든 입력 데이타에 대해서 hash 결과값이 균등 분포를 가져야 한다.</li>
+<li>데이타 손상 검출용: 원하는 비트 개수 까지의 오류에 대해서 정확히 검출되어야 하고, 알고리즘에 따라서 제한된 비트 개수 까지 오류 복원이 가능하여야 한다.</li>
+<li>암호화용: 해시 값으로 원본을 추측 불가능하여야 하고, 임의의 두 데이타가 동일한 해시값을 가지는 충돌이 실제적으로 불가능하여야 한다.</li>
+</ul>
+<h2 id="암호화-hash의-특징" class="headerLink">
+    <a href="#%ec%95%94%ed%98%b8%ed%99%94-hash%ec%9d%98-%ed%8a%b9%ec%a7%95" class="header-mark"></a>암호화 hash의 특징</h2><p>우선 용어를 정리해 보자.</p>]]></description></item></channel></rss>

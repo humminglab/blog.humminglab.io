@@ -1,27 +1,62 @@
 <!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><title>Yocto에 OSTree upgrade 적용(1) - 이미지 생성 - All about IoT</title><meta name=Description content><meta property="og:url" content="https://blog.humminglab.io/posts/yocto-ostree-meta-updater-1/">
 <meta property="og:site_name" content="All about IoT"><meta property="og:title" content="Yocto에 OSTree upgrade 적용(1) - 이미지 생성"><meta property="og:description" content="Linux PC 의 경우 각 배포본 마다 yum, rpm, dpkg 등의 package manager를 제공하여, 이를 이용하여 패키지를 최신 버전으로 유지 관리할 수 있다. 임베디드의 경우도 Raspberry Pi OS, armbian 은 PC 에서 사용하는 package manager 방식을 제공하고, Yocto 도 rpm 등을 이용하여 패키지 관리가 가능하다.
-이들 패키지 매니저는 패키지 데이타베이스를 업데이트 하고, 패키지 업그레이드 시 의존성 있는 추가 패키지도 다운로드 받아서 설치/삭제하고, 설치 전/후처리를 위한 script를 자동으로 실행시켜서 최종 상태를 만들어 준다."><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-01-26T21:00:00+09:00"><meta property="article:modified_time" content="2022-02-14T09:00:00+09:00"><meta property="article:tag" content="Yocto"><meta property="article:tag" content="OSTree"><meta property="article:tag" content="OTA"><meta name=twitter:card content="summary"><meta name=twitter:title content="Yocto에 OSTree upgrade 적용(1) - 이미지 생성"><meta name=twitter:description content="Linux PC 의 경우 각 배포본 마다 yum, rpm, dpkg 등의 package manager를 제공하여, 이를 이용하여 패키지를 최신 버전으로 유지 관리할 수 있다. 임베디드의 경우도 Raspberry Pi OS, armbian 은 PC 에서 사용하는 package manager 방식을 제공하고, Yocto 도 rpm 등을 이용하여 패키지 관리가 가능하다.
-이들 패키지 매니저는 패키지 데이타베이스를 업데이트 하고, 패키지 업그레이드 시 의존성 있는 추가 패키지도 다운로드 받아서 설치/삭제하고, 설치 전/후처리를 위한 script를 자동으로 실행시켜서 최종 상태를 만들어 준다."><meta name=application-name content="All about IoT"><meta name=apple-mobile-web-app-title content="All about IoT"><meta name=theme-color content="#f8f8f8"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/posts/yocto-ostree-meta-updater-1/><link rel=prev href=https://blog.humminglab.io/posts/port-mirroring-network-switch-gs108ev3/><link rel=next href=https://blog.humminglab.io/posts/tls-cryptography-1-overview/><link rel=stylesheet href=/css/main.css><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/style.min.css><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/fontawesome-free/all.min.css><noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/animate/animate.min.css><noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Yocto에 OSTree upgrade 적용(1) - 이미지 생성","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/yocto-ostree-meta-updater-1\/"},"genre":"posts","keywords":"Yocto, OSTree, OTA","wordcount":2159,"url":"https:\/\/blog.humminglab.io\/posts\/yocto-ostree-meta-updater-1\/","datePublished":"2022-01-26T21:00:00+09:00","dateModified":"2022-02-14T09:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script><script src=//instant.page/5.2.0 defer type=module integrity=sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEtvFPiQYbXWUorga2aqZJ0z></script></head><body header-desktop header-mobile><script type=text/javascript>function setTheme(e){document.body.setAttribute("theme",e),document.documentElement.style.setProperty("color-scheme",e==="light"?"light":"dark"),window.theme=e,window.isDark=window.theme!=="light"}function saveTheme(e){window.localStorage&&localStorage.setItem("theme",e)}function getMeta(e){const t=document.getElementsByTagName("meta");for(let n=0;n<t.length;n++)if(t[n].getAttribute("name")===e)return t[n];return""}if(window.localStorage&&localStorage.getItem("theme")){let e=localStorage.getItem("theme");e==="light"||e==="dark"||e==="black"?setTheme(e):setTheme(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}else""==="light"||""==="dark"||""==="black"?(setTheme(""),saveTheme("")):(saveTheme("auto"),setTheme(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));let metaColors={light:"#f8f8f8",dark:"#252627",black:"#000000"};getMeta("theme-color").content=metaColors[document.body.getAttribute("theme")],window.switchThemeEventSet=new Set</script><div id=back-to-top></div><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title="All about IoT">All about IoT</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/>Posts </a><a class=menu-item href=/tags/>Tags </a><a class=menu-item href=/categories/>Categories </a><a class=menu-item href=https://www.humminglab.io/ rel="noopener noreferrer" target=_blank>HummingLab </a><span class="menu-item delimiter"></span><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
-<i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title="All about IoT">All about IoT</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><a class=menu-item href=/posts/ title>Posts</a><a class=menu-item href=/tags/ title>Tags</a><a class=menu-item href=/categories/ title>Categories</a><a class=menu-item href=https://www.humminglab.io/ title rel="noopener noreferrer" target=_blank>HummingLab</a><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
-<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>Contents</h2><div class=toc-content id=toc-content-auto><nav id=TableOfContents><ul><li><a href=#git-을-이용한-업그레이드>Git 을 이용한 업그레이드</a></li><li><a href=#ostree-overview>OSTree Overview</a></li><li><a href=#ostree-cli>OSTree CLI</a></li><li><a href=#ostree-operating-method>OSTree 운영 방법</a></li><li><a href=#ostree-on-yocto>OSTree On Yocto</a><ul><li><a href=#build-절차-요약>Build 절차 요약</a></li><li><a href=#image_types_ostreebbclass>image_types_ostree.bbclass</a></li><li><a href=#image_types_otabbclass>image_types_ota.bbclass</a></li></ul></li><li><a href=#정리>정리</a></li></ul></nav></div></div><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC","true")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX">Yocto에 OSTree upgrade 적용(1) - 이미지 생성</h1><div class=post-meta><div class=post-meta-line><span class=post-author><span class=author><span class="author fas fa-user-circle fa-fw"></span><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
-</span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/development/><i class="far fa-folder fa-fw"></i>Development</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2022-01-26>2022-01-26</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2022-02-14>2022-02-14</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;2159 words&nbsp;<i class="far fa-clock fa-fw"></i>&nbsp;11 minutes&nbsp;</div></div><div class="details toc" id=toc-static kept><div class="details-summary toc-title"><span>Contents</span>
-<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#git-을-이용한-업그레이드>Git 을 이용한 업그레이드</a></li><li><a href=#ostree-overview>OSTree Overview</a></li><li><a href=#ostree-cli>OSTree CLI</a></li><li><a href=#ostree-operating-method>OSTree 운영 방법</a></li><li><a href=#ostree-on-yocto>OSTree On Yocto</a><ul><li><a href=#build-절차-요약>Build 절차 요약</a></li><li><a href=#image_types_ostreebbclass>image_types_ostree.bbclass</a></li><li><a href=#image_types_otabbclass>image_types_ota.bbclass</a></li></ul></li><li><a href=#정리>정리</a></li></ul></nav></div></div><div class=content id=content><p>Linux PC 의 경우 각 배포본 마다 yum, rpm, dpkg 등의 package manager를 제공하여, 이를 이용하여 패키지를 최신 버전으로 유지 관리할 수 있다.
+이들 패키지 매니저는 패키지 데이타베이스를 업데이트 하고, 패키지 업그레이드 시 의존성 있는 추가 패키지도 다운로드 받아서 설치/삭제하고, 설치 전/후처리를 위한 script를 자동으로 실행시켜서 최종 상태를 만들어 준다. 하지만 임베디드 제품의 경우 이같은 방식은 다음과 같은 유지 관리 문제를 가져 올 수 있다."><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-01-26T21:00:00+09:00"><meta property="article:modified_time" content="2022-02-14T09:00:00+09:00"><meta property="article:tag" content="Yocto"><meta property="article:tag" content="OSTree"><meta property="article:tag" content="OTA"><meta name=twitter:card content="summary"><meta name=twitter:title content="Yocto에 OSTree upgrade 적용(1) - 이미지 생성"><meta name=twitter:description content="Linux PC 의 경우 각 배포본 마다 yum, rpm, dpkg 등의 package manager를 제공하여, 이를 이용하여 패키지를 최신 버전으로 유지 관리할 수 있다. 임베디드의 경우도 Raspberry Pi OS, armbian 은 PC 에서 사용하는 package manager 방식을 제공하고, Yocto 도 rpm 등을 이용하여 패키지 관리가 가능하다.
+이들 패키지 매니저는 패키지 데이타베이스를 업데이트 하고, 패키지 업그레이드 시 의존성 있는 추가 패키지도 다운로드 받아서 설치/삭제하고, 설치 전/후처리를 위한 script를 자동으로 실행시켜서 최종 상태를 만들어 준다. 하지만 임베디드 제품의 경우 이같은 방식은 다음과 같은 유지 관리 문제를 가져 올 수 있다."><meta name=application-name content="All about IoT"><meta name=apple-mobile-web-app-title content="All about IoT"><meta name=theme-color content="#f8f8f8"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/posts/yocto-ostree-meta-updater-1/><link rel=prev href=https://blog.humminglab.io/posts/port-mirroring-network-switch-gs108ev3/><link rel=next href=https://blog.humminglab.io/posts/tls-cryptography-1-overview/><link rel=stylesheet href=/css/main.min.css><link rel=stylesheet href=/css/style.min.css><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Yocto에 OSTree upgrade 적용(1) - 이미지 생성","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.humminglab.io/posts/yocto-ostree-meta-updater-1/"},"genre":"posts","keywords":["Yocto","OSTree","OTA"],"wordcount":1979,"url":"https://blog.humminglab.io/posts/yocto-ostree-meta-updater-1/","datePublished":"2022-01-26T21:00:00+09:00","dateModified":"2022-02-14T09:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"author":[{"@type":"Person","name":"YSLee","url":"https://www.humminglab.io"}],"description":""}</script></head><body data-instant-intensity=viewport><script type=text/javascript>function setTheme(e){document.body.setAttribute("theme",e),document.documentElement.className=e,document.documentElement.style.setProperty("color-scheme",e==="light"?"light":"dark"),e==="light"?document.documentElement.classList.remove("tw-dark"):document.documentElement.classList.add("tw-dark"),window.theme=e,window.isDark=window.theme!=="light"}function saveTheme(e){window.localStorage&&localStorage.setItem("theme",e)}function getMeta(e){const t=document.getElementsByTagName("meta");for(let n=0;n<t.length;n++)if(t[n].getAttribute("name")===e)return t[n];return""}if(window.localStorage&&localStorage.getItem("theme")){let e=localStorage.getItem("theme");e==="light"||e==="dark"?setTheme(e):setTheme(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}else""==="light"||""==="dark"?(setTheme(""),saveTheme("")):(saveTheme("auto"),setTheme(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));let metaColors={light:"#f8f8f8",dark:"#161b22"};getMeta("theme-color").content=metaColors[document.body.getAttribute("theme")],window.switchThemeEventSet=new Set</script><div id=back-to-top></div><div id=mask></div><header class="desktop print:!tw-hidden" id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title="All about IoT">All about IoT</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/>Posts </a><a class=menu-item href=/tags/>Tags </a><a class=menu-item href=/categories/>Categories </a><a class=menu-item href=https://www.humminglab.io/ rel="noopener noreferrer" target=_blank>HummingLab </a><span class="menu-item delimiter"></span><button class="menu-item theme-switch" aria-label="Switch Theme"><svg class="icon" viewBox="0 0 512 512"><path d="M8 256c0 136.966 111.033 248 248 248s248-111.034 248-248S392.966 8 256 8 8 119.033 8 256zm248 184V72c101.705.0 184 82.311 184 184 0 101.705-82.311 184-184 184z"/></svg></button></div></div></div></header><header class="mobile print:!tw-hidden" id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title="All about IoT">All about IoT</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><a class=menu-item href=/posts/ title>Posts</a><a class=menu-item href=/tags/ title>Tags</a><a class=menu-item href=/categories/ title>Categories</a><a class=menu-item href=https://www.humminglab.io/ title rel="noopener noreferrer" target=_blank>HummingLab</a><button class="menu-item theme-switch tw-w-full" aria-label="Switch Theme"><svg class="icon" viewBox="0 0 512 512"><path d="M8 256c0 136.966 111.033 248 248 248s248-111.034 248-248S392.966 8 256 8 8 119.033 8 256zm248 184V72c101.705.0 184 82.311 184 184 0 101.705-82.311 184-184 184z"/></svg></button></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=tw-mx-4><div class="toc print:!tw-hidden" id=toc-auto><h2 class=toc-title>Contents</h2><div class=toc-content id=toc-content-auto><nav id=TableOfContents><ul><li><a href=#git-을-이용한-업그레이드>Git 을 이용한 업그레이드</a></li><li><a href=#ostree-overview>OSTree Overview</a></li><li><a href=#ostree-cli>OSTree CLI</a></li><li><a href=#ostree-operating-method>OSTree 운영 방법</a></li><li><a href=#ostree-on-yocto>OSTree On Yocto</a><ul><li><a href=#build-절차-요약>Build 절차 요약</a></li><li><a href=#image_types_ostreebbclass>image_types_ostree.bbclass</a></li><li><a href=#image_types_otabbclass>image_types_ota.bbclass</a></li></ul></li><li><a href=#정리>정리</a></li></ul></nav></div></div><dialog id=toc-dialog class="tw-max-w-full tw-w-full tw-max-h-full tw-h-full tw-ml-16"><div class="toc tw-mx-4 tw-max-w-full"><h2 class="tw-mx-0 tw-my-6 tw-uppercase tw-text-2xl">Contents</h2><div class=toc-content><nav id=TableOfContents><ul><li><a href=#git-을-이용한-업그레이드>Git 을 이용한 업그레이드</a></li><li><a href=#ostree-overview>OSTree Overview</a></li><li><a href=#ostree-cli>OSTree CLI</a></li><li><a href=#ostree-operating-method>OSTree 운영 방법</a></li><li><a href=#ostree-on-yocto>OSTree On Yocto</a><ul><li><a href=#build-절차-요약>Build 절차 요약</a></li><li><a href=#image_types_ostreebbclass>image_types_ostree.bbclass</a></li><li><a href=#image_types_otabbclass>image_types_ota.bbclass</a></li></ul></li><li><a href=#정리>정리</a></li></ul></nav></div></div></dialog><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC","true")</script><article class="page single print:!tw-w-full print:!tw-max-w-none print:!tw-m-0 print:!tw-p-0"><h1 class=single-title data-pagefind-meta=date:2022-01-26 data-pagefind-body>Yocto에 OSTree upgrade 적용(1) - 이미지 생성</h1><div class=post-meta><div class=post-meta-line><span class=post-author><span class=author><span class=screen-reader-text></span><a href=https://blog.humminglab.io/authors/yslee/><img class="tw-inline-block tw-max-h-4 tw-rounded-full tw-translate-y-[-2px] tw-mr-1" src="https://www.gravatar.com/avatar/ebfb7d4b2184ae7b5f72ef31ebd7cc61?s=240&d=mp" alt="YSLee avatar" height=16 width=16>YSLee</a></span>
+</span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/development/><svg class="icon" viewBox="0 0 512 512"><path d="M464 128H272l-54.63-54.63c-6-6-14.14-9.37-22.63-9.37H48C21.49 64 0 85.49.0 112v288c0 26.51 21.49 48 48 48h416c26.51.0 48-21.49 48-48V176c0-26.51-21.49-48-48-48zm0 272H48V112h140.12l54.63 54.63c6 6 14.14 9.37 22.63 9.37H464v224z"/></svg>Development</a></span></div><div class=post-meta-line><svg class="icon" viewBox="0 0 448 512"><path d="M148 288h-40c-6.6.0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12zm108-12v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm-96 96v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm-96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm192 0v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm96-260v352c0 26.5-21.5 48-48 48H48c-26.5.0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h48V12c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v52h128V12c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v52h48c26.5.0 48 21.5 48 48zm-48 346V160H48v298c0 3.3 2.7 6 6 6h340c3.3.0 6-2.7 6-6z"/></svg>&nbsp;<time datetime=2022-01-26>2022-01-26</time>&nbsp;<svg class="icon" viewBox="0 0 576 512"><path d="M402.3 344.9l32-32c5-5 13.7-1.5 13.7 5.7V464c0 26.5-21.5 48-48 48H48c-26.5.0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h273.5c7.1.0 10.7 8.6 5.7 13.7l-32 32c-1.5 1.5-3.5 2.3-5.7 2.3H48v352h352V350.5c0-2.1.8-4.1 2.3-5.6zm156.6-201.8L296.3 405.7l-90.4 10c-26.2 2.9-48.5-19.2-45.6-45.6l10-90.4L432.9 17.1c22.9-22.9 59.9-22.9 82.7.0l43.2 43.2c22.9 22.9 22.9 60 .1 82.8zM460.1 174 402 115.9 216.2 301.8l-7.3 65.3 65.3-7.3L460.1 174zm64.8-79.7-43.2-43.2c-4.1-4.1-10.8-4.1-14.8.0L436 82l58.1 58.1 30.9-30.9c4-4.2 4-10.8-.1-14.9z"/></svg>&nbsp;<time datetime=2022-02-14>2022-02-14</time>&nbsp;<svg class="icon" viewBox="0 0 512 512"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3.0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9.0l60.1 60.1c18.8 18.7 18.8 49.1.0 67.9zM284.2 99.8 21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3.0-17l-111-111c-4.8-4.7-12.4-4.7-17.1.0zM124.1 339.9c-5.5-5.5-5.5-14.3.0-19.8l154-154c5.5-5.5 14.3-5.5 19.8.0s5.5 14.3.0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8.0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"/></svg>&nbsp;1979 words&nbsp;
+<svg class="icon" viewBox="0 0 512 512"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5.0-2e2-89.5-2e2-2e2S145.5 56 256 56s2e2 89.5 2e2 2e2-89.5 2e2-2e2 2e2zm61.8-104.4-84.9-61.7c-3.1-2.3-4.9-5.9-4.9-9.7V116c0-6.6 5.4-12 12-12h32c6.6.0 12 5.4 12 12v141.7l66.8 48.6c5.4 3.9 6.5 11.4 2.6 16.8L334.6 349c-3.9 5.3-11.4 6.5-16.8 2.6z"/></svg>&nbsp;9 minutes&nbsp;</div></div><div class="details toc print:!tw-block" id=toc-static kept><div class="details-summary toc-title"><span>Contents</span>
+<span class=details-icon><svg class="icon" viewBox="0 0 256 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9.0l-22.6-22.6c-9.4-9.4-9.4-24.6.0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6.0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9.0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#git-을-이용한-업그레이드>Git 을 이용한 업그레이드</a></li><li><a href=#ostree-overview>OSTree Overview</a></li><li><a href=#ostree-cli>OSTree CLI</a></li><li><a href=#ostree-operating-method>OSTree 운영 방법</a></li><li><a href=#ostree-on-yocto>OSTree On Yocto</a><ul><li><a href=#build-절차-요약>Build 절차 요약</a></li><li><a href=#image_types_ostreebbclass>image_types_ostree.bbclass</a></li><li><a href=#image_types_otabbclass>image_types_ota.bbclass</a></li></ul></li><li><a href=#정리>정리</a></li></ul></nav></div></div><div class=content id=content data-pagefind-body><p>Linux PC 의 경우 각 배포본 마다 yum, rpm, dpkg 등의 package manager를 제공하여, 이를 이용하여 패키지를 최신 버전으로 유지 관리할 수 있다.
 임베디드의 경우도 <a href=https://www.raspberrypi.com/software/ target=_blank rel="noopener noreferrer">Raspberry Pi OS</a>, <a href=https://www.armbian.com/ target=_blank rel="noopener noreferrer">armbian</a> 은 PC 에서 사용하는 package manager 방식을 제공하고, Yocto 도 rpm 등을 이용하여 패키지 관리가 가능하다.</p><p>이들 패키지 매니저는 패키지 데이타베이스를 업데이트 하고, 패키지 업그레이드 시 의존성 있는 추가 패키지도 다운로드 받아서 설치/삭제하고, 설치 전/후처리를 위한 script를 자동으로 실행시켜서 최종 상태를 만들어 준다. 하지만 임베디드 제품의 경우 이같은 방식은 다음과 같은 유지 관리 문제를 가져 올 수 있다.</p><ul><li>언제든지 전원이 꺼질 수 있는 기기 특성 상, 기존 패키지 매니저를 이용한 업그레이드 도중 전원 차단 시 시스템 손상 가능성</li><li>업그레이드 시점에 따라 기기마다 다른 패키지 버전 설치로 고객 센터에서 장애 대응 어려움</li><li>자체 검증이 안된 외부 공개 패키지 업그레이드 시 장애 발생 가능성</li><li>모니터, 키보드 등의 사용자 인터페이스가 없는 제품의 경우 장애 발생 시 장애 원인 확인 및 수동 복구 어려움</li></ul><p>이와 같은 단점으로 많은 임베디드 기기의 경우 보통 루트 파일 시스템 전체를 업그레이드 하는 방법을 취한다. 다만 이와 같은 업그레이드 방식은 작은 수정 시에도 전체 이미지를 다운로드 설치하여야 하여 비용 및 시간이 소요되는 불편한 점이 있다.</p><p>여기에서는 다른 대안으로 <a href=https://ostreedev.github.io/ostree/ target=_blank rel="noopener noreferrer">OSTree</a>를 이용한 OTA (Over the Air) Firmrware Update 하는 방법에 대한 이해와 Yocto project 를 이용한 구축 예를 설명한다.</p><p>이 방식은 간단하게 말하면 git 과 같은 delta 업데이트 방식으로 전체 이미지가 아닌 변경된 파일만 다운로드 받는 방식이다.
-Connected Car 솔루션과 같이 지속적으로 성능 개선 및 유지 보수가 필요한 경우, 이와 같은 OTA 방식을 적용한다면 더욱 빠르게 업그레이드가 가능하고, rollback 등의 관리도 유연하게 대응할 수 있게 된다.</p><h2 id=git-을-이용한-업그레이드 class=headerLink><a href=#git-%ec%9d%84-%ec%9d%b4%ec%9a%a9%ed%95%9c-%ec%97%85%ea%b7%b8%eb%a0%88%ec%9d%b4%eb%93%9c class=header-mark></a>Git 을 이용한 업그레이드</h2><p>우리가 많이 사용하는 <a href=https://git-scm.com/ target=_blank rel="noopener noreferrer">git</a> 버전 관리 시스템은 <a href=https://git-scm.com/book/ko/v2/%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0-Git-%EA%B8%B0%EC%B4%88 target=_blank rel="noopener noreferrer">Pro Git 기초</a>에 있는 그림과 같이 그 기반은 분산형 파일 버전 관리 파일 시스템이라고 볼 수가 있다.</p><figure><img src=https://git-scm.com/book/en/v2/images/snapshots.png alt="git version" width=600px height=auto><figcaption><p>git version</p></figcaption></figure><p>위 그림처럼 repository에는 각 버전별로 snapshot 파일들을 관리한다. <code>git-checkout</code>은 원하는 snapshot 을 작업 디레토리로 가져오는 과정이라고 볼 수 있다.</p><p>git 에서 repository에 snapshot 정보를 관리하는 방법은 <a href=https://git-scm.com/book/ko/v2/Git%EC%9D%98-%EB%82%B4%EB%B6%80-Git-%EA%B0%9C%EC%B2%B4 target=_blank rel="noopener noreferrer">Pro Git 10.2 Git의 내부</a>를 보면 좀 더 자세히 알 수 있다.</p><p>간단하게 요약하면, tree(디렉토리 정보), blob(파일 내용), commit(commit 내용), tag(태그 정보) 등의 각 개별정보를 각각의 파일로 만들어서 아래 그림처럼 snapshot 정보를 repository에 관리하는 것이다.</p><figure><img src=https://git-scm.com/book/en/v2/images/data-model-3.png alt="Git 저장소 내의 모든 개체" width=600px height=auto><figcaption><p>Git 저장소 내의 모든 개체</p></figcaption></figure><p>이를 업그레이드에 활용하면 어떻게 될까?</p><p>파일의 내용을 모두 git 에 추가한 다음 기기에서는 대략적인 과정으로는 아래처럼 운용을 하면 될 것이다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
-</span><span class=lnt> 2
-</span><span class=lnt> 3
-</span><span class=lnt> 4
-</span><span class=lnt> 5
-</span><span class=lnt> 6
-</span><span class=lnt> 7
-</span><span class=lnt> 8
-</span><span class=lnt> 9
-</span><span class=lnt>10
-</span><span class=lnt>11
-</span><span class=lnt>12
-</span><span class=lnt>13
-</span><span class=lnt>14
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 현재 production-v1 branch 를 v1 디렉토리에 설치하기</span>
+Connected Car 솔루션과 같이 지속적으로 성능 개선 및 유지 보수가 필요한 경우, 이와 같은 OTA 방식을 적용한다면 더욱 빠르게 업그레이드가 가능하고, rollback 등의 관리도 유연하게 대응할 수 있게 된다.</p><h2 id=git-을-이용한-업그레이드 class=headerLink><a href=#git-%ec%9d%84-%ec%9d%b4%ec%9a%a9%ed%95%9c-%ec%97%85%ea%b7%b8%eb%a0%88%ec%9d%b4%eb%93%9c class=header-mark></a>Git 을 이용한 업그레이드</h2><p>우리가 많이 사용하는 <a href=https://git-scm.com/ target=_blank rel="noopener noreferrer">git</a> 버전 관리 시스템은 <a href=https://git-scm.com/book/ko/v2/%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0-Git-%EA%B8%B0%EC%B4%88 target=_blank rel="noopener noreferrer">Pro Git 기초</a>에 있는 그림과 같이 그 기반은 분산형 파일 버전 관리 파일 시스템이라고 볼 수가 있다.</p><figure><img src=https://git-scm.com/book/en/v2/images/snapshots.png alt="git version" width=600px height=auto><figcaption><p>git version</p></figcaption></figure><p>위 그림처럼 repository에는 각 버전별로 snapshot 파일들을 관리한다. <code>git-checkout</code>은 원하는 snapshot 을 작업 디레토리로 가져오는 과정이라고 볼 수 있다.</p><p>git 에서 repository에 snapshot 정보를 관리하는 방법은 <a href=https://git-scm.com/book/ko/v2/Git%EC%9D%98-%EB%82%B4%EB%B6%80-Git-%EA%B0%9C%EC%B2%B4 target=_blank rel="noopener noreferrer">Pro Git 10.2 Git의 내부</a>를 보면 좀 더 자세히 알 수 있다.</p><p>간단하게 요약하면, tree(디렉토리 정보), blob(파일 내용), commit(commit 내용), tag(태그 정보) 등의 각 개별정보를 각각의 파일로 만들어서 아래 그림처럼 snapshot 정보를 repository에 관리하는 것이다.</p><figure><img src=https://git-scm.com/book/en/v2/images/data-model-3.png alt="Git 저장소 내의 모든 개체" width=600px height=auto><figcaption><p>Git 저장소 내의 모든 개체</p></figcaption></figure><p>이를 업그레이드에 활용하면 어떻게 될까?</p><p>파일의 내용을 모두 git 에 추가한 다음 기기에서는 대략적인 과정으로는 아래처럼 운용을 하면 될 것이다.</p><div class="code-block highlight is-open show-line-numbers tw-group tw-my-2"><div class="code-block-title
+tw-flex
+tw-flex-row
+tw-justify-between
+tw-w-full tw-bg-bgColor-secondary"><button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-rotate-90
+tw-transition-[transform]
+tw-duration-500
+tw-ease-in-out
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></button><div class="code-block-title-bar tw-w-full"><p class="tw-select-none !tw-my-1">shell</p></div><div class=tw-flex><button class="line-number-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.show-line-numbers]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.is-wrap]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+hover:tw-text-fgColor-link
+print:!tw-hidden" title="Copy code">
+<span class="copy-icon tw-block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw-hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-hidden
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw-block tw-m-0 tw-p-0"><code id=codeblock-id-1 class="chroma
+!tw-block
+tw-p-0
+tw-m-0
+tw-transition-[max-height]
+tw-duration-500
+tw-ease-in-out
+group-[.is-closed]:!tw-max-h-0
+group-[.is-wrap]:tw-text-wrap
+tw-overflow-y-hidden
+tw-overflow-x-auto
+tw-scrollbar-thin"><span class=line><span class=cl><span class=c1># 현재 production-v1 branch 를 v1 디렉토리에 설치하기</span>
 </span></span><span class=line><span class=cl>$ git clone -n https://github.com/xxxxxxxxxxx
 </span></span><span class=line><span class=cl>$ git fetch
 </span></span><span class=line><span class=cl>$ mkdir v1
@@ -34,36 +69,57 @@ Connected Car 솔루션과 같이 지속적으로 성능 개선 및 유지 보�
 </span></span><span class=line><span class=cl>$ git --work-tree<span class=o>=</span>v2 origin/production-v2 -- .
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl><span class=c1># 신규 FW로 교체하기</span>
-</span></span><span class=line><span class=cl>$ ln -sf v2 current
-</span></span></code></pre></td></tr></table></div></div><ul><li>1: git clone은 하는데 checkout은 하지 않음.</li><li>4~5: v1 디렉토리로 prodution-v1을 checkout</li><li>6: current를 v1으로 심볼릭 링크</li><li>9~14: 신규 v2로 업그레이드 과정. 서버에서 fetch로 받아오고, 이를 v2에 설치하고, current로 링크</li></ul><p>문제는 루트파일 시스템을 이와같이 운용하기에는 다음과 같은 관점에서 비효율적이다.</p><ul><li>checkout 과정이 파일 복사로 위 경우 동일파일이 git repository, v1, v2 디렉토리에 3개 유지</li><li>Git repository에 모든 이력을 가지고 있어야 함(Shallow clone 이라도 v1 ~ v2 이력은 가지고 있어야 함)</li></ul><h2 id=ostree-overview class=headerLink><a href=#ostree-overview class=header-mark></a>OSTree Overview</h2><p>Git 과 유사한 방식으로 루트 파일시스템의 업그레이드 기능을 만든 것이 OSTree 라고 할 수 있다.</p><p><a href=https://github.com/ostreedev/ostree target=_blank rel="noopener noreferrer">OSTree(libostree)</a>는 GNU license 오픈소스프로젝트로 <a href=https://getfedora.org/en/coreos target=_blank rel="noopener noreferrer">Fedora CoreOS</a> 등에서 사용하고 있다. OSTree(libostree)는 이름처럼 library 형태와 ostree CLI 두가지 모두 제공한다. 일반적인 용도에서는 ostree CLI 를 이용하여 OTA 기능을 구현한다.</p><p>OSTree가 git 과의 가장 큰 차이점은 deploy(checkout) 시 repository 내의 파일을 hard link 를 통한 복제를 하고, repository 내의 정보도 현재 버전과 새로운 버전을 위한 정보만 local 에 유지하여 전체적인 저장공간 사용량을 최소화 한다.</p><h2 id=ostree-cli class=headerLink><a href=#ostree-cli class=header-mark></a>OSTree CLI</h2><p>OSTree CLI는 git과 유사하게 subcommand를 지원하는데, 이 명령은 크게 admin 명령과 다른 명령들로 구분된다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
-</span><span class=lnt> 2
-</span><span class=lnt> 3
-</span><span class=lnt> 4
-</span><span class=lnt> 5
-</span><span class=lnt> 6
-</span><span class=lnt> 7
-</span><span class=lnt> 8
-</span><span class=lnt> 9
-</span><span class=lnt>10
-</span><span class=lnt>11
-</span><span class=lnt>12
-</span><span class=lnt>13
-</span><span class=lnt>14
-</span><span class=lnt>15
-</span><span class=lnt>16
-</span><span class=lnt>17
-</span><span class=lnt>18
-</span><span class=lnt>19
-</span><span class=lnt>20
-</span><span class=lnt>21
-</span><span class=lnt>22
-</span><span class=lnt>23
-</span><span class=lnt>24
-</span><span class=lnt>25
-</span><span class=lnt>26
-</span><span class=lnt>27
-</span><span class=lnt>28
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$  ostree
+</span></span><span class=line><span class=cl>$ ln -sf v2 current</span></span></code></pre></div><ul><li>1: git clone은 하는데 checkout은 하지 않음.</li><li>4~5: v1 디렉토리로 prodution-v1을 checkout</li><li>6: current를 v1으로 심볼릭 링크</li><li>9~14: 신규 v2로 업그레이드 과정. 서버에서 fetch로 받아오고, 이를 v2에 설치하고, current로 링크</li></ul><p>문제는 루트파일 시스템을 이와같이 운용하기에는 다음과 같은 관점에서 비효율적이다.</p><ul><li>checkout 과정이 파일 복사로 위 경우 동일파일이 git repository, v1, v2 디렉토리에 3개 유지</li><li>Git repository에 모든 이력을 가지고 있어야 함(Shallow clone 이라도 v1 ~ v2 이력은 가지고 있어야 함)</li></ul><h2 id=ostree-overview class=headerLink><a href=#ostree-overview class=header-mark></a>OSTree Overview</h2><p>Git 과 유사한 방식으로 루트 파일시스템의 업그레이드 기능을 만든 것이 OSTree 라고 할 수 있다.</p><p><a href=https://github.com/ostreedev/ostree target=_blank rel="noopener noreferrer">OSTree(libostree)</a>는 GNU license 오픈소스프로젝트로 <a href=https://getfedora.org/en/coreos target=_blank rel="noopener noreferrer">Fedora CoreOS</a> 등에서 사용하고 있다. OSTree(libostree)는 이름처럼 library 형태와 ostree CLI 두가지 모두 제공한다. 일반적인 용도에서는 ostree CLI 를 이용하여 OTA 기능을 구현한다.</p><p>OSTree가 git 과의 가장 큰 차이점은 deploy(checkout) 시 repository 내의 파일을 hard link 를 통한 복제를 하고, repository 내의 정보도 현재 버전과 새로운 버전을 위한 정보만 local 에 유지하여 전체적인 저장공간 사용량을 최소화 한다.</p><h2 id=ostree-cli class=headerLink><a href=#ostree-cli class=header-mark></a>OSTree CLI</h2><p>OSTree CLI는 git과 유사하게 subcommand를 지원하는데, 이 명령은 크게 admin 명령과 다른 명령들로 구분된다.</p><div class="code-block highlight is-open show-line-numbers tw-group tw-my-2"><div class="code-block-title
+tw-flex
+tw-flex-row
+tw-justify-between
+tw-w-full tw-bg-bgColor-secondary"><button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-rotate-90
+tw-transition-[transform]
+tw-duration-500
+tw-ease-in-out
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></button><div class="code-block-title-bar tw-w-full"><p class="tw-select-none !tw-my-1">shell</p></div><div class=tw-flex><button class="line-number-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.show-line-numbers]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.is-wrap]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+hover:tw-text-fgColor-link
+print:!tw-hidden" title="Copy code">
+<span class="copy-icon tw-block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw-hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-hidden
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw-block tw-m-0 tw-p-0"><code id=codeblock-id-2 class="chroma
+!tw-block
+tw-p-0
+tw-m-0
+tw-transition-[max-height]
+tw-duration-500
+tw-ease-in-out
+group-[.is-closed]:!tw-max-h-0
+group-[.is-wrap]:tw-text-wrap
+tw-overflow-y-hidden
+tw-overflow-x-auto
+tw-scrollbar-thin"><span class=line><span class=cl>$  ostree
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>Builtin Commands:
 </span></span><span class=line><span class=cl>  admin             Commands <span class=k>for</span> managing a host system booted with ostree
@@ -90,51 +146,170 @@ Connected Car 솔루션과 같이 지속적으로 성능 개선 및 유지 보�
 </span></span><span class=line><span class=cl>  rev-parse         Output the target of a rev
 </span></span><span class=line><span class=cl>  show              Output a metadata object
 </span></span><span class=line><span class=cl>  static-delta      Static delta related commands
-</span></span><span class=line><span class=cl>  summary           Manage summary metadata
-</span></span></code></pre></td></tr></table></div></div><ul><li>admin 이외의 명령들: <code>--repo</code> 로 지정한 repository 에 대해서 git 명령들과 유사한 작업을 수행한다. 즉 repository를 관리하는 명령이라고 보면 된다.</li><li>admin 명령: admin은 실제 루트 파일시스템에서 업그레이드를 수행할 때 사용하는 명령이다. Target 파일 시스템에는 <code>/ostree/repo</code> 로 repository 디렉토리가 지정되어 있고, 이 명령 수행 시에는 <code>--sysroot</code> 로 실제 루트 위치를 지정하여 사용한다.</li></ul><h2 id=ostree-operating-method class=headerLink><a href=#ostree-operating-method class=header-mark></a>OSTree 운영 방법</h2><p>타겟에서 실행 시 ROOTFS는 read only로 마운트 하고, 업그레이드 시 ROOTFS snapshot을 교체하는 방식이다.
+</span></span><span class=line><span class=cl>  summary           Manage summary metadata</span></span></code></pre></div><ul><li>admin 이외의 명령들: <code>--repo</code> 로 지정한 repository 에 대해서 git 명령들과 유사한 작업을 수행한다. 즉 repository를 관리하는 명령이라고 보면 된다.</li><li>admin 명령: admin은 실제 루트 파일시스템에서 업그레이드를 수행할 때 사용하는 명령이다. Target 파일 시스템에는 <code>/ostree/repo</code> 로 repository 디렉토리가 지정되어 있고, 이 명령 수행 시에는 <code>--sysroot</code> 로 실제 루트 위치를 지정하여 사용한다.</li></ul><h2 id=ostree-operating-method class=headerLink><a href=#ostree-operating-method class=header-mark></a>OSTree 운영 방법</h2><p>타겟에서 실행 시 ROOTFS는 read only로 마운트 하고, 업그레이드 시 ROOTFS snapshot을 교체하는 방식이다.
 기기 설정과 동작 중 생성되는 파일을 위하여 <code>/etc</code>와 <code>/var</code>는 read/write 로 생성되고, 다음과 같이 별도로 관리한다.</p><ul><li><code>/var</code>: 처음 생성한 이후로는 OSTree에서는 관여하지 않는다. 기기에서 생성되는 파일들을 저장하고, 업그레이드 시에도 이 디렉토리는 유지된다.</li><li><code>/etc</code>: 초기에 read/write 영역에 별도로 복사하여 사용하고, 동작 중 수정 될 수도 이다. 업그레이드 시에는 3-way merge 를 수행하여 업그레이드 되도록 한다.</li></ul><p>OSTree 로 관리가 가능한 파일 시스템을 만들어야 하는데 이와 같은 절차는 다음과 같다.</p><ol><li>기존에 생성된 루트 파일 시스템을 OSTree 정책에 맞도록 정리한다. 예를 들어 <code>/mnt</code> 디렉토리는 삭제하고, <code>/var/rootdirs/mnt</code> 로 symlink를 생성해둔다 (부팅 시 ramfs 등을 이용하여 마운트하여 사용).</li><li>정리된 rootfs 디렉토리를 ostree CLI를 이용하여 원격 repository에 push 한다.</li><li>ostree CLI의 admin 명령을 이용하여 target 에 write 할 rootfs 이미지를 만든다. 이 이미지는 ostree repository와 1)의 과정에서 만든 snapshot을 deploy 디렉토리에 생생한다.</li><li>initramfs를 이용하여 deploy 디렉토리가 root로 마운트 되도록 <a href=https://www.baeldung.com/linux/bind-mounts target=_blank rel="noopener noreferrer">bind mount</a>하여 적절히 구성을 하고 <a href=https://man7.org/linux/man-pages/man8/switch_root.8.html target=_blank rel="noopener noreferrer">switch_root</a>로 root 를 전환하고 정상 부팅과정을 진행한다.</li></ol><p>위와 같은 과정을 OTRree가 관여 하다보니 다른 OTA 방식과 비교하여 조금은 복잡한 편이다.</p><h2 id=ostree-on-yocto class=headerLink><a href=#ostree-on-yocto class=header-mark></a>OSTree On Yocto</h2><p><a href=https://www.yoctoproject.org/ target=_blank rel="noopener noreferrer">Yocto Project</a>에 OSTree를 적용하는 절차는 recipe 에 따라 빌드, 생성해 주기 때문에 간단하지만, OSTree의 운영 방법에 대한 이해가 없다면 실제로 어떻게 관리되는지를 알수가 없게 된다.
-또한 Yocto 빌드 과정에서 생성된 OSTree repository를 실수로 지우기라도 한다면 OTA snapshot 을 복구하는 험난한 과정을 거쳐야 한다. 그러므로 정확한 동작 방식을 이해한 후에 사용하여야만 된다.</p><p>Yocto에서 OSTree를 적용하기 위하여는 잘 관리되고 있는 <a href=https://github.com/advancedtelematic/meta-updater target=_blank rel="noopener noreferrer">meta-updater</a> layer를 사용하면 된다.</p><p><a href=https://docs.ota.here.com/ota-client/latest/supported-boards.html target=_blank rel="noopener noreferrer">기본으로 제공하는 board</a>는 몇 가지가 있는데, 이 중 Raspberry Pi 3를 사용하는 경우를 예로 들어 설명한다.</p><p>Raspberry Pi 로 빌드하는 경우는 아래 링크를 참고하면 된다.</p><ul><li><a href=https://docs.ota.here.com/ota-client/latest/build-raspberry.html target=_blank rel="noopener noreferrer">Build a Raspberry Pi image in OTA Connect Developer Guide</a></li></ul><h3 id=build-절차-요약 class=headerLink><a href=#build-%ec%a0%88%ec%b0%a8-%ec%9a%94%ec%95%bd class=header-mark></a>Build 절차 요약</h3><p>위 링크에 나온 것과 같이 repo 를 이용하여 이미지를 받아서 빌드 할 수 있다. 지원되는 Yocto 버전 중 가장 최신인 <a href=https://wiki.yoctoproject.org/wiki/Releases target=_blank rel="noopener noreferrer">Yocto 3.1 (Dunfell)</a> 을 사용하였다.</p><p>Processor/Board 업체에서는 여러 layer를 포함하여 repository를 편하게 배포하려고 이와 같이 <a href="https://source.android.com/setup/develop/repo?hl=ko" target=_blank rel="noopener noreferrer">repo</a> 를 이용하는 경우가 많다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
-</span><span class=lnt>2
-</span><span class=lnt>3
-</span><span class=lnt>4
-</span><span class=lnt>5
-</span><span class=lnt>6
-</span><span class=lnt>7
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ mkdir myproject
+또한 Yocto 빌드 과정에서 생성된 OSTree repository를 실수로 지우기라도 한다면 OTA snapshot 을 복구하는 험난한 과정을 거쳐야 한다. 그러므로 정확한 동작 방식을 이해한 후에 사용하여야만 된다.</p><p>Yocto에서 OSTree를 적용하기 위하여는 잘 관리되고 있는 <a href=https://github.com/advancedtelematic/meta-updater target=_blank rel="noopener noreferrer">meta-updater</a> layer를 사용하면 된다.</p><p><a href=https://docs.ota.here.com/ota-client/latest/supported-boards.html target=_blank rel="noopener noreferrer">기본으로 제공하는 board</a>는 몇 가지가 있는데, 이 중 Raspberry Pi 3를 사용하는 경우를 예로 들어 설명한다.</p><p>Raspberry Pi 로 빌드하는 경우는 아래 링크를 참고하면 된다.</p><ul><li><a href=https://docs.ota.here.com/ota-client/latest/build-raspberry.html target=_blank rel="noopener noreferrer">Build a Raspberry Pi image in OTA Connect Developer Guide</a></li></ul><h3 id=build-절차-요약 class=headerLink><a href=#build-%ec%a0%88%ec%b0%a8-%ec%9a%94%ec%95%bd class=header-mark></a>Build 절차 요약</h3><p>위 링크에 나온 것과 같이 repo 를 이용하여 이미지를 받아서 빌드 할 수 있다. 지원되는 Yocto 버전 중 가장 최신인 <a href=https://wiki.yoctoproject.org/wiki/Releases target=_blank rel="noopener noreferrer">Yocto 3.1 (Dunfell)</a> 을 사용하였다.</p><p>Processor/Board 업체에서는 여러 layer를 포함하여 repository를 편하게 배포하려고 이와 같이 <a href="https://source.android.com/setup/develop/repo?hl=ko" target=_blank rel="noopener noreferrer">repo</a> 를 이용하는 경우가 많다.</p><div class="code-block highlight is-open show-line-numbers tw-group tw-my-2"><div class="code-block-title
+tw-flex
+tw-flex-row
+tw-justify-between
+tw-w-full tw-bg-bgColor-secondary"><button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-rotate-90
+tw-transition-[transform]
+tw-duration-500
+tw-ease-in-out
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></button><div class="code-block-title-bar tw-w-full"><p class="tw-select-none !tw-my-1">shell</p></div><div class=tw-flex><button class="line-number-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.show-line-numbers]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.is-wrap]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+hover:tw-text-fgColor-link
+print:!tw-hidden" title="Copy code">
+<span class="copy-icon tw-block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw-hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-hidden
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw-block tw-m-0 tw-p-0"><code id=codeblock-id-3 class="chroma
+!tw-block
+tw-p-0
+tw-m-0
+tw-transition-[max-height]
+tw-duration-500
+tw-ease-in-out
+group-[.is-closed]:!tw-max-h-0
+group-[.is-wrap]:tw-text-wrap
+tw-overflow-y-hidden
+tw-overflow-x-auto
+tw-scrollbar-thin"><span class=line><span class=cl>$ mkdir myproject
 </span></span><span class=line><span class=cl>$ <span class=nb>cd</span> myproject
 </span></span><span class=line><span class=cl>$ repo init -u https://github.com/advancedtelematic/updater-repo.git -m dunfell.xml
 </span></span><span class=line><span class=cl>$ repo sync
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>$ <span class=nb>source</span> meta-updater/scripts/envsetup.sh raspberrypi3
-</span></span><span class=line><span class=cl>$ bitbake core-image-minimal
-</span></span></code></pre></td></tr></table></div></div><p>위와 같이 빌드를 마치면 build/tmp/deploy/images/raspberrypi3/ 에는 다음과 같은 파일이 생성된다.</p><ul><li><code>core-image-minimal-raspberrypi3.ext3</code>: OSTree 적용 전의 rootfs</li><li><code>core-image-minimal-raspberrypi3.ostree</code>: <a href=#ostree-operating-method rel>OSTree 운영 방법</a>의 1) 과정. core-image-minimal-raspberrypi3.ext3 를 OSTree 운영 정책대로 수정 (정확히는 해당파일은 더미이고, core-image-minimal work 디렉토리에서 찾을 수 있음)</li><li><code>ostree_repo</code>: OSTree repository. <a href=#ostree-operating-method rel>OSTree 운영 방법</a>의 2) 과정. core-image-minimal-raspberrypi3.ostree 를 commit 하여 만듬. 이를 외부 HTTP server 로 운영하여 업그레이드 시 다운로드 받을 수 있도록 한다.</li><li><code>core-image-minimal-raspberrypi3.ota-ext4</code>: <a href=#ostree-operating-method rel>OSTree 운영 방법</a>의 3) 과정. <code>ostree_repo</code>의 최종 snapshot을 이용하여 deploy 구조로 만듬</li><li><code>initramfs-ostree-image-raspberrypi3.cpio.gz</code>: 부팅시 사용하는 initramfs. 다음과 같은 두개의 모듈을 실행<ul><li><a href=https://github.com/ostreedev/ostree/tree/main/src/switchroot target=_blank rel="noopener noreferrer">ostree-prepare-root</a>: 링크에 있는 switchroot.sh 파일의 절차와 같이 bind, move mount를 이용하여 root 디렉토리 구성</li><li><a href=https://github.com/advancedtelematic/meta-updater/tree/master/recipes-sota/ostree-initrd target=_blank rel="noopener noreferrer">ostree-initrd</a>: tmpfs 등을 적절히 mount 하고 switch_root를 이용하여 root 디렉토리를 변경</li></ul></li><li><code>fitImage</code>: u-boot, kernel, initramfs 이미지를 합쳐서 생성한 파일</li><li><code>core-image-minimal-raspberrypi3.wic</code>: 위 전체를 다 포함해서 만든 SD Card 에 쓰기 위한 이미지 파일</li></ul><p>위 파일 중 wic 파일을 dd 등을 이용하여 SD Card에 쓴 후 부팅하면 된다.</p><h3 id=image_types_ostreebbclass class=headerLink><a href=#image_types_ostreebbclass class=header-mark></a>image_types_ostree.bbclass</h3><p>위 파일 중 <code>core-image-minimal-raspberrypi3.ostree</code> 를 만드는 절차로 기존의 rootfs 을 다음과 같이 수정한다.</p><ul><li><code>var/local</code> 을 제외한 <code>var</code> 내의 디렉토리 삭제</li><li><code>syslroot/</code>, <code>usr/rootdirs</code> 생성</li><li><code>home/</code>, <code>opt/</code>, <code>mnt/</code>, <code>media/</code>, <code>srv/</code>, <code>root/</code>, <code>usr/local</code> 디렉토리 삭제하고 <code>var/rootdirs</code>로 symlink 생성<ul><li>init script에 부팅 시 <code>/var</code> ramdisk 에 디렉토리가 생성되도록 설정 추가</li></ul></li><li><code>etc</code>를 <code>usr/etc</code>로 이동</li></ul><p>위와 같이 하면 기본적인 OSTree 의 read only rootfs를 구성한다.</p><h3 id=image_types_otabbclass class=headerLink><a href=#image_types_otabbclass class=header-mark></a>image_types_ota.bbclass</h3><p>image_types_ostree 로 생성되는 rootfs는 initramfs에서 최종적으로 bind mount로 이리저리 옮겨서 실제로 실행되는 rootfs 형태이고, image_types_ota 는 local repository와 이를 deploy한 디렉토리로 구성된, 실제로 디스크에 쓰는 파일 시스템을 생성한다. 이를 이용하여 생성한 파일은 <code>core-image-minimal-raspberrypi3.ota-ext4</code> 가 된다.</p><p>다음과 같은 절차로 만들어 간다.</p><ul><li>ostree admin init-fs 서브 명령으로 파일시스템의 기본 틀을 생성한다.</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
-</span><span class=lnt>2
-</span><span class=lnt>3
-</span><span class=lnt>4
-</span><span class=lnt>5
-</span><span class=lnt>6
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ <span class=nb>export</span> <span class=nv>OTA_SYSROOT</span><span class=o>=</span><span class=s2>&#34;ota-sysroot&#34;</span>
+</span></span><span class=line><span class=cl>$ bitbake core-image-minimal</span></span></code></pre></div><p>위와 같이 빌드를 마치면 build/tmp/deploy/images/raspberrypi3/ 에는 다음과 같은 파일이 생성된다.</p><ul><li><code>core-image-minimal-raspberrypi3.ext3</code>: OSTree 적용 전의 rootfs</li><li><code>core-image-minimal-raspberrypi3.ostree</code>: <a href=#ostree-operating-method rel>OSTree 운영 방법</a>의 1) 과정. core-image-minimal-raspberrypi3.ext3 를 OSTree 운영 정책대로 수정 (정확히는 해당파일은 더미이고, core-image-minimal work 디렉토리에서 찾을 수 있음)</li><li><code>ostree_repo</code>: OSTree repository. <a href=#ostree-operating-method rel>OSTree 운영 방법</a>의 2) 과정. core-image-minimal-raspberrypi3.ostree 를 commit 하여 만듬. 이를 외부 HTTP server 로 운영하여 업그레이드 시 다운로드 받을 수 있도록 한다.</li><li><code>core-image-minimal-raspberrypi3.ota-ext4</code>: <a href=#ostree-operating-method rel>OSTree 운영 방법</a>의 3) 과정. <code>ostree_repo</code>의 최종 snapshot을 이용하여 deploy 구조로 만듬</li><li><code>initramfs-ostree-image-raspberrypi3.cpio.gz</code>: 부팅시 사용하는 initramfs. 다음과 같은 두개의 모듈을 실행<ul><li><a href=https://github.com/ostreedev/ostree/tree/main/src/switchroot target=_blank rel="noopener noreferrer">ostree-prepare-root</a>: 링크에 있는 switchroot.sh 파일의 절차와 같이 bind, move mount를 이용하여 root 디렉토리 구성</li><li><a href=https://github.com/advancedtelematic/meta-updater/tree/master/recipes-sota/ostree-initrd target=_blank rel="noopener noreferrer">ostree-initrd</a>: tmpfs 등을 적절히 mount 하고 switch_root를 이용하여 root 디렉토리를 변경</li></ul></li><li><code>fitImage</code>: u-boot, kernel, initramfs 이미지를 합쳐서 생성한 파일</li><li><code>core-image-minimal-raspberrypi3.wic</code>: 위 전체를 다 포함해서 만든 SD Card 에 쓰기 위한 이미지 파일</li></ul><p>위 파일 중 wic 파일을 dd 등을 이용하여 SD Card에 쓴 후 부팅하면 된다.</p><h3 id=image_types_ostreebbclass class=headerLink><a href=#image_types_ostreebbclass class=header-mark></a>image_types_ostree.bbclass</h3><p>위 파일 중 <code>core-image-minimal-raspberrypi3.ostree</code> 를 만드는 절차로 기존의 rootfs 을 다음과 같이 수정한다.</p><ul><li><code>var/local</code> 을 제외한 <code>var</code> 내의 디렉토리 삭제</li><li><code>syslroot/</code>, <code>usr/rootdirs</code> 생성</li><li><code>home/</code>, <code>opt/</code>, <code>mnt/</code>, <code>media/</code>, <code>srv/</code>, <code>root/</code>, <code>usr/local</code> 디렉토리 삭제하고 <code>var/rootdirs</code>로 symlink 생성<ul><li>init script에 부팅 시 <code>/var</code> ramdisk 에 디렉토리가 생성되도록 설정 추가</li></ul></li><li><code>etc</code>를 <code>usr/etc</code>로 이동</li></ul><p>위와 같이 하면 기본적인 OSTree 의 read only rootfs를 구성한다.</p><h3 id=image_types_otabbclass class=headerLink><a href=#image_types_otabbclass class=header-mark></a>image_types_ota.bbclass</h3><p>image_types_ostree 로 생성되는 rootfs는 initramfs에서 최종적으로 bind mount로 이리저리 옮겨서 실제로 실행되는 rootfs 형태이고, image_types_ota 는 local repository와 이를 deploy한 디렉토리로 구성된, 실제로 디스크에 쓰는 파일 시스템을 생성한다. 이를 이용하여 생성한 파일은 <code>core-image-minimal-raspberrypi3.ota-ext4</code> 가 된다.</p><p>다음과 같은 절차로 만들어 간다.</p><ul><li>ostree admin init-fs 서브 명령으로 파일시스템의 기본 틀을 생성한다.</li></ul><div class="code-block highlight is-open show-line-numbers tw-group tw-my-2"><div class="code-block-title
+tw-flex
+tw-flex-row
+tw-justify-between
+tw-w-full tw-bg-bgColor-secondary"><button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-rotate-90
+tw-transition-[transform]
+tw-duration-500
+tw-ease-in-out
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></button><div class="code-block-title-bar tw-w-full"><p class="tw-select-none !tw-my-1">shell</p></div><div class=tw-flex><button class="line-number-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.show-line-numbers]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.is-wrap]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+hover:tw-text-fgColor-link
+print:!tw-hidden" title="Copy code">
+<span class="copy-icon tw-block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw-hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-hidden
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw-block tw-m-0 tw-p-0"><code id=codeblock-id-4 class="chroma
+!tw-block
+tw-p-0
+tw-m-0
+tw-transition-[max-height]
+tw-duration-500
+tw-ease-in-out
+group-[.is-closed]:!tw-max-h-0
+group-[.is-wrap]:tw-text-wrap
+tw-overflow-y-hidden
+tw-overflow-x-auto
+tw-scrollbar-thin"><span class=line><span class=cl>$ <span class=nb>export</span> <span class=nv>OTA_SYSROOT</span><span class=o>=</span><span class=s2>&#34;ota-sysroot&#34;</span>
 </span></span><span class=line><span class=cl>$ <span class=nb>export</span> <span class=nv>OSTREE_OSNAME</span><span class=o>=</span><span class=s2>&#34;poky&#34;</span>
 </span></span><span class=line><span class=cl>$ <span class=nb>export</span> <span class=nv>OSTREE_BRANCHNAME</span><span class=o>=</span><span class=s2>&#34;raspberrypi3&#34;</span>
 </span></span><span class=line><span class=cl>$ <span class=nb>export</span> <span class=nv>OSTREE_REPO</span><span class=o>=</span><span class=s2>&#34;../../../../deploy/images/raspberrypi3/ostree_repo&#34;</span>
 </span></span><span class=line><span class=cl>$ mkdir <span class=si>${</span><span class=nv>OTA_SYSROOT</span><span class=si>}</span>
-</span></span><span class=line><span class=cl>$ ostree admin --sysroot<span class=o>=</span><span class=si>${</span><span class=nv>OTA_SYSROOT</span><span class=si>}</span> init-fs --modern <span class=si>${</span><span class=nv>OTA_SYSROOT</span><span class=si>}</span>
-</span></span></code></pre></td></tr></table></div></div><p>이를 거치면 다음과 같은 타겟용 rootfs 디렉토리 구조가 생성된다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
-</span><span class=lnt> 2
-</span><span class=lnt> 3
-</span><span class=lnt> 4
-</span><span class=lnt> 5
-</span><span class=lnt> 6
-</span><span class=lnt> 7
-</span><span class=lnt> 8
-</span><span class=lnt> 9
-</span><span class=lnt>10
-</span><span class=lnt>11
-</span><span class=lnt>12
-</span><span class=lnt>13
-</span><span class=lnt>14
-</span><span class=lnt>15
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>.
+</span></span><span class=line><span class=cl>$ ostree admin --sysroot<span class=o>=</span><span class=si>${</span><span class=nv>OTA_SYSROOT</span><span class=si>}</span> init-fs --modern <span class=si>${</span><span class=nv>OTA_SYSROOT</span><span class=si>}</span></span></span></code></pre></div><p>이를 거치면 다음과 같은 타겟용 rootfs 디렉토리 구조가 생성된다.</p><div class="code-block highlight is-open show-line-numbers tw-group tw-my-2"><div class="code-block-title
+tw-flex
+tw-flex-row
+tw-justify-between
+tw-w-full tw-bg-bgColor-secondary"><button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-rotate-90
+tw-transition-[transform]
+tw-duration-500
+tw-ease-in-out
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></button><div class="code-block-title-bar tw-w-full"><p class="tw-select-none !tw-my-1">shell</p></div><div class=tw-flex><button class="line-number-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.show-line-numbers]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.is-wrap]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+hover:tw-text-fgColor-link
+print:!tw-hidden" title="Copy code">
+<span class="copy-icon tw-block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw-hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-hidden
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw-block tw-m-0 tw-p-0"><code id=codeblock-id-5 class="chroma
+!tw-block
+tw-p-0
+tw-m-0
+tw-transition-[max-height]
+tw-duration-500
+tw-ease-in-out
+group-[.is-closed]:!tw-max-h-0
+group-[.is-wrap]:tw-text-wrap
+tw-overflow-y-hidden
+tw-overflow-x-auto
+tw-scrollbar-thin"><span class=line><span class=cl>.
 </span></span><span class=line><span class=cl>├── boot
 </span></span><span class=line><span class=cl>└── ostree
 </span></span><span class=line><span class=cl>    ├── deploy
@@ -148,32 +323,107 @@ Connected Car 솔루션과 같이 지속적으로 성능 개선 및 유지 보�
 </span></span><span class=line><span class=cl>        │   └── remotes
 </span></span><span class=line><span class=cl>        ├── state
 </span></span><span class=line><span class=cl>        └── tmp
-</span></span><span class=line><span class=cl>            └── cache
-</span></span></code></pre></td></tr></table></div></div><ul><li>ostree admin os-init 로 deploy 용 기본 구조 생성.<ul><li>ostree/deploy/${OSTREE_OSNAME} 으로 deploy 디렉토리 생성 및 초기 /var 구조 생성</li></ul></li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ ostree admin --sysroot<span class=o>=</span><span class=si>${</span><span class=nv>OTA_SYSROOT</span><span class=si>}</span> os-init <span class=si>${</span><span class=nv>OSTREE_OSNAME</span><span class=si>}</span>
-</span></span></code></pre></td></tr></table></div></div><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
-</span><span class=lnt> 2
-</span><span class=lnt> 3
-</span><span class=lnt> 4
-</span><span class=lnt> 5
-</span><span class=lnt> 6
-</span><span class=lnt> 7
-</span><span class=lnt> 8
-</span><span class=lnt> 9
-</span><span class=lnt>10
-</span><span class=lnt>11
-</span><span class=lnt>12
-</span><span class=lnt>13
-</span><span class=lnt>14
-</span><span class=lnt>15
-</span><span class=lnt>16
-</span><span class=lnt>17
-</span><span class=lnt>18
-</span><span class=lnt>19
-</span><span class=lnt>20
-</span><span class=lnt>21
-</span><span class=lnt>22
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>.
+</span></span><span class=line><span class=cl>            └── cache</span></span></code></pre></div><ul><li>ostree admin os-init 로 deploy 용 기본 구조 생성.<ul><li>ostree/deploy/${OSTREE_OSNAME} 으로 deploy 디렉토리 생성 및 초기 /var 구조 생성</li></ul></li></ul><div class="code-block highlight is-open show-line-numbers tw-group tw-my-2"><div class="code-block-title
+tw-flex
+tw-flex-row
+tw-justify-between
+tw-w-full tw-bg-bgColor-secondary"><button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-rotate-90
+tw-transition-[transform]
+tw-duration-500
+tw-ease-in-out
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></button><div class="code-block-title-bar tw-w-full"><p class="tw-select-none !tw-my-1">shell</p></div><div class=tw-flex><button class="line-number-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.show-line-numbers]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.is-wrap]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+hover:tw-text-fgColor-link
+print:!tw-hidden" title="Copy code">
+<span class="copy-icon tw-block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw-hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-hidden
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw-block tw-m-0 tw-p-0"><code id=codeblock-id-6 class="chroma
+!tw-block
+tw-p-0
+tw-m-0
+tw-transition-[max-height]
+tw-duration-500
+tw-ease-in-out
+group-[.is-closed]:!tw-max-h-0
+group-[.is-wrap]:tw-text-wrap
+tw-overflow-y-hidden
+tw-overflow-x-auto
+tw-scrollbar-thin"><span class=line><span class=cl>$ ostree admin --sysroot<span class=o>=</span><span class=si>${</span><span class=nv>OTA_SYSROOT</span><span class=si>}</span> os-init <span class=si>${</span><span class=nv>OSTREE_OSNAME</span><span class=si>}</span></span></span></code></pre></div><div class="code-block highlight is-open show-line-numbers tw-group tw-my-2"><div class="code-block-title
+tw-flex
+tw-flex-row
+tw-justify-between
+tw-w-full tw-bg-bgColor-secondary"><button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-rotate-90
+tw-transition-[transform]
+tw-duration-500
+tw-ease-in-out
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></button><div class="code-block-title-bar tw-w-full"><p class="tw-select-none !tw-my-1">shell</p></div><div class=tw-flex><button class="line-number-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.show-line-numbers]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.is-wrap]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+hover:tw-text-fgColor-link
+print:!tw-hidden" title="Copy code">
+<span class="copy-icon tw-block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw-hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-hidden
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw-block tw-m-0 tw-p-0"><code id=codeblock-id-7 class="chroma
+!tw-block
+tw-p-0
+tw-m-0
+tw-transition-[max-height]
+tw-duration-500
+tw-ease-in-out
+group-[.is-closed]:!tw-max-h-0
+group-[.is-wrap]:tw-text-wrap
+tw-overflow-y-hidden
+tw-overflow-x-auto
+tw-scrollbar-thin"><span class=line><span class=cl>.
 </span></span><span class=line><span class=cl>├── boot
 </span></span><span class=line><span class=cl>└── ostree
 </span></span><span class=line><span class=cl>    ├── deploy
@@ -194,44 +444,109 @@ Connected Car 솔루션과 같이 지속적으로 성능 개선 및 유지 보�
 </span></span><span class=line><span class=cl>        │   └── remotes
 </span></span><span class=line><span class=cl>        ├── state
 </span></span><span class=line><span class=cl>        └── tmp
-</span></span><span class=line><span class=cl>            └── cache
-</span></span></code></pre></td></tr></table></div></div><ul><li>ostree pull-local 로 REPO 를 복사하기 filesystem 안으로 복사하고 reference 생성</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
-</span><span class=lnt>2
-</span><span class=lnt>3
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ <span class=nb>export</span> <span class=nv>ostree_target_hash</span><span class=o>=</span><span class=sb>`</span>ostree --repo<span class=o>=</span><span class=si>${</span><span class=nv>OSTREE_REPO</span><span class=si>}</span> rev-parse <span class=si>${</span><span class=nv>OSTREE_BRANCHNAME</span><span class=si>}</span><span class=sb>`</span>
+</span></span><span class=line><span class=cl>            └── cache</span></span></code></pre></div><ul><li>ostree pull-local 로 REPO 를 복사하기 filesystem 안으로 복사하고 reference 생성</li></ul><div class="code-block highlight is-open show-line-numbers tw-group tw-my-2"><div class="code-block-title
+tw-flex
+tw-flex-row
+tw-justify-between
+tw-w-full tw-bg-bgColor-secondary"><button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-rotate-90
+tw-transition-[transform]
+tw-duration-500
+tw-ease-in-out
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></button><div class="code-block-title-bar tw-w-full"><p class="tw-select-none !tw-my-1">shell</p></div><div class=tw-flex><button class="line-number-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.show-line-numbers]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.is-wrap]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+hover:tw-text-fgColor-link
+print:!tw-hidden" title="Copy code">
+<span class="copy-icon tw-block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw-hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-hidden
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw-block tw-m-0 tw-p-0"><code id=codeblock-id-8 class="chroma
+!tw-block
+tw-p-0
+tw-m-0
+tw-transition-[max-height]
+tw-duration-500
+tw-ease-in-out
+group-[.is-closed]:!tw-max-h-0
+group-[.is-wrap]:tw-text-wrap
+tw-overflow-y-hidden
+tw-overflow-x-auto
+tw-scrollbar-thin"><span class=line><span class=cl>$ <span class=nb>export</span> <span class=nv>ostree_target_hash</span><span class=o>=</span><span class=sb>`</span>ostree --repo<span class=o>=</span><span class=si>${</span><span class=nv>OSTREE_REPO</span><span class=si>}</span> rev-parse <span class=si>${</span><span class=nv>OSTREE_BRANCHNAME</span><span class=si>}</span><span class=sb>`</span>
 </span></span><span class=line><span class=cl>$ ostree --repo<span class=o>=</span><span class=si>${</span><span class=nv>OTA_SYSROOT</span><span class=si>}</span>/ostree/repo pull-local --remote<span class=o>=</span><span class=si>${</span><span class=nv>OSTREE_OSNAME</span><span class=si>}</span> <span class=si>${</span><span class=nv>OSTREE_REPO</span><span class=si>}</span> <span class=si>${</span><span class=nv>ostree_target_hash</span><span class=si>}</span>
-</span></span><span class=line><span class=cl>$ ostree --repo<span class=o>=</span><span class=si>${</span><span class=nv>OTA_SYSROOT</span><span class=si>}</span>/ostree/repo refs --create<span class=o>=</span><span class=si>${</span><span class=nv>OSTREE_OSNAME</span><span class=si>}</span>:<span class=si>${</span><span class=nv>OSTREE_BRANCHNAME</span><span class=si>}</span> <span class=si>${</span><span class=nv>ostree_target_hash</span><span class=si>}</span>
-</span></span></code></pre></td></tr></table></div></div><p>repo 디렉토리 안에 repository가 복제되고, refs/remotes 에 reference가 생성된다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
-</span><span class=lnt> 2
-</span><span class=lnt> 3
-</span><span class=lnt> 4
-</span><span class=lnt> 5
-</span><span class=lnt> 6
-</span><span class=lnt> 7
-</span><span class=lnt> 8
-</span><span class=lnt> 9
-</span><span class=lnt>10
-</span><span class=lnt>11
-</span><span class=lnt>12
-</span><span class=lnt>13
-</span><span class=lnt>14
-</span><span class=lnt>15
-</span><span class=lnt>16
-</span><span class=lnt>17
-</span><span class=lnt>18
-</span><span class=lnt>19
-</span><span class=lnt>20
-</span><span class=lnt>21
-</span><span class=lnt>22
-</span><span class=lnt>23
-</span><span class=lnt>24
-</span><span class=lnt>25
-</span><span class=lnt>26
-</span><span class=lnt>27
-</span><span class=lnt>28
-</span><span class=lnt>29
-</span><span class=lnt>30
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>.
+</span></span><span class=line><span class=cl>$ ostree --repo<span class=o>=</span><span class=si>${</span><span class=nv>OTA_SYSROOT</span><span class=si>}</span>/ostree/repo refs --create<span class=o>=</span><span class=si>${</span><span class=nv>OSTREE_OSNAME</span><span class=si>}</span>:<span class=si>${</span><span class=nv>OSTREE_BRANCHNAME</span><span class=si>}</span> <span class=si>${</span><span class=nv>ostree_target_hash</span><span class=si>}</span></span></span></code></pre></div><p>repo 디렉토리 안에 repository가 복제되고, refs/remotes 에 reference가 생성된다.</p><div class="code-block highlight is-open show-line-numbers tw-group tw-my-2"><div class="code-block-title
+tw-flex
+tw-flex-row
+tw-justify-between
+tw-w-full tw-bg-bgColor-secondary"><button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-rotate-90
+tw-transition-[transform]
+tw-duration-500
+tw-ease-in-out
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></button><div class="code-block-title-bar tw-w-full"><p class="tw-select-none !tw-my-1">shell</p></div><div class=tw-flex><button class="line-number-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.show-line-numbers]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.is-wrap]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+hover:tw-text-fgColor-link
+print:!tw-hidden" title="Copy code">
+<span class="copy-icon tw-block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw-hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-hidden
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw-block tw-m-0 tw-p-0"><code id=codeblock-id-9 class="chroma
+!tw-block
+tw-p-0
+tw-m-0
+tw-transition-[max-height]
+tw-duration-500
+tw-ease-in-out
+group-[.is-closed]:!tw-max-h-0
+group-[.is-wrap]:tw-text-wrap
+tw-overflow-y-hidden
+tw-overflow-x-auto
+tw-scrollbar-thin"><span class=line><span class=cl>.
 </span></span><span class=line><span class=cl>├── boot
 </span></span><span class=line><span class=cl>└── ostree
 </span></span><span class=line><span class=cl>    ├── deploy
@@ -260,77 +575,112 @@ Connected Car 솔루션과 같이 지속적으로 성능 개선 및 유지 보�
 </span></span><span class=line><span class=cl>        │           └── raspberrypi3
 </span></span><span class=line><span class=cl>        ├── state
 </span></span><span class=line><span class=cl>        └── tmp
-</span></span><span class=line><span class=cl>            └── cache
-</span></span></code></pre></td></tr></table></div></div><ul><li>ostree admin deploy 로 deploy 수행</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
-</span><span class=lnt>2
-</span><span class=lnt>3
-</span><span class=lnt>4
-</span><span class=lnt>5
-</span><span class=lnt>6
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ mkdir -p <span class=si>${</span><span class=nv>OTA_SYSROOT</span><span class=si>}</span>/boot/loader.0
+</span></span><span class=line><span class=cl>            └── cache</span></span></code></pre></div><ul><li>ostree admin deploy 로 deploy 수행</li></ul><div class="code-block highlight is-open show-line-numbers tw-group tw-my-2"><div class="code-block-title
+tw-flex
+tw-flex-row
+tw-justify-between
+tw-w-full tw-bg-bgColor-secondary"><button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-rotate-90
+tw-transition-[transform]
+tw-duration-500
+tw-ease-in-out
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></button><div class="code-block-title-bar tw-w-full"><p class="tw-select-none !tw-my-1">shell</p></div><div class=tw-flex><button class="line-number-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.show-line-numbers]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.is-wrap]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+hover:tw-text-fgColor-link
+print:!tw-hidden" title="Copy code">
+<span class="copy-icon tw-block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw-hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-hidden
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw-block tw-m-0 tw-p-0"><code id=codeblock-id-10 class="chroma
+!tw-block
+tw-p-0
+tw-m-0
+tw-transition-[max-height]
+tw-duration-500
+tw-ease-in-out
+group-[.is-closed]:!tw-max-h-0
+group-[.is-wrap]:tw-text-wrap
+tw-overflow-y-hidden
+tw-overflow-x-auto
+tw-scrollbar-thin"><span class=line><span class=cl>$ mkdir -p <span class=si>${</span><span class=nv>OTA_SYSROOT</span><span class=si>}</span>/boot/loader.0
 </span></span><span class=line><span class=cl>$ ln -s loader.0 <span class=si>${</span><span class=nv>OTA_SYSROOT</span><span class=si>}</span>/boot/loader
 </span></span><span class=line><span class=cl>$ touch <span class=si>${</span><span class=nv>OTA_SYSROOT</span><span class=si>}</span>/boot/loader/uEnv.txt
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>$ <span class=nb>export</span> <span class=nv>kargs_list</span><span class=o>=</span><span class=s2>&#34;--karg-append=kernel_option1&#34;</span>
-</span></span><span class=line><span class=cl>$ ostree admin --sysroot<span class=o>=</span><span class=si>${</span><span class=nv>OTA_SYSROOT</span><span class=si>}</span> deploy <span class=si>${</span><span class=nv>kargs_list</span><span class=si>}</span> --os<span class=o>=</span><span class=si>${</span><span class=nv>OSTREE_OSNAME</span><span class=si>}</span> <span class=si>${</span><span class=nv>OSTREE_OSNAME</span><span class=si>}</span>:<span class=si>${</span><span class=nv>OSTREE_BRANCHNAME</span><span class=si>}</span>
-</span></span></code></pre></td></tr></table></div></div><p>deploy 를 실행하면 ostre/deploy/${OSTREE_OSNAME}/deploy/ 로 reference로 deploy 되고, boot 디렉토리에는 kernel 파일이 복사된다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
-</span><span class=lnt> 2
-</span><span class=lnt> 3
-</span><span class=lnt> 4
-</span><span class=lnt> 5
-</span><span class=lnt> 6
-</span><span class=lnt> 7
-</span><span class=lnt> 8
-</span><span class=lnt> 9
-</span><span class=lnt>10
-</span><span class=lnt>11
-</span><span class=lnt>12
-</span><span class=lnt>13
-</span><span class=lnt>14
-</span><span class=lnt>15
-</span><span class=lnt>16
-</span><span class=lnt>17
-</span><span class=lnt>18
-</span><span class=lnt>19
-</span><span class=lnt>20
-</span><span class=lnt>21
-</span><span class=lnt>22
-</span><span class=lnt>23
-</span><span class=lnt>24
-</span><span class=lnt>25
-</span><span class=lnt>26
-</span><span class=lnt>27
-</span><span class=lnt>28
-</span><span class=lnt>29
-</span><span class=lnt>30
-</span><span class=lnt>31
-</span><span class=lnt>32
-</span><span class=lnt>33
-</span><span class=lnt>34
-</span><span class=lnt>35
-</span><span class=lnt>36
-</span><span class=lnt>37
-</span><span class=lnt>38
-</span><span class=lnt>39
-</span><span class=lnt>40
-</span><span class=lnt>41
-</span><span class=lnt>42
-</span><span class=lnt>43
-</span><span class=lnt>44
-</span><span class=lnt>45
-</span><span class=lnt>46
-</span><span class=lnt>47
-</span><span class=lnt>48
-</span><span class=lnt>49
-</span><span class=lnt>50
-</span><span class=lnt>51
-</span><span class=lnt>52
-</span><span class=lnt>53
-</span><span class=lnt>54
-</span><span class=lnt>55
-</span><span class=lnt>56
-</span><span class=lnt>57
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>.
+</span></span><span class=line><span class=cl>$ ostree admin --sysroot<span class=o>=</span><span class=si>${</span><span class=nv>OTA_SYSROOT</span><span class=si>}</span> deploy <span class=si>${</span><span class=nv>kargs_list</span><span class=si>}</span> --os<span class=o>=</span><span class=si>${</span><span class=nv>OSTREE_OSNAME</span><span class=si>}</span> <span class=si>${</span><span class=nv>OSTREE_OSNAME</span><span class=si>}</span>:<span class=si>${</span><span class=nv>OSTREE_BRANCHNAME</span><span class=si>}</span></span></span></code></pre></div><p>deploy 를 실행하면 ostre/deploy/${OSTREE_OSNAME}/deploy/ 로 reference로 deploy 되고, boot 디렉토리에는 kernel 파일이 복사된다.</p><div class="code-block highlight is-closed show-line-numbers tw-group tw-my-2"><div class="code-block-title
+tw-flex
+tw-flex-row
+tw-justify-between
+tw-w-full tw-bg-bgColor-secondary"><button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-rotate-90
+tw-transition-[transform]
+tw-duration-500
+tw-ease-in-out
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></button><div class="code-block-title-bar tw-w-full"><p class="tw-select-none !tw-my-1">shell</p></div><div class=tw-flex><button class="line-number-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.show-line-numbers]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.is-wrap]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+hover:tw-text-fgColor-link
+print:!tw-hidden" title="Copy code">
+<span class="copy-icon tw-block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw-hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-hidden
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw-block tw-m-0 tw-p-0"><code id=codeblock-id-11 class="chroma
+!tw-block
+tw-p-0
+tw-m-0
+tw-transition-[max-height]
+tw-duration-500
+tw-ease-in-out
+group-[.is-closed]:!tw-max-h-0
+group-[.is-wrap]:tw-text-wrap
+tw-overflow-y-hidden
+tw-overflow-x-auto
+tw-scrollbar-thin"><span class=line><span class=cl>.
 </span></span><span class=line><span class=cl>├── boot
 </span></span><span class=line><span class=cl>│   ├── loader -&gt; loader.1
 </span></span><span class=line><span class=cl>│   ├── loader.1
@@ -386,14 +736,70 @@ Connected Car 솔루션과 같이 지속적으로 성능 개선 및 유지 보�
 </span></span><span class=line><span class=cl>        │           └── raspberrypi3
 </span></span><span class=line><span class=cl>        ├── state
 </span></span><span class=line><span class=cl>        └── tmp
-</span></span><span class=line><span class=cl>            └── cache
-</span></span></code></pre></td></tr></table></div></div><p>deploy 전에 boot/loader/uEnv.txt 를 임시로 만들었는데, 이렇게 uEnv.txt 파일이 있으면 deploy 시 uEnv.txt 파일도 자동으로 업데이트 하여 u-boot 에서 이를 참조 할 수 있도록 한다.</p><p>boot/loader/uEnv.txt 를 보면 다음과 같이 생성된다. deploy시 추가한 kernel argument 도 같이 추가되어 있다.
-u-boot 에서는 이를 읽어들여 kernel, ramdisk 이미지를 로드하고, 적절한 kernel arguments를 추가하면 된다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
-</span><span class=lnt>2
-</span><span class=lnt>3
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>kernel_image=/ostree/poky-925...009/vmlinuz-4.19.126-v7
+</span></span><span class=line><span class=cl>            └── cache</span></span></code></pre></div><p>deploy 전에 boot/loader/uEnv.txt 를 임시로 만들었는데, 이렇게 uEnv.txt 파일이 있으면 deploy 시 uEnv.txt 파일도 자동으로 업데이트 하여 u-boot 에서 이를 참조 할 수 있도록 한다.</p><p>boot/loader/uEnv.txt 를 보면 다음과 같이 생성된다. deploy시 추가한 kernel argument 도 같이 추가되어 있다.
+u-boot 에서는 이를 읽어들여 kernel, ramdisk 이미지를 로드하고, 적절한 kernel arguments를 추가하면 된다.</p><div class="code-block highlight is-open show-line-numbers tw-group tw-my-2"><div class="code-block-title
+tw-flex
+tw-flex-row
+tw-justify-between
+tw-w-full tw-bg-bgColor-secondary"><button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-rotate-90
+tw-transition-[transform]
+tw-duration-500
+tw-ease-in-out
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></button><div class="code-block-title-bar tw-w-full"><p class="tw-select-none !tw-my-1">text</p></div><div class=tw-flex><button class="line-number-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.show-line-numbers]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.is-wrap]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+hover:tw-text-fgColor-link
+print:!tw-hidden" title="Copy code">
+<span class="copy-icon tw-block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw-hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-hidden
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw-block tw-m-0 tw-p-0"><code id=codeblock-id-12 class="chroma
+!tw-block
+tw-p-0
+tw-m-0
+tw-transition-[max-height]
+tw-duration-500
+tw-ease-in-out
+group-[.is-closed]:!tw-max-h-0
+group-[.is-wrap]:tw-text-wrap
+tw-overflow-y-hidden
+tw-overflow-x-auto
+tw-scrollbar-thin"><span class=line><span class=cl>kernel_image=/ostree/poky-925...009/vmlinuz-4.19.126-v7
 </span></span><span class=line><span class=cl>ramdisk_image=/ostree/poky-925...009/initramfs-4.19.126-v7.img
-</span></span><span class=line><span class=cl>bootargs=kernel_option1 ostree=/ostree/boot.1/poky/925...009/0
-</span></span></code></pre></td></tr></table></div></div><ul><li>추가로 ${OTA_SYSROOT}/ostree/deploy/poky/var 디렉토리의 초기 구성을 잡아준다.</li></ul><h2 id=정리 class=headerLink><a href=#%ec%a0%95%eb%a6%ac class=header-mark></a>정리</h2><p>이상으로 OSTree 를 이용한 업그레이드 시스템 구성 시 파일 시스템이 어떻게 구성되는지를 정리하였다.</p><p>다음에는 생성된 Yocto Image 로 실행중인 장치에서 OSTree를 이용하여 업그레이드, rollback을 하는 방법을 정리하기로 한다.</p></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>Updated on 2022-02-14</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/yocto/>Yocto</a>,&nbsp;<a href=/tags/ostree/>OSTree</a>,&nbsp;<a href=/tags/ota/>OTA</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span></section></div><div class=post-nav><a href=/posts/port-mirroring-network-switch-gs108ev3/ class=prev rel=prev title="Port Mirroring 기능 지원 저렴한 스위치 - GS108Ev3"><i class="fas fa-angle-left fa-fw"></i>Port Mirroring 기능 지원 저렴한 스위치 - GS108Ev3</a>
-<a href=/posts/tls-cryptography-1-overview/ class=next rel=next title="TLS/암호 알고리즘 쉽게 이해하기(1) - 개요">TLS/암호 알고리즘 쉽게 이해하기(1) - 개요<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=giscus></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://giscus.app/>giscus</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2024</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://www.humminglab.io target=_blank rel="noopener noreferrer">HummingLab</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div><div class=footer-line></div><div class=footer-line></div></div></footer></div><div id=fixed-buttons><a href=#back-to-top id=back-to-top-button class=fixed-button title="Back to Top"><i class="fas fa-arrow-up fa-fw"></i>
-</a><a href=# id=view-comments class=fixed-button title="View Comments"><i class="fas fa-comment fa-fw"></i></a></div><div class=assets><link rel=stylesheet href=/lib/katex/katex.min.css><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/katex/copy-tex.min.css><noscript><link rel=stylesheet href=/lib/katex/copy-tex.min.css></noscript><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataInputPosition:"bottom",dataLang:"en",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",dataStrict:"0",lightTheme:"light"}},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1}}</script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js defer></script><script type=text/javascript src=/lib/katex/auto-render.min.js defer></script><script type=text/javascript src=/lib/katex/copy-tex.min.js defer></script><script type=text/javascript src=/lib/katex/mhchem.min.js defer></script><script type=text/javascript src=/js/katex.min.js defer></script><script type=text/javascript src=/js/theme.min.js defer></script><script type=text/javascript src=/js/giscus.min.js defer></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","UA-83257319-3",{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=UA-83257319-3" async></script></div></body></html>
+</span></span><span class=line><span class=cl>bootargs=kernel_option1 ostree=/ostree/boot.1/poky/925...009/0</span></span></code></pre></div><ul><li>추가로 ${OTA_SYSROOT}/ostree/deploy/poky/var 디렉토리의 초기 구성을 잡아준다.</li></ul><h2 id=정리 class=headerLink><a href=#%ec%a0%95%eb%a6%ac class=header-mark></a>정리</h2><p>이상으로 OSTree 를 이용한 업그레이드 시스템 구성 시 파일 시스템이 어떻게 구성되는지를 정리하였다.</p><p>다음에는 생성된 Yocto Image 로 실행중인 장치에서 OSTree를 이용하여 업그레이드, rollback을 하는 방법을 정리하기로 한다.</p></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>Updated on 2022-02-14</span></div><div class=post-info-license></div></div><div class="post-info-line print:!tw-hidden"><div class=post-info-md></div><div class=post-info-share></div></div></div><div class=post-info-more><section class=post-tags><svg class="icon" viewBox="0 0 640 512"><path d="M497.941 225.941 286.059 14.059A48 48 0 00252.118.0H48C21.49.0.0 21.49.0 48v204.118a48 48 0 0014.059 33.941l211.882 211.882c18.744 18.745 49.136 18.746 67.882.0l204.118-204.118c18.745-18.745 18.745-49.137.0-67.882zM112 160c-26.51.0-48-21.49-48-48s21.49-48 48-48 48 21.49 48 48-21.49 48-48 48zm513.941 133.823L421.823 497.941c-18.745 18.745-49.137 18.745-67.882.0l-.36-.36L527.64 323.522c16.999-16.999 26.36-39.6 26.36-63.64s-9.362-46.641-26.36-63.64L331.397.0h48.721a48 48 0 0133.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137.0 67.882z"/></svg>&nbsp;<a href=/tags/yocto/>Yocto</a>,&nbsp;<a href=/tags/ostree/>OSTree</a>,&nbsp;<a href=/tags/ota/>OTA</a></section><section class=print:!tw-hidden><span><button class="tw-text-fgColor-link-muted hover:tw-text-fgColor-link-muted-hover" onclick=window.history.back()>Back</button></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span></section></div><div class="post-nav print:tw-hidden"><a href=/posts/port-mirroring-network-switch-gs108ev3/ class=prev rel=prev title="Port Mirroring 기능 지원 저렴한 스위치 - GS108Ev3"><svg class="icon" viewBox="0 0 256 512"><path d="M31.7 239l136-136c9.4-9.4 24.6-9.4 33.9.0l22.6 22.6c9.4 9.4 9.4 24.6.0 33.9L127.9 256l96.4 96.4c9.4 9.4 9.4 24.6.0 33.9L201.7 409c-9.4 9.4-24.6 9.4-33.9.0l-136-136c-9.5-9.4-9.5-24.6-.1-34z"/></svg>Port Mirroring 기능 지원 저렴한 스위치 - GS108Ev3</a>
+<a href=/posts/tls-cryptography-1-overview/ class=next rel=next title="TLS/암호 알고리즘 쉽게 이해하기(1) - 개요">TLS/암호 알고리즘 쉽게 이해하기(1) - 개요<svg class="icon" viewBox="0 0 256 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9.0l-22.6-22.6c-9.4-9.4-9.4-24.6.0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6.0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9.0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg></a></div></div><div id=comments class="print:!tw-hidden tw-pt-32 tw-pb-8"><div id=giscus></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://giscus.app/>giscus</a>.</noscript></div></article></main><footer class=footer><div class=footer-container><div class=footer-line><svg class="icon" viewBox="0 0 512 512"><path d="M256 8C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm0 448c-110.532.0-2e2-89.451-2e2-2e2.0-110.531 89.451-2e2 2e2-2e2 110.532.0 2e2 89.451 2e2 2e2.0 110.532-89.451 2e2-2e2 2e2zm107.351-101.064c-9.614 9.712-45.53 41.396-104.065 41.396-82.43.0-140.484-61.425-140.484-141.567.0-79.152 60.275-139.401 139.762-139.401 55.531.0 88.738 26.62 97.593 34.779a11.965 11.965.0 011.936 15.322l-18.155 28.113c-3.841 5.95-11.966 7.282-17.499 2.921-8.595-6.776-31.814-22.538-61.708-22.538-48.303.0-77.916 35.33-77.916 80.082.0 41.589 26.888 83.692 78.277 83.692 32.657.0 56.843-19.039 65.726-27.225 5.27-4.857 13.596-4.039 17.82 1.738l19.865 27.17a11.947 11.947.0 01-1.152 15.518z"/></svg>2025<span class=author>&nbsp;<a href=https://www.humminglab.io target=_blank rel="noopener noreferrer">HummingLab</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div><div class=footer-line></div><div class=footer-line></div></div></footer><div class="print:!tw-hidden tw-flex tw-flex-col tw-fixed tw-right-4 tw-bottom-4 tw-gap-2"><a href=#back-to-top id=back-to-top-button class="tw-transition-opacity tw-opacity-0 tw-block tw-bg-bgColor-secondary tw-rounded-full" style=padding:.6rem;line-height:1.3rem;font-size:1rem title="Back to Top"><svg class="icon" viewBox="0 0 448 512"><path d="M34.9 289.5l-22.2-22.2c-9.4-9.4-9.4-24.6.0-33.9L207 39c9.4-9.4 24.6-9.4 33.9.0l194.3 194.3c9.4 9.4 9.4 24.6.0 33.9L413 289.4c-9.5 9.5-25 9.3-34.3-.4L264 168.6V456c0 13.3-10.7 24-24 24h-32c-13.3.0-24-10.7-24-24V168.6L69.2 289.1c-9.3 9.8-24.8 10-34.3.4z"/></svg>
+</a><button id=toc-drawer-button class="tw-block tw-bg-bgColor-secondary tw-rounded-full md:tw-hidden" style=padding:.6rem;line-height:1.3rem;font-size:1rem>
+<svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg>
+</button><a href=#comments id=view-comments class="tw-block tw-bg-bgColor-secondary tw-rounded-full" style=padding:.6rem;line-height:1.3rem;font-size:1rem title="View Comments"><svg class="icon" viewBox="0 0 512 512"><path d="M256 32C114.6 32 0 125.1.0 240c0 49.6 21.4 95 57 130.7C44.5 421.1 2.7 466 2.2 466.5c-2.2 2.3-2.8 5.7-1.5 8.7S4.8 480 8 480c66.3.0 116-31.8 140.6-51.4 32.7 12.3 69 19.4 107.4 19.4 141.4.0 256-93.1 256-208S397.4 32 256 32z"/></svg></a></div><link rel=stylesheet href=/lib/katex/katex.min.css><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/katex/copy-tex.min.css><noscript><link rel=stylesheet href=/lib/katex/copy-tex.min.css></noscript><script>window.config={comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataInputPosition:"bottom",dataLang:"en",dataLoading:"lazy",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",dataStrict:"0",lightTheme:"light"}},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1}}</script><script src=/lib/katex/katex.min.js defer></script><script src=/lib/katex/auto-render.min.js defer></script><script src=/lib/katex/copy-tex.min.js defer></script><script src=/lib/katex/mhchem.min.js defer></script><script src=/js/katex.min.js defer></script><script src=/js/theme.min.js defer></script><script src=/js/giscus.min.js defer></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","UA-83257319-3",{anonymize_ip:!0})</script><script src="https://www.googletagmanager.com/gtag/js?id=UA-83257319-3" async></script><script type=speculationrules>
+  {
+    "prerender": [
+      {
+        "where": { "href_matches": "/*" },
+        "eagerness": "moderate"
+      }
+    ]
+  }
+</script></body></html>

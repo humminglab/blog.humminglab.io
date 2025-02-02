@@ -3,15 +3,14 @@
 RSA는 이름에 특별한 의미는 없고, 알고리즘을 발명한 사람들(Ron Rivest, Adi Shamir, Leonard Adleman)의 약자를 따서 만든 것이다.
 AES와는 달리 공개키(public key)와 개인키(private key) 두 벌로 구성된 키를 가지고 있는 비대칭키 암호화 알고리즘이다.
 가장 일반적인 사용용도는 다음과 같이 Bob 이 Alice에게 암호 데이타 전달하는 방법이다.
-Alice의 공개키는 공개되어 누구나 알수 있다. Bob은 Alice의 공개키를 이용하여 암호화 하여 일반 채널로 전달한다."><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-03-21T09:00:00+09:00"><meta property="article:modified_time" content="2022-03-21T09:00:00+09:00"><meta property="article:tag" content="Cryptography, RSA, ECC, PCKS"><meta property="og:see_also" content="https://blog.humminglab.io/posts/tls-cryptography-14-x509/"><meta property="og:see_also" content="https://blog.humminglab.io/posts/tls-cryptography-13-mac-aead/"><meta property="og:see_also" content="https://blog.humminglab.io/posts/tls-cryptography-12-ecc2/"><meta property="og:see_also" content="https://blog.humminglab.io/posts/tls-cryptography-11-ecc/"><meta property="og:see_also" content="https://blog.humminglab.io/posts/tls-cryptography-10-hash/"><meta property="og:see_also" content="https://blog.humminglab.io/posts/tls-cryptography-9-dsa/"><meta name=twitter:card content="summary"><meta name=twitter:title content="TLS/암호 알고리즘 쉽게 이해하기(8) - RSA"><meta name=twitter:description content="지난 번에 설명한 이산대수를 이용하면 RSA 의 기본원리도 쉽게 이해할 수 있다.
+Alice의 공개키는 공개되어 누구나 알수 있다. Bob은 Alice의 공개키를 이용하여 암호화 하여 일반 채널로 전달한다. Alice는 자신의 개인키로 복호화 하여 Bob이 보낸 데이타를 얻을 수 있다. sequenceDiagram Participant Alice Participant Bob Alice ->> Bob: 공개키(K_pub) 배포 note over Bob: P=본문E=RSA(K_pub, P) Bob ->> Alice: 암호화된 데이타(E) 전송 note over Alice: P=RSA(K_pri, E) 이 과정에서 암호화된 데이타를 다른 사람이 도청을 하더라도, Alice 의 private key가 없는 이상 복호화 할 방법은 없다."><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-03-21T09:00:00+09:00"><meta property="article:modified_time" content="2022-03-21T09:00:00+09:00"><meta property="article:tag" content="Cryptography, RSA, ECC, PCKS"><meta property="og:see_also" content="https://blog.humminglab.io/posts/tls-cryptography-14-x509/"><meta property="og:see_also" content="https://blog.humminglab.io/posts/tls-cryptography-13-mac-aead/"><meta property="og:see_also" content="https://blog.humminglab.io/posts/tls-cryptography-12-ecc2/"><meta property="og:see_also" content="https://blog.humminglab.io/posts/tls-cryptography-11-ecc/"><meta property="og:see_also" content="https://blog.humminglab.io/posts/tls-cryptography-10-hash/"><meta property="og:see_also" content="https://blog.humminglab.io/posts/tls-cryptography-9-dsa/"><meta name=twitter:card content="summary"><meta name=twitter:title content="TLS/암호 알고리즘 쉽게 이해하기(8) - RSA"><meta name=twitter:description content="지난 번에 설명한 이산대수를 이용하면 RSA 의 기본원리도 쉽게 이해할 수 있다.
 RSA는 이름에 특별한 의미는 없고, 알고리즘을 발명한 사람들(Ron Rivest, Adi Shamir, Leonard Adleman)의 약자를 따서 만든 것이다.
 AES와는 달리 공개키(public key)와 개인키(private key) 두 벌로 구성된 키를 가지고 있는 비대칭키 암호화 알고리즘이다.
 가장 일반적인 사용용도는 다음과 같이 Bob 이 Alice에게 암호 데이타 전달하는 방법이다.
-Alice의 공개키는 공개되어 누구나 알수 있다. Bob은 Alice의 공개키를 이용하여 암호화 하여 일반 채널로 전달한다."><meta name=application-name content="All about IoT"><meta name=apple-mobile-web-app-title content="All about IoT"><meta name=theme-color content="#f8f8f8"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/posts/tls-cryptography-8-rsa/><link rel=prev href=https://blog.humminglab.io/posts/tls-cryptography-7-diffie-hellman/><link rel=next href=https://blog.humminglab.io/posts/tls-cryptography-9-dsa/><link rel=stylesheet href=/css/main.css><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/style.min.css><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/fontawesome-free/all.min.css><noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/animate/animate.min.css><noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"TLS/암호 알고리즘 쉽게 이해하기(8) - RSA","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/tls-cryptography-8-rsa\/"},"genre":"posts","keywords":"Cryptography, RSA, ECC, PCKS","wordcount":1577,"url":"https:\/\/blog.humminglab.io\/posts\/tls-cryptography-8-rsa\/","datePublished":"2022-03-21T09:00:00+09:00","dateModified":"2022-03-21T09:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script><script src=//instant.page/5.2.0 defer type=module integrity=sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEtvFPiQYbXWUorga2aqZJ0z></script></head><body header-desktop header-mobile><script type=text/javascript>function setTheme(e){document.body.setAttribute("theme",e),document.documentElement.style.setProperty("color-scheme",e==="light"?"light":"dark"),window.theme=e,window.isDark=window.theme!=="light"}function saveTheme(e){window.localStorage&&localStorage.setItem("theme",e)}function getMeta(e){const t=document.getElementsByTagName("meta");for(let n=0;n<t.length;n++)if(t[n].getAttribute("name")===e)return t[n];return""}if(window.localStorage&&localStorage.getItem("theme")){let e=localStorage.getItem("theme");e==="light"||e==="dark"||e==="black"?setTheme(e):setTheme(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}else""==="light"||""==="dark"||""==="black"?(setTheme(""),saveTheme("")):(saveTheme("auto"),setTheme(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));let metaColors={light:"#f8f8f8",dark:"#252627",black:"#000000"};getMeta("theme-color").content=metaColors[document.body.getAttribute("theme")],window.switchThemeEventSet=new Set</script><div id=back-to-top></div><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title="All about IoT">All about IoT</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/>Posts </a><a class=menu-item href=/tags/>Tags </a><a class=menu-item href=/categories/>Categories </a><a class=menu-item href=https://www.humminglab.io/ rel="noopener noreferrer" target=_blank>HummingLab </a><span class="menu-item delimiter"></span><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
-<i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title="All about IoT">All about IoT</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><a class=menu-item href=/posts/ title>Posts</a><a class=menu-item href=/tags/ title>Tags</a><a class=menu-item href=/categories/ title>Categories</a><a class=menu-item href=https://www.humminglab.io/ title rel="noopener noreferrer" target=_blank>HummingLab</a><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
-<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>Contents</h2><div class=toc-content id=toc-content-auto><nav id=TableOfContents><ul><li><a href=#기본-원리>기본 원리</a></li><li><a href=#보안성>보안성</a></li><li><a href=#openssl로-확인>OpenSSL로 확인</a></li><li><a href=#정리>정리</a></li></ul></nav></div></div><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC","true")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX">TLS/암호 알고리즘 쉽게 이해하기(8) - RSA</h1><div class=post-meta><div class=post-meta-line><span class=post-author><span class=author><span class="author fas fa-user-circle fa-fw"></span><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
-</span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/security/><i class="far fa-folder fa-fw"></i>Security</a></span>&nbsp;<span class=post-category>and</span>&nbsp;<span class=post-series>series <a href=/series/tls/%EC%95%94%ED%98%B8-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0/><i class="far fa-list-alt fa-fw"></i>TLS/암호 알고리즘 쉽게 이해하기</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2022-03-21>2022-03-21</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2022-03-21>2022-03-21</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;1577 words&nbsp;<i class="far fa-clock fa-fw"></i>&nbsp;8 minutes&nbsp;</div></div><div class="details series-nav open"><div class="details-summary series-title"><span>Series - </span><span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content series-content"><nav><ul><li><a href=/posts/tls-cryptography-14-x509/>TLS/암호 알고리즘 쉽게 이해하기(14) - PKI and X.509</a></li><li><a href=/posts/tls-cryptography-13-mac-aead/>TLS/암호 알고리즘 쉽게 이해하기(13) - MAC, AE, AEAD</a></li><li><a href=/posts/tls-cryptography-12-ecc2/>TLS/암호 알고리즘 쉽게 이해하기(12) - ECDH, ECDSA</a></li><li><a href=/posts/tls-cryptography-11-ecc/>TLS/암호 알고리즘 쉽게 이해하기(11) - Elliptic Curve Cryptography(ECC)</a></li><li><a href=/posts/tls-cryptography-10-hash/>TLS/암호 알고리즘 쉽게 이해하기(10) - Hash</a></li><li><a href=/posts/tls-cryptography-9-dsa/>TLS/암호 알고리즘 쉽게 이해하기(9) - Digital Signature</a></li><li><span class=active>TLS/암호 알고리즘 쉽게 이해하기(8) - RSA</span></li><li><a href=/posts/tls-cryptography-7-diffie-hellman/>TLS/암호 알고리즘 쉽게 이해하기(7) - Diffie-Hellman Key Exchange</a></li><li><a href=/posts/tls-cryptography-6-math/>TLS/암호 알고리즘 쉽게 이해하기(6) - 이산 대수</a></li><li><a href=/posts/tls-cryptography-5-stream-cipher/>TLS/암호 알고리즘 쉽게 이해하기(5) - Stream Cipher</a></li><li><a href=/posts/tls-cryptography-4-block-cipher-mode/>TLS/암호 알고리즘 쉽게 이해하기(4) - Block Cipher Mode</a></li><li><a href=/posts/tls-cryptography-3-block-cipher/>TLS/암호 알고리즘 쉽게 이해하기(3) - Block Cipher</a></li><li><a href=/posts/tls-cryptography-2-random/>TLS/암호 알고리즘 쉽게 이해하기(2) - Random</a></li><li><a href=/posts/tls-cryptography-1-overview/>TLS/암호 알고리즘 쉽게 이해하기(1) - 개요</a></li></ul></nav></div></div><div class="details toc" id=toc-static kept><div class="details-summary toc-title"><span>Contents</span>
-<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#기본-원리>기본 원리</a></li><li><a href=#보안성>보안성</a></li><li><a href=#openssl로-확인>OpenSSL로 확인</a></li><li><a href=#정리>정리</a></li></ul></nav></div></div><div class=content id=content><p>지난 번에 설명한 <a href=https://blog.humminglab.io/posts/tls-cryptography-6-math/ rel>이산대수</a>를 이용하면 RSA 의 기본원리도 쉽게 이해할 수 있다.</p><p>RSA는 이름에 특별한 의미는 없고, 알고리즘을 발명한 사람들(Ron Rivest, Adi Shamir, Leonard Adleman)의 약자를 따서 만든 것이다.</p><p><a href=https://blog.humminglab.io/posts/tls-cryptography-3-block-cipher/ rel>AES</a>와는 달리 공개키(public key)와 개인키(private key) 두 벌로 구성된 키를 가지고 있는 비대칭키 암호화 알고리즘이다.</p><p>가장 일반적인 사용용도는 다음과 같이 Bob 이 Alice에게 암호 데이타 전달하는 방법이다.</p><ul><li>Alice의 공개키는 공개되어 누구나 알수 있다.</li><li>Bob은 Alice의 공개키를 이용하여 암호화 하여 일반 채널로 전달한다.</li><li>Alice는 자신의 개인키로 복호화 하여 Bob이 보낸 데이타를 얻을 수 있다.</li></ul><pre class=mermaid>sequenceDiagram
+Alice의 공개키는 공개되어 누구나 알수 있다. Bob은 Alice의 공개키를 이용하여 암호화 하여 일반 채널로 전달한다. Alice는 자신의 개인키로 복호화 하여 Bob이 보낸 데이타를 얻을 수 있다. sequenceDiagram Participant Alice Participant Bob Alice ->> Bob: 공개키(K_pub) 배포 note over Bob: P=본문E=RSA(K_pub, P) Bob ->> Alice: 암호화된 데이타(E) 전송 note over Alice: P=RSA(K_pri, E) 이 과정에서 암호화된 데이타를 다른 사람이 도청을 하더라도, Alice 의 private key가 없는 이상 복호화 할 방법은 없다."><meta name=application-name content="All about IoT"><meta name=apple-mobile-web-app-title content="All about IoT"><meta name=theme-color content="#f8f8f8"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/posts/tls-cryptography-8-rsa/><link rel=prev href=https://blog.humminglab.io/posts/tls-cryptography-7-diffie-hellman/><link rel=next href=https://blog.humminglab.io/posts/tls-cryptography-9-dsa/><link rel=stylesheet href=/css/main.min.css><link rel=stylesheet href=/css/style.min.css><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"TLS/암호 알고리즘 쉽게 이해하기(8) - RSA","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.humminglab.io/posts/tls-cryptography-8-rsa/"},"genre":"posts","keywords":["Cryptography, RSA, ECC, PCKS"],"wordcount":1444,"url":"https://blog.humminglab.io/posts/tls-cryptography-8-rsa/","datePublished":"2022-03-21T09:00:00+09:00","dateModified":"2022-03-21T09:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"author":[{"@type":"Person","name":"YSLee","url":"https://www.humminglab.io"}],"description":""}</script></head><body data-instant-intensity=viewport><script type=text/javascript>function setTheme(e){document.body.setAttribute("theme",e),document.documentElement.className=e,document.documentElement.style.setProperty("color-scheme",e==="light"?"light":"dark"),e==="light"?document.documentElement.classList.remove("tw-dark"):document.documentElement.classList.add("tw-dark"),window.theme=e,window.isDark=window.theme!=="light"}function saveTheme(e){window.localStorage&&localStorage.setItem("theme",e)}function getMeta(e){const t=document.getElementsByTagName("meta");for(let n=0;n<t.length;n++)if(t[n].getAttribute("name")===e)return t[n];return""}if(window.localStorage&&localStorage.getItem("theme")){let e=localStorage.getItem("theme");e==="light"||e==="dark"?setTheme(e):setTheme(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}else""==="light"||""==="dark"?(setTheme(""),saveTheme("")):(saveTheme("auto"),setTheme(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));let metaColors={light:"#f8f8f8",dark:"#161b22"};getMeta("theme-color").content=metaColors[document.body.getAttribute("theme")],window.switchThemeEventSet=new Set</script><div id=back-to-top></div><div id=mask></div><header class="desktop print:!tw-hidden" id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title="All about IoT">All about IoT</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/>Posts </a><a class=menu-item href=/tags/>Tags </a><a class=menu-item href=/categories/>Categories </a><a class=menu-item href=https://www.humminglab.io/ rel="noopener noreferrer" target=_blank>HummingLab </a><span class="menu-item delimiter"></span><button class="menu-item theme-switch" aria-label="Switch Theme"><svg class="icon" viewBox="0 0 512 512"><path d="M8 256c0 136.966 111.033 248 248 248s248-111.034 248-248S392.966 8 256 8 8 119.033 8 256zm248 184V72c101.705.0 184 82.311 184 184 0 101.705-82.311 184-184 184z"/></svg></button></div></div></div></header><header class="mobile print:!tw-hidden" id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title="All about IoT">All about IoT</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><a class=menu-item href=/posts/ title>Posts</a><a class=menu-item href=/tags/ title>Tags</a><a class=menu-item href=/categories/ title>Categories</a><a class=menu-item href=https://www.humminglab.io/ title rel="noopener noreferrer" target=_blank>HummingLab</a><button class="menu-item theme-switch tw-w-full" aria-label="Switch Theme"><svg class="icon" viewBox="0 0 512 512"><path d="M8 256c0 136.966 111.033 248 248 248s248-111.034 248-248S392.966 8 256 8 8 119.033 8 256zm248 184V72c101.705.0 184 82.311 184 184 0 101.705-82.311 184-184 184z"/></svg></button></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=tw-mx-4><div class="toc print:!tw-hidden" id=toc-auto><h2 class=toc-title>Contents</h2><div class=toc-content id=toc-content-auto><nav id=TableOfContents><ul><li><a href=#기본-원리>기본 원리</a></li><li><a href=#보안성>보안성</a></li><li><a href=#openssl로-확인>OpenSSL로 확인</a></li><li><a href=#정리>정리</a></li></ul></nav></div></div><dialog id=toc-dialog class="tw-max-w-full tw-w-full tw-max-h-full tw-h-full tw-ml-16"><div class="toc tw-mx-4 tw-max-w-full"><h2 class="tw-mx-0 tw-my-6 tw-uppercase tw-text-2xl">Contents</h2><div class=toc-content><nav id=TableOfContents><ul><li><a href=#기본-원리>기본 원리</a></li><li><a href=#보안성>보안성</a></li><li><a href=#openssl로-확인>OpenSSL로 확인</a></li><li><a href=#정리>정리</a></li></ul></nav></div></div></dialog><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC","true")</script><article class="page single print:!tw-w-full print:!tw-max-w-none print:!tw-m-0 print:!tw-p-0"><h1 class=single-title data-pagefind-meta=date:2022-03-21 data-pagefind-body>TLS/암호 알고리즘 쉽게 이해하기(8) - RSA</h1><div class=post-meta><div class=post-meta-line><span class=post-author><span class=author><span class=screen-reader-text></span><a href=https://blog.humminglab.io/authors/yslee/><img class="tw-inline-block tw-max-h-4 tw-rounded-full tw-translate-y-[-2px] tw-mr-1" src="https://www.gravatar.com/avatar/ebfb7d4b2184ae7b5f72ef31ebd7cc61?s=240&d=mp" alt="YSLee avatar" height=16 width=16>YSLee</a></span>
+</span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/security/><svg class="icon" viewBox="0 0 512 512"><path d="M464 128H272l-54.63-54.63c-6-6-14.14-9.37-22.63-9.37H48C21.49 64 0 85.49.0 112v288c0 26.51 21.49 48 48 48h416c26.51.0 48-21.49 48-48V176c0-26.51-21.49-48-48-48zm0 272H48V112h140.12l54.63 54.63c6 6 14.14 9.37 22.63 9.37H464v224z"/></svg>Security</a></span>&nbsp;<span class=post-category>and</span>&nbsp;<span class=post-series>series <a href=/series/tls/%EC%95%94%ED%98%B8-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0/><svg class="icon" viewBox="0 0 512 512"><path d="M464 32H48C21.49 32 0 53.49.0 80v352c0 26.51 21.49 48 48 48h416c26.51.0 48-21.49 48-48V80c0-26.51-21.49-48-48-48zm-6 4e2H54a6 6 0 01-6-6V86a6 6 0 016-6h404a6 6 0 016 6v340a6 6 0 01-6 6zm-42-92v24c0 6.627-5.373 12-12 12H204c-6.627.0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h2e2c6.627.0 12 5.373 12 12zm0-96v24c0 6.627-5.373 12-12 12H204c-6.627.0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h2e2c6.627.0 12 5.373 12 12zm0-96v24c0 6.627-5.373 12-12 12H204c-6.627.0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h2e2c6.627.0 12 5.373 12 12zm-252 12c0 19.882-16.118 36-36 36s-36-16.118-36-36 16.118-36 36-36 36 16.118 36 36zm0 96c0 19.882-16.118 36-36 36s-36-16.118-36-36 16.118-36 36-36 36 16.118 36 36zm0 96c0 19.882-16.118 36-36 36s-36-16.118-36-36 16.118-36 36-36 36 16.118 36 36z"/></svg>TLS/암호 알고리즘 쉽게 이해하기</a></span></div><div class=post-meta-line><svg class="icon" viewBox="0 0 448 512"><path d="M148 288h-40c-6.6.0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12zm108-12v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm-96 96v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm-96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm192 0v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm96-260v352c0 26.5-21.5 48-48 48H48c-26.5.0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h48V12c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v52h128V12c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v52h48c26.5.0 48 21.5 48 48zm-48 346V160H48v298c0 3.3 2.7 6 6 6h340c3.3.0 6-2.7 6-6z"/></svg>&nbsp;<time datetime=2022-03-21>2022-03-21</time>&nbsp;<svg class="icon" viewBox="0 0 576 512"><path d="M402.3 344.9l32-32c5-5 13.7-1.5 13.7 5.7V464c0 26.5-21.5 48-48 48H48c-26.5.0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h273.5c7.1.0 10.7 8.6 5.7 13.7l-32 32c-1.5 1.5-3.5 2.3-5.7 2.3H48v352h352V350.5c0-2.1.8-4.1 2.3-5.6zm156.6-201.8L296.3 405.7l-90.4 10c-26.2 2.9-48.5-19.2-45.6-45.6l10-90.4L432.9 17.1c22.9-22.9 59.9-22.9 82.7.0l43.2 43.2c22.9 22.9 22.9 60 .1 82.8zM460.1 174 402 115.9 216.2 301.8l-7.3 65.3 65.3-7.3L460.1 174zm64.8-79.7-43.2-43.2c-4.1-4.1-10.8-4.1-14.8.0L436 82l58.1 58.1 30.9-30.9c4-4.2 4-10.8-.1-14.9z"/></svg>&nbsp;<time datetime=2022-03-21>2022-03-21</time>&nbsp;<svg class="icon" viewBox="0 0 512 512"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3.0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9.0l60.1 60.1c18.8 18.7 18.8 49.1.0 67.9zM284.2 99.8 21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3.0-17l-111-111c-4.8-4.7-12.4-4.7-17.1.0zM124.1 339.9c-5.5-5.5-5.5-14.3.0-19.8l154-154c5.5-5.5 14.3-5.5 19.8.0s5.5 14.3.0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8.0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"/></svg>&nbsp;1444 words&nbsp;
+<svg class="icon" viewBox="0 0 512 512"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5.0-2e2-89.5-2e2-2e2S145.5 56 256 56s2e2 89.5 2e2 2e2-89.5 2e2-2e2 2e2zm61.8-104.4-84.9-61.7c-3.1-2.3-4.9-5.9-4.9-9.7V116c0-6.6 5.4-12 12-12h32c6.6.0 12 5.4 12 12v141.7l66.8 48.6c5.4 3.9 6.5 11.4 2.6 16.8L334.6 349c-3.9 5.3-11.4 6.5-16.8 2.6z"/></svg>&nbsp;7 minutes&nbsp;</div></div><div class="details series-nav open"><div class="details-summary series-title"><span>Series - </span><span class=details-icon><svg class="icon" viewBox="0 0 256 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9.0l-22.6-22.6c-9.4-9.4-9.4-24.6.0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6.0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9.0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg></span></div><div class="details-content series-content"><nav><ul><li><a href=/posts/tls-cryptography-14-x509/>TLS/암호 알고리즘 쉽게 이해하기(14) - PKI and X.509</a></li><li><a href=/posts/tls-cryptography-13-mac-aead/>TLS/암호 알고리즘 쉽게 이해하기(13) - MAC, AE, AEAD</a></li><li><a href=/posts/tls-cryptography-12-ecc2/>TLS/암호 알고리즘 쉽게 이해하기(12) - ECDH, ECDSA</a></li><li><a href=/posts/tls-cryptography-11-ecc/>TLS/암호 알고리즘 쉽게 이해하기(11) - Elliptic Curve Cryptography(ECC)</a></li><li><a href=/posts/tls-cryptography-10-hash/>TLS/암호 알고리즘 쉽게 이해하기(10) - Hash</a></li><li><a href=/posts/tls-cryptography-9-dsa/>TLS/암호 알고리즘 쉽게 이해하기(9) - Digital Signature</a></li><li><span class=active>TLS/암호 알고리즘 쉽게 이해하기(8) - RSA</span></li><li><a href=/posts/tls-cryptography-7-diffie-hellman/>TLS/암호 알고리즘 쉽게 이해하기(7) - Diffie-Hellman Key Exchange</a></li><li><a href=/posts/tls-cryptography-6-math/>TLS/암호 알고리즘 쉽게 이해하기(6) - 이산 대수</a></li><li><a href=/posts/tls-cryptography-5-stream-cipher/>TLS/암호 알고리즘 쉽게 이해하기(5) - Stream Cipher</a></li><li><a href=/posts/tls-cryptography-4-block-cipher-mode/>TLS/암호 알고리즘 쉽게 이해하기(4) - Block Cipher Mode</a></li><li><a href=/posts/tls-cryptography-3-block-cipher/>TLS/암호 알고리즘 쉽게 이해하기(3) - Block Cipher</a></li><li><a href=/posts/tls-cryptography-2-random/>TLS/암호 알고리즘 쉽게 이해하기(2) - Random</a></li><li><a href=/posts/tls-cryptography-1-overview/>TLS/암호 알고리즘 쉽게 이해하기(1) - 개요</a></li></ul></nav></div></div><div class="details toc print:!tw-block" id=toc-static kept><div class="details-summary toc-title"><span>Contents</span>
+<span class=details-icon><svg class="icon" viewBox="0 0 256 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9.0l-22.6-22.6c-9.4-9.4-9.4-24.6.0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6.0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9.0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#기본-원리>기본 원리</a></li><li><a href=#보안성>보안성</a></li><li><a href=#openssl로-확인>OpenSSL로 확인</a></li><li><a href=#정리>정리</a></li></ul></nav></div></div><div class=content id=content data-pagefind-body><p>지난 번에 설명한 <a href=https://blog.humminglab.io/posts/tls-cryptography-6-math/ rel>이산대수</a>를 이용하면 RSA 의 기본원리도 쉽게 이해할 수 있다.</p><p>RSA는 이름에 특별한 의미는 없고, 알고리즘을 발명한 사람들(Ron Rivest, Adi Shamir, Leonard Adleman)의 약자를 따서 만든 것이다.</p><p><a href=https://blog.humminglab.io/posts/tls-cryptography-3-block-cipher/ rel>AES</a>와는 달리 공개키(public key)와 개인키(private key) 두 벌로 구성된 키를 가지고 있는 비대칭키 암호화 알고리즘이다.</p><p>가장 일반적인 사용용도는 다음과 같이 Bob 이 Alice에게 암호 데이타 전달하는 방법이다.</p><ul><li>Alice의 공개키는 공개되어 누구나 알수 있다.</li><li>Bob은 Alice의 공개키를 이용하여 암호화 하여 일반 채널로 전달한다.</li><li>Alice는 자신의 개인키로 복호화 하여 Bob이 보낸 데이타를 얻을 수 있다.</li></ul><pre class=mermaid>sequenceDiagram
 Participant Alice
 Participant Bob
 Alice ->> Bob: 공개키(K_pub) 배포
@@ -35,108 +34,111 @@ note over Bob: SHA_1(P) == RSA(K_pub, S)
 $$</p><p>앞의 이산 수학을 보면 이 모듈로 n 연산에서 임의의 수를 이 $\Phi(n)$ 개수 만큼 곱해보면(지수연산) 항상 1이 된다.</p><p>이것이 오일러의 정리로 다음과 같은 관계가 된다.</p><p>$$ k^{\Phi(n)} \equiv 1 \mod n$$</p><p>이 식의 양변에 k를 곱해서 다시 써보면 다음과 같이 된다.</p><p>$$ k^{\Phi(n)+1} \equiv k \mod n$$
 $$ k^{\Phi(n) + 1} \equiv k^{x \cdot \Phi(n) + 1} \mod n $$</p><p>두 수를 곱해서 $(x \cdot \Phi(n) + 1)$ 가 되면 되는데(x는 임의의 정수), 이는 $\Phi(n)$ 모듈로 연산이라고 볼수 있다.</p><p>이 두개의 키 e와 d를 선정하는데, 이 둘의 관계를 모듈로 연산으로 정리하면 다음과 같은 관계가 되면 된다.</p><p>$$ e \cdot d = 1 \mod {\Phi(n)}$$</p><p>평문 k가 있을 때 공개키 e로 암호화 한것은 다음과 같다.</p><p>$$ E = k^{e} \mod n$$</p><p>복호화는 다음과 같이 d 로 할 수 있다.</p><p>$$ k = E^{d} \mod n$$</p><p>이와 같이 복호화가 되는 이유는 두 식을 합쳐 보면 된다.</p><p>$$ E^{d} = (k^{e})^d = k^{e\cdot d} = k^{1 + x \cdot \Phi(n)} = k^1 \cdot k^{x \cdot \Phi(n)} = k^1 = k\mod n$$</p><p>식으로 보면 e 로 암호화를 하냐, d 로 암호화를 하느냐는 차이가 없다. e로 암호화 하면 d로 풀수 있고, d로 암호화를 하면 e로 풀수 있다.</p><h2 id=보안성 class=headerLink><a href=#%eb%b3%b4%ec%95%88%ec%84%b1 class=header-mark></a>보안성</h2><p>위의 식에서 외부로 공개되는 값은 모듈로 n 과 공개키 e 이다.</p><p>e를 이용하여 d를 얻고 싶으면 다음 공식의 $\Phi(n)$ 을 모르는 이상 구하기가 쉽지 않다 (이산대수 문제).</p><p>$$ e \cdot d = 1 \mod {\Phi(n)}$$</p><p>그러면 n에서 두개의 소수 p, q를 찾으면 $\Phi(n)$ 을 아래 처럼 구할 수 있는데, 이것도 큰 수의 소인수분해 문제로 아주아주 큰 수 인 경우 소인수분해를 하는 것은 실제적으로 불가능하다.</p><p>$$
 \Phi(n) = (p - 1) \cdot (q - 1)
-$$</p><h2 id=openssl로-확인 class=headerLink><a href=#openssl%eb%a1%9c-%ed%99%95%ec%9d%b8 class=header-mark></a>OpenSSL로 확인</h2><p>OpenSSL utility 로 이를 확인해 보면 다음과 같다.</p><p>우선 다음과 같이 하여 개인키를 생성할 수 있다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
-</span><span class=lnt>2
-</span><span class=lnt>3
-</span><span class=lnt>4
-</span><span class=lnt>5
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ openssl genrsa -out private.pem <span class=m>2048</span>
+$$</p><h2 id=openssl로-확인 class=headerLink><a href=#openssl%eb%a1%9c-%ed%99%95%ec%9d%b8 class=header-mark></a>OpenSSL로 확인</h2><p>OpenSSL utility 로 이를 확인해 보면 다음과 같다.</p><p>우선 다음과 같이 하여 개인키를 생성할 수 있다.</p><div class="code-block highlight is-open show-line-numbers tw-group tw-my-2"><div class="code-block-title
+tw-flex
+tw-flex-row
+tw-justify-between
+tw-w-full tw-bg-bgColor-secondary"><button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-rotate-90
+tw-transition-[transform]
+tw-duration-500
+tw-ease-in-out
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></button><div class="code-block-title-bar tw-w-full"><p class="tw-select-none !tw-my-1">shell</p></div><div class=tw-flex><button class="line-number-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.show-line-numbers]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.is-wrap]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+hover:tw-text-fgColor-link
+print:!tw-hidden" title="Copy code">
+<span class="copy-icon tw-block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw-hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-hidden
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw-block tw-m-0 tw-p-0"><code id=codeblock-id-1 class="chroma
+!tw-block
+tw-p-0
+tw-m-0
+tw-transition-[max-height]
+tw-duration-500
+tw-ease-in-out
+group-[.is-closed]:!tw-max-h-0
+group-[.is-wrap]:tw-text-wrap
+tw-overflow-y-hidden
+tw-overflow-x-auto
+tw-scrollbar-thin"><span class=line><span class=cl>$ openssl genrsa -out private.pem <span class=m>2048</span>
 </span></span><span class=line><span class=cl>Generating RSA private key, <span class=m>2048</span> bit long modulus <span class=o>(</span><span class=m>2</span> primes<span class=o>)</span>
 </span></span><span class=line><span class=cl>........................................+++++
 </span></span><span class=line><span class=cl>..............................................................................................+++++
-</span></span><span class=line><span class=cl>e is <span class=m>65537</span> <span class=o>(</span>0x010001<span class=o>)</span>
-</span></span></code></pre></td></tr></table></div></div><p>생성된 PEM 파일은 다음과 같이 확인할 수 있다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
-</span><span class=lnt> 2
-</span><span class=lnt> 3
-</span><span class=lnt> 4
-</span><span class=lnt> 5
-</span><span class=lnt> 6
-</span><span class=lnt> 7
-</span><span class=lnt> 8
-</span><span class=lnt> 9
-</span><span class=lnt>10
-</span><span class=lnt>11
-</span><span class=lnt>12
-</span><span class=lnt>13
-</span><span class=lnt>14
-</span><span class=lnt>15
-</span><span class=lnt>16
-</span><span class=lnt>17
-</span><span class=lnt>18
-</span><span class=lnt>19
-</span><span class=lnt>20
-</span><span class=lnt>21
-</span><span class=lnt>22
-</span><span class=lnt>23
-</span><span class=lnt>24
-</span><span class=lnt>25
-</span><span class=lnt>26
-</span><span class=lnt>27
-</span><span class=lnt>28
-</span><span class=lnt>29
-</span><span class=lnt>30
-</span><span class=lnt>31
-</span><span class=lnt>32
-</span><span class=lnt>33
-</span><span class=lnt>34
-</span><span class=lnt>35
-</span><span class=lnt>36
-</span><span class=lnt>37
-</span><span class=lnt>38
-</span><span class=lnt>39
-</span><span class=lnt>40
-</span><span class=lnt>41
-</span><span class=lnt>42
-</span><span class=lnt>43
-</span><span class=lnt>44
-</span><span class=lnt>45
-</span><span class=lnt>46
-</span><span class=lnt>47
-</span><span class=lnt>48
-</span><span class=lnt>49
-</span><span class=lnt>50
-</span><span class=lnt>51
-</span><span class=lnt>52
-</span><span class=lnt>53
-</span><span class=lnt>54
-</span><span class=lnt>55
-</span><span class=lnt>56
-</span><span class=lnt>57
-</span><span class=lnt>58
-</span><span class=lnt>59
-</span><span class=lnt>60
-</span><span class=lnt>61
-</span><span class=lnt>62
-</span><span class=lnt>63
-</span><span class=lnt>64
-</span><span class=lnt>65
-</span><span class=lnt>66
-</span><span class=lnt>67
-</span><span class=lnt>68
-</span><span class=lnt>69
-</span><span class=lnt>70
-</span><span class=lnt>71
-</span><span class=lnt>72
-</span><span class=lnt>73
-</span><span class=lnt>74
-</span><span class=lnt>75
-</span><span class=lnt>76
-</span><span class=lnt>77
-</span><span class=lnt>78
-</span><span class=lnt>79
-</span><span class=lnt>80
-</span><span class=lnt>81
-</span><span class=lnt>82
-</span><span class=lnt>83
-</span><span class=lnt>84
-</span><span class=lnt>85
-</span><span class=lnt>86
-</span><span class=lnt>87
-</span><span class=lnt>88
-</span><span class=lnt>89
-</span><span class=lnt>90
-</span><span class=lnt>91
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>openssl rsa -in private.pem -text -noout
+</span></span><span class=line><span class=cl>e is <span class=m>65537</span> <span class=o>(</span>0x010001<span class=o>)</span></span></span></code></pre></div><p>생성된 PEM 파일은 다음과 같이 확인할 수 있다.</p><div class="code-block highlight is-closed show-line-numbers tw-group tw-my-2"><div class="code-block-title
+tw-flex
+tw-flex-row
+tw-justify-between
+tw-w-full tw-bg-bgColor-secondary"><button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-rotate-90
+tw-transition-[transform]
+tw-duration-500
+tw-ease-in-out
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></button><div class="code-block-title-bar tw-w-full"><p class="tw-select-none !tw-my-1">shell</p></div><div class=tw-flex><button class="line-number-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.show-line-numbers]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.is-wrap]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+hover:tw-text-fgColor-link
+print:!tw-hidden" title="Copy code">
+<span class="copy-icon tw-block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw-hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-hidden
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw-block tw-m-0 tw-p-0"><code id=codeblock-id-2 class="chroma
+!tw-block
+tw-p-0
+tw-m-0
+tw-transition-[max-height]
+tw-duration-500
+tw-ease-in-out
+group-[.is-closed]:!tw-max-h-0
+group-[.is-wrap]:tw-text-wrap
+tw-overflow-y-hidden
+tw-overflow-x-auto
+tw-scrollbar-thin"><span class=line><span class=cl>openssl rsa -in private.pem -text -noout
 </span></span><span class=line><span class=cl>RSA Private-Key: <span class=o>(</span><span class=m>2048</span> bit, <span class=m>2</span> primes<span class=o>)</span>
 </span></span><span class=line><span class=cl>modulus:
 </span></span><span class=line><span class=cl>    00:cb:cb:a0:cf:9a:0e:14:8c:61:fa:5e:ae:f3:e4:
@@ -226,33 +228,57 @@ $$</p><h2 id=openssl로-확인 class=headerLink><a href=#openssl%eb%a1%9c-%ed%99
 </span></span><span class=line><span class=cl>    f9:c5:11:88:1c:cc:2b:9d:5f:48:95:fd:b8:7a:77:
 </span></span><span class=line><span class=cl>    7f:1a:3b:b5:96:05:e4:9c:1f:48:3f:a3:bc:e3:40:
 </span></span><span class=line><span class=cl>    ad:9c:67:4e:78:03:36:39:15:fb:6a:b9:1b:34:98:
-</span></span><span class=line><span class=cl>    31:15:83:2d:ab:81:ff:66
-</span></span></code></pre></td></tr></table></div></div><p>각각의 필드는 다음과 같다.</p><ul><li><strong>prime1</strong>, <strong>prime2</strong>: 소수 p와 q를 말한다. 두 수의 비트를 보면 총 앞의 &lsquo;00:&rsquo; 을 제외하면 1024bit (128bytes) 이다.</li><li><strong>modulus</strong>: $n = p \cdot q$를 말한다. 길이는 2048bit (256bytes) 이다.</li><li><strong>publicExponent</strong>: 공개키인 e 를 말한다. 일반적인 경우 공개키는 65537 (0x10001) 와 같은 고정된 값을 사용한다.</li><li><strong>privateExponent</strong>: 개인키인 d 를 말한다. 2048bit (256bytes) 에 가까운 값이 된다.</li><li><strong>exponent1</strong>, <strong>exponent2</strong>, <strong>coefficient</strong>: <a href=https://en.wikipedia.org/wiki/RSA_%28cryptosystem%29#Using_the_Chinese_remainder_algorithm target=_blank rel="noopener noreferrer">중국인의 나머지 정리</a>에 따라 성능 빠른 연산을 위한 추가적인 파라메타들 이다.</li></ul><p>공개키 (publicExponent)가 짧은 것은, 서명 용도로 사용할 때 특히나 장점이 될 수 있다.</p><ul><li>암호화 용도로 사용할 때에도 private 키에는 추가적인 parameter가 있어, 공개키만 알고 있는 사람에 비하여 빠른 연산이 가능하다.</li><li>서명 용도로 사용할 때는 서명자가 1회 서명한 문서를, 다수의 사람들이 필요한 시점에 매번 검증을 하는 경우가 많다(인증서 서명 검증용). 이 경우 다수의 사람들이 검증을 할때 연산량을 줄일 수 가 있다.</li></ul><p>개인키 파일에서 공개키 파일은 다음과 같이 생성할 수 있다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
-</span><span class=lnt> 2
-</span><span class=lnt> 3
-</span><span class=lnt> 4
-</span><span class=lnt> 5
-</span><span class=lnt> 6
-</span><span class=lnt> 7
-</span><span class=lnt> 8
-</span><span class=lnt> 9
-</span><span class=lnt>10
-</span><span class=lnt>11
-</span><span class=lnt>12
-</span><span class=lnt>13
-</span><span class=lnt>14
-</span><span class=lnt>15
-</span><span class=lnt>16
-</span><span class=lnt>17
-</span><span class=lnt>18
-</span><span class=lnt>19
-</span><span class=lnt>20
-</span><span class=lnt>21
-</span><span class=lnt>22
-</span><span class=lnt>23
-</span><span class=lnt>24
-</span><span class=lnt>25
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ openssl rsa  -in private.pem -out public.pem -pubout
+</span></span><span class=line><span class=cl>    31:15:83:2d:ab:81:ff:66</span></span></code></pre></div><p>각각의 필드는 다음과 같다.</p><ul><li><strong>prime1</strong>, <strong>prime2</strong>: 소수 p와 q를 말한다. 두 수의 비트를 보면 총 앞의 &lsquo;00:&rsquo; 을 제외하면 1024bit (128bytes) 이다.</li><li><strong>modulus</strong>: $n = p \cdot q$를 말한다. 길이는 2048bit (256bytes) 이다.</li><li><strong>publicExponent</strong>: 공개키인 e 를 말한다. 일반적인 경우 공개키는 65537 (0x10001) 와 같은 고정된 값을 사용한다.</li><li><strong>privateExponent</strong>: 개인키인 d 를 말한다. 2048bit (256bytes) 에 가까운 값이 된다.</li><li><strong>exponent1</strong>, <strong>exponent2</strong>, <strong>coefficient</strong>: <a href=https://en.wikipedia.org/wiki/RSA_%28cryptosystem%29#Using_the_Chinese_remainder_algorithm target=_blank rel="noopener noreferrer">중국인의 나머지 정리</a>에 따라 성능 빠른 연산을 위한 추가적인 파라메타들 이다.</li></ul><p>공개키 (publicExponent)가 짧은 것은, 서명 용도로 사용할 때 특히나 장점이 될 수 있다.</p><ul><li>암호화 용도로 사용할 때에도 private 키에는 추가적인 parameter가 있어, 공개키만 알고 있는 사람에 비하여 빠른 연산이 가능하다.</li><li>서명 용도로 사용할 때는 서명자가 1회 서명한 문서를, 다수의 사람들이 필요한 시점에 매번 검증을 하는 경우가 많다(인증서 서명 검증용). 이 경우 다수의 사람들이 검증을 할때 연산량을 줄일 수 가 있다.</li></ul><p>개인키 파일에서 공개키 파일은 다음과 같이 생성할 수 있다.</p><div class="code-block highlight is-open show-line-numbers tw-group tw-my-2"><div class="code-block-title
+tw-flex
+tw-flex-row
+tw-justify-between
+tw-w-full tw-bg-bgColor-secondary"><button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-rotate-90
+tw-transition-[transform]
+tw-duration-500
+tw-ease-in-out
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></button><div class="code-block-title-bar tw-w-full"><p class="tw-select-none !tw-my-1">shell</p></div><div class=tw-flex><button class="line-number-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.show-line-numbers]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.is-wrap]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+hover:tw-text-fgColor-link
+print:!tw-hidden" title="Copy code">
+<span class="copy-icon tw-block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw-hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-hidden
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw-block tw-m-0 tw-p-0"><code id=codeblock-id-3 class="chroma
+!tw-block
+tw-p-0
+tw-m-0
+tw-transition-[max-height]
+tw-duration-500
+tw-ease-in-out
+group-[.is-closed]:!tw-max-h-0
+group-[.is-wrap]:tw-text-wrap
+tw-overflow-y-hidden
+tw-overflow-x-auto
+tw-scrollbar-thin"><span class=line><span class=cl>$ openssl rsa  -in private.pem -out public.pem -pubout
 </span></span><span class=line><span class=cl>writing RSA key
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>$ openssl rsa -in public.pem -pubin -text -noout
@@ -276,34 +302,115 @@ $$</p><h2 id=openssl로-확인 class=headerLink><a href=#openssl%eb%a1%9c-%ed%99
 </span></span><span class=line><span class=cl>    69:d3:73:75:fa:83:b9:e3:b7:4f:c5:bc:f0:d2:c1:
 </span></span><span class=line><span class=cl>    0f:80:34:30:3e:0d:bf:dc:3e:4c:60:1b:ee:2a:2a:
 </span></span><span class=line><span class=cl>    bb:8b
-</span></span><span class=line><span class=cl>Exponent: <span class=m>65537</span> <span class=o>(</span>0x10001<span class=o>)</span>
-</span></span></code></pre></td></tr></table></div></div><p>위와 같이 Modulus와 Public Exponent만 추출된 것을 확인할 수 있다.</p><p>다음과 같이 몇개의 경우를 암호화 복호화 해보자.</p><p>RSA-2048은 256bytes(2048bit)의 데이타를 2048bit의 큰 숫자로 생각하고, RSA 연산을 수행하는 것이다.
-우선 0으로 패딩된 데이타를 암호화 해보자.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
-</span><span class=lnt>2
-</span><span class=lnt>3
-</span><span class=lnt>4
-</span><span class=lnt>5
-</span><span class=lnt>6
-</span><span class=lnt>7
-</span><span class=lnt>8
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ dd <span class=k>if</span><span class=o>=</span>/dev/zero <span class=k>if</span><span class=o>=</span>zeros.bin <span class=nv>bs</span><span class=o>=</span><span class=m>256</span> <span class=nv>count</span><span class=o>=</span><span class=m>1</span>
+</span></span><span class=line><span class=cl>Exponent: <span class=m>65537</span> <span class=o>(</span>0x10001<span class=o>)</span></span></span></code></pre></div><p>위와 같이 Modulus와 Public Exponent만 추출된 것을 확인할 수 있다.</p><p>다음과 같이 몇개의 경우를 암호화 복호화 해보자.</p><p>RSA-2048은 256bytes(2048bit)의 데이타를 2048bit의 큰 숫자로 생각하고, RSA 연산을 수행하는 것이다.
+우선 0으로 패딩된 데이타를 암호화 해보자.</p><div class="code-block highlight is-open show-line-numbers tw-group tw-my-2"><div class="code-block-title
+tw-flex
+tw-flex-row
+tw-justify-between
+tw-w-full tw-bg-bgColor-secondary"><button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-rotate-90
+tw-transition-[transform]
+tw-duration-500
+tw-ease-in-out
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></button><div class="code-block-title-bar tw-w-full"><p class="tw-select-none !tw-my-1">shell</p></div><div class=tw-flex><button class="line-number-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.show-line-numbers]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.is-wrap]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+hover:tw-text-fgColor-link
+print:!tw-hidden" title="Copy code">
+<span class="copy-icon tw-block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw-hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-hidden
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw-block tw-m-0 tw-p-0"><code id=codeblock-id-4 class="chroma
+!tw-block
+tw-p-0
+tw-m-0
+tw-transition-[max-height]
+tw-duration-500
+tw-ease-in-out
+group-[.is-closed]:!tw-max-h-0
+group-[.is-wrap]:tw-text-wrap
+tw-overflow-y-hidden
+tw-overflow-x-auto
+tw-scrollbar-thin"><span class=line><span class=cl>$ dd <span class=k>if</span><span class=o>=</span>/dev/zero <span class=k>if</span><span class=o>=</span>zeros.bin <span class=nv>bs</span><span class=o>=</span><span class=m>256</span> <span class=nv>count</span><span class=o>=</span><span class=m>1</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>$ openssl rsautl -encrypt -raw -in zeros.bin -out enc.bin -pubin -inkey public.pem
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>$ hexdump -v enc.bin
 </span></span><span class=line><span class=cl><span class=m>0000000</span> <span class=m>0000</span> <span class=m>0000</span> <span class=m>0000</span> <span class=m>0000</span> <span class=m>0000</span> <span class=m>0000</span> <span class=m>0000</span> <span class=m>0000</span>
 </span></span><span class=line><span class=cl>...
-</span></span><span class=line><span class=cl>00000f0 <span class=m>0000</span> <span class=m>0000</span> <span class=m>0000</span> <span class=m>0000</span> <span class=m>0000</span> <span class=m>0000</span> <span class=m>0000</span> <span class=m>0000</span>
-</span></span></code></pre></td></tr></table></div></div><p>암호화한 데이타도 원본과 동일하게 0이다.</p><p>마찬가지로 1을 가진 값도 암호화를 해보면 그 자신이 된다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
-</span><span class=lnt>2
-</span><span class=lnt>3
-</span><span class=lnt>4
-</span><span class=lnt>5
-</span><span class=lnt>6
-</span><span class=lnt>7
-</span><span class=lnt>8
-</span><span class=lnt>9
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ &lt; /dev/zero tr <span class=s1>&#39;\000&#39;</span> <span class=s1>&#39;\001&#39;</span> <span class=p>|</span> head -c <span class=m>1</span> &gt; one.bin
+</span></span><span class=line><span class=cl>00000f0 <span class=m>0000</span> <span class=m>0000</span> <span class=m>0000</span> <span class=m>0000</span> <span class=m>0000</span> <span class=m>0000</span> <span class=m>0000</span> <span class=m>0000</span></span></span></code></pre></div><p>암호화한 데이타도 원본과 동일하게 0이다.</p><p>마찬가지로 1을 가진 값도 암호화를 해보면 그 자신이 된다.</p><div class="code-block highlight is-open show-line-numbers tw-group tw-my-2"><div class="code-block-title
+tw-flex
+tw-flex-row
+tw-justify-between
+tw-w-full tw-bg-bgColor-secondary"><button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-rotate-90
+tw-transition-[transform]
+tw-duration-500
+tw-ease-in-out
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></button><div class="code-block-title-bar tw-w-full"><p class="tw-select-none !tw-my-1">shell</p></div><div class=tw-flex><button class="line-number-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.show-line-numbers]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.is-wrap]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+hover:tw-text-fgColor-link
+print:!tw-hidden" title="Copy code">
+<span class="copy-icon tw-block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw-hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-hidden
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw-block tw-m-0 tw-p-0"><code id=codeblock-id-5 class="chroma
+!tw-block
+tw-p-0
+tw-m-0
+tw-transition-[max-height]
+tw-duration-500
+tw-ease-in-out
+group-[.is-closed]:!tw-max-h-0
+group-[.is-wrap]:tw-text-wrap
+tw-overflow-y-hidden
+tw-overflow-x-auto
+tw-scrollbar-thin"><span class=line><span class=cl>$ &lt; /dev/zero tr <span class=s1>&#39;\000&#39;</span> <span class=s1>&#39;\001&#39;</span> <span class=p>|</span> head -c <span class=m>1</span> &gt; one.bin
 </span></span><span class=line><span class=cl>$ dd <span class=k>if</span><span class=o>=</span>/dev/zero <span class=nv>of</span><span class=o>=</span>ones.bin  <span class=nv>bs</span><span class=o>=</span><span class=m>255</span> <span class=nv>count</span><span class=o>=</span><span class=m>1</span>
 </span></span><span class=line><span class=cl>$ cat one.bin &gt;&gt; ones.bin
 </span></span><span class=line><span class=cl>
@@ -311,11 +418,24 @@ $$</p><h2 id=openssl로-확인 class=headerLink><a href=#openssl%eb%a1%9c-%ed%99
 </span></span><span class=line><span class=cl>$ hexdump -v -C enc.bin
 </span></span><span class=line><span class=cl><span class=m>00000000</span>  <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>00</span>  <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>00</span>  <span class=p>|</span>................<span class=p>|</span>
 </span></span><span class=line><span class=cl>...
-</span></span><span class=line><span class=cl>000000f0  <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>00</span>  <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>01</span>  <span class=p>|</span>................<span class=p>|</span>
-</span></span></code></pre></td></tr></table></div></div><p>이유는 RSA 의 모듈러 지수연산의 특성 상 0 이나 1을 지수연산 해보아도 그 자신이 되기 때문이다.</p><p>이외에도 RSA는 HASH나 AES와 같이 암호화 결과가 랜덤 특성을 가지지 못하므로, 중복 가능성이 높은 일반 평문 텍스트 문장을 RSA로 암호화를 하는 경우 분석적인 공격에 의하여 뚫릴 가능성도 높아진다.</p><p>RSA는 이와 같은 약점을 가지고 있으므로 텍스트 문장을 암호화 하는 용도로는 사용하지 않는다. 다만 이런 경우에는 <a href=https://en.wikipedia.org/wiki/Optimal_asymmetric_encryption_padding target=_blank rel="noopener noreferrer">OEAP, PKCS#1</a> 패딩을 추가하여 사용한다. 위 rsautl을 사용하여 암호화 할 때 -raw 옵션을 제외하면 <a href=https://datatracker.ietf.org/doc/html/rfc2313 target=_blank rel="noopener noreferrer">PKCS#1 v1.5</a> 방법을 이용하여 패딩한다.</p><p>RSA를 암호화 용도로 사용하는 경우 다음 룰을 따라야 한다.</p><ul><li>RSA로는 일반 텍스트 문장을 암호화 하지 않고, hash, 임시 키 등의 random 특성을 가진 데이타를 암호화는 용도로만 사용한다.</li><li>텍스트를 암호화 하기 위하여는 RSA로 임시 비밀키를 전달하여 이를 사용하여 AES 등으로 대칭키 알고리즘으로 암호화 한다.</li></ul><p>참고로 RSA와 같은 비대칭키 알고리즘인 ECC(Elliptic Curve Cryptography)의 경우에는 이와 같은 암호/복호화 용도로는 기능을 제공하지 않는다. Diffie-Hellman 방식의 키교환 ECDH 이나, 서명용 ECDSA 와 같은 용도로만 사용한다.</p><h2 id=정리 class=headerLink><a href=#%ec%a0%95%eb%a6%ac class=header-mark></a>정리</h2><p>이상으로 RSA를 사용한 암호화/복호화 방법에 대하여 정리하였다.</p><p><a href=https://blog.humminglab.io/posts/tls-cryptography-3-block-cipher/#KeyLength rel>암호화 키 길이</a>에 정리한 것과 같이 인수분해 문제를 이용한 RSA는 AES 와 같은 것에 비하여 암호 강도가 낮다. 현재 기술로 AES-128 은 아직은 안전하다고 볼수 있는데, 이를 만족할만한 것은 RSA-3072 이상이 되어야 한다.</p><p>아직은 일반적인 경우 RSA-2048 을 많이 사용되나, 최근에는 RSA-4096 이상도 사용하는 경우가 있다.</p><p>이와 같이 키가 길어지면 작은 메모리를 가진 IoT 기기에서 사용 시 문제가 될 수도 있다.
+</span></span><span class=line><span class=cl>000000f0  <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>00</span>  <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>00</span> <span class=m>01</span>  <span class=p>|</span>................<span class=p>|</span></span></span></code></pre></div><p>이유는 RSA 의 모듈러 지수연산의 특성 상 0 이나 1을 지수연산 해보아도 그 자신이 되기 때문이다.</p><p>이외에도 RSA는 HASH나 AES와 같이 암호화 결과가 랜덤 특성을 가지지 못하므로, 중복 가능성이 높은 일반 평문 텍스트 문장을 RSA로 암호화를 하는 경우 분석적인 공격에 의하여 뚫릴 가능성도 높아진다.</p><p>RSA는 이와 같은 약점을 가지고 있으므로 텍스트 문장을 암호화 하는 용도로는 사용하지 않는다. 다만 이런 경우에는 <a href=https://en.wikipedia.org/wiki/Optimal_asymmetric_encryption_padding target=_blank rel="noopener noreferrer">OEAP, PKCS#1</a> 패딩을 추가하여 사용한다. 위 rsautl을 사용하여 암호화 할 때 -raw 옵션을 제외하면 <a href=https://datatracker.ietf.org/doc/html/rfc2313 target=_blank rel="noopener noreferrer">PKCS#1 v1.5</a> 방법을 이용하여 패딩한다.</p><p>RSA를 암호화 용도로 사용하는 경우 다음 룰을 따라야 한다.</p><ul><li>RSA로는 일반 텍스트 문장을 암호화 하지 않고, hash, 임시 키 등의 random 특성을 가진 데이타를 암호화는 용도로만 사용한다.</li><li>텍스트를 암호화 하기 위하여는 RSA로 임시 비밀키를 전달하여 이를 사용하여 AES 등으로 대칭키 알고리즘으로 암호화 한다.</li></ul><p>참고로 RSA와 같은 비대칭키 알고리즘인 ECC(Elliptic Curve Cryptography)의 경우에는 이와 같은 암호/복호화 용도로는 기능을 제공하지 않는다. Diffie-Hellman 방식의 키교환 ECDH 이나, 서명용 ECDSA 와 같은 용도로만 사용한다.</p><h2 id=정리 class=headerLink><a href=#%ec%a0%95%eb%a6%ac class=header-mark></a>정리</h2><p>이상으로 RSA를 사용한 암호화/복호화 방법에 대하여 정리하였다.</p><p><a href=https://blog.humminglab.io/posts/tls-cryptography-3-block-cipher/#KeyLength rel>암호화 키 길이</a>에 정리한 것과 같이 인수분해 문제를 이용한 RSA는 AES 와 같은 것에 비하여 암호 강도가 낮다. 현재 기술로 AES-128 은 아직은 안전하다고 볼수 있는데, 이를 만족할만한 것은 RSA-3072 이상이 되어야 한다.</p><p>아직은 일반적인 경우 RSA-2048 을 많이 사용되나, 최근에는 RSA-4096 이상도 사용하는 경우가 있다.</p><p>이와 같이 키가 길어지면 작은 메모리를 가진 IoT 기기에서 사용 시 문제가 될 수도 있다.
 뒤에서 다시 설명하지만, 보통은 공개키는 상위기관의 서명이 포함된 인증서 형태로 가지고 있게 된다.</p><p>IoT 기기에서는 최소한 루트인증서를 저장하여야 하는데, RSA-4096 인 경우 인증서의 modulus 길이가 4096bit(512bytes)가 된다.
 이외에도 인증서가 체인으로 엮여 있는 경우 외부 기기와 통신을 위하여는 해당 인증서를 모두 통신 채널로 전달하여야 한다.
 예를 들어 3단계 인증이 되어 있다면 각 공개키의 modulus의 길이만 1,532bytes가 된다.
-이를 BLE, Zigbee, LoRA 등의 저속 통신 프로토콜을 이용하는 경우 이 전송 비용도 만만치 않게 된다.</p><p>이런 이유로 점차적으로 타원알고리즘(EC)을 적용한 암호화 시스템을 IoT 기기에서는 많이 사용하는 편이나, 일반 웹 서비스의 경우에는 아직은 기존에 오랜 기간 사용하였던 RSA 서명 시스템을 많이 사용한다.</p></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>Updated on 2022-03-21</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href></a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span></section></div><div class=post-nav><a href=/posts/tls-cryptography-7-diffie-hellman/ class=prev rel=prev title="TLS/암호 알고리즘 쉽게 이해하기(7) - Diffie-Hellman Key Exchange"><i class="fas fa-angle-left fa-fw"></i>TLS/암호 알고리즘 쉽게 이해하기(7) - Diffie-Hellman Key Exchange</a>
-<a href=/posts/tls-cryptography-9-dsa/ class=next rel=next title="TLS/암호 알고리즘 쉽게 이해하기(9) - Digital Signature">TLS/암호 알고리즘 쉽게 이해하기(9) - Digital Signature<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=giscus></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://giscus.app/>giscus</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2024</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://www.humminglab.io target=_blank rel="noopener noreferrer">HummingLab</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div><div class=footer-line></div><div class=footer-line></div></div></footer></div><div id=fixed-buttons><a href=#back-to-top id=back-to-top-button class=fixed-button title="Back to Top"><i class="fas fa-arrow-up fa-fw"></i>
-</a><a href=# id=view-comments class=fixed-button title="View Comments"><i class="fas fa-comment fa-fw"></i></a></div><div class=assets><link rel=stylesheet href=/lib/katex/katex.min.css><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/katex/copy-tex.min.css><noscript><link rel=stylesheet href=/lib/katex/copy-tex.min.css></noscript><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataInputPosition:"bottom",dataLang:"en",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",dataStrict:"0",lightTheme:"light"}},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1}}</script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js defer></script><script type=text/javascript src=/lib/katex/auto-render.min.js defer></script><script type=text/javascript src=/lib/katex/copy-tex.min.js defer></script><script type=text/javascript src=/lib/katex/mhchem.min.js defer></script><script type=text/javascript src=/js/katex.min.js defer></script><script type=text/javascript src=/js/theme.min.js defer></script><script type=text/javascript src=/js/giscus.min.js defer></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","UA-83257319-3",{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=UA-83257319-3" async></script></div></body></html>
+이를 BLE, Zigbee, LoRA 등의 저속 통신 프로토콜을 이용하는 경우 이 전송 비용도 만만치 않게 된다.</p><p>이런 이유로 점차적으로 타원알고리즘(EC)을 적용한 암호화 시스템을 IoT 기기에서는 많이 사용하는 편이나, 일반 웹 서비스의 경우에는 아직은 기존에 오랜 기간 사용하였던 RSA 서명 시스템을 많이 사용한다.</p></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>Updated on 2022-03-21</span></div><div class=post-info-license></div></div><div class="post-info-line print:!tw-hidden"><div class=post-info-md></div><div class=post-info-share></div></div></div><div class=post-info-more><section class=post-tags><svg class="icon" viewBox="0 0 640 512"><path d="M497.941 225.941 286.059 14.059A48 48 0 00252.118.0H48C21.49.0.0 21.49.0 48v204.118a48 48 0 0014.059 33.941l211.882 211.882c18.744 18.745 49.136 18.746 67.882.0l204.118-204.118c18.745-18.745 18.745-49.137.0-67.882zM112 160c-26.51.0-48-21.49-48-48s21.49-48 48-48 48 21.49 48 48-21.49 48-48 48zm513.941 133.823L421.823 497.941c-18.745 18.745-49.137 18.745-67.882.0l-.36-.36L527.64 323.522c16.999-16.999 26.36-39.6 26.36-63.64s-9.362-46.641-26.36-63.64L331.397.0h48.721a48 48 0 0133.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137.0 67.882z"/></svg>&nbsp;<a href></a></section><section class=print:!tw-hidden><span><button class="tw-text-fgColor-link-muted hover:tw-text-fgColor-link-muted-hover" onclick=window.history.back()>Back</button></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span></section></div><div class="post-nav print:tw-hidden"><a href=/posts/tls-cryptography-7-diffie-hellman/ class=prev rel=prev title="TLS/암호 알고리즘 쉽게 이해하기(7) - Diffie-Hellman Key Exchange"><svg class="icon" viewBox="0 0 256 512"><path d="M31.7 239l136-136c9.4-9.4 24.6-9.4 33.9.0l22.6 22.6c9.4 9.4 9.4 24.6.0 33.9L127.9 256l96.4 96.4c9.4 9.4 9.4 24.6.0 33.9L201.7 409c-9.4 9.4-24.6 9.4-33.9.0l-136-136c-9.5-9.4-9.5-24.6-.1-34z"/></svg>TLS/암호 알고리즘 쉽게 이해하기(7) - Diffie-Hellman Key Exchange</a>
+<a href=/posts/tls-cryptography-9-dsa/ class=next rel=next title="TLS/암호 알고리즘 쉽게 이해하기(9) - Digital Signature">TLS/암호 알고리즘 쉽게 이해하기(9) - Digital Signature<svg class="icon" viewBox="0 0 256 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9.0l-22.6-22.6c-9.4-9.4-9.4-24.6.0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6.0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9.0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg></a></div></div><div id=comments class="print:!tw-hidden tw-pt-32 tw-pb-8"><div id=giscus></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://giscus.app/>giscus</a>.</noscript></div></article></main><footer class=footer><div class=footer-container><div class=footer-line><svg class="icon" viewBox="0 0 512 512"><path d="M256 8C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm0 448c-110.532.0-2e2-89.451-2e2-2e2.0-110.531 89.451-2e2 2e2-2e2 110.532.0 2e2 89.451 2e2 2e2.0 110.532-89.451 2e2-2e2 2e2zm107.351-101.064c-9.614 9.712-45.53 41.396-104.065 41.396-82.43.0-140.484-61.425-140.484-141.567.0-79.152 60.275-139.401 139.762-139.401 55.531.0 88.738 26.62 97.593 34.779a11.965 11.965.0 011.936 15.322l-18.155 28.113c-3.841 5.95-11.966 7.282-17.499 2.921-8.595-6.776-31.814-22.538-61.708-22.538-48.303.0-77.916 35.33-77.916 80.082.0 41.589 26.888 83.692 78.277 83.692 32.657.0 56.843-19.039 65.726-27.225 5.27-4.857 13.596-4.039 17.82 1.738l19.865 27.17a11.947 11.947.0 01-1.152 15.518z"/></svg>2025<span class=author>&nbsp;<a href=https://www.humminglab.io target=_blank rel="noopener noreferrer">HummingLab</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div><div class=footer-line></div><div class=footer-line></div></div></footer><div class="print:!tw-hidden tw-flex tw-flex-col tw-fixed tw-right-4 tw-bottom-4 tw-gap-2"><a href=#back-to-top id=back-to-top-button class="tw-transition-opacity tw-opacity-0 tw-block tw-bg-bgColor-secondary tw-rounded-full" style=padding:.6rem;line-height:1.3rem;font-size:1rem title="Back to Top"><svg class="icon" viewBox="0 0 448 512"><path d="M34.9 289.5l-22.2-22.2c-9.4-9.4-9.4-24.6.0-33.9L207 39c9.4-9.4 24.6-9.4 33.9.0l194.3 194.3c9.4 9.4 9.4 24.6.0 33.9L413 289.4c-9.5 9.5-25 9.3-34.3-.4L264 168.6V456c0 13.3-10.7 24-24 24h-32c-13.3.0-24-10.7-24-24V168.6L69.2 289.1c-9.3 9.8-24.8 10-34.3.4z"/></svg>
+</a><button id=toc-drawer-button class="tw-block tw-bg-bgColor-secondary tw-rounded-full md:tw-hidden" style=padding:.6rem;line-height:1.3rem;font-size:1rem>
+<svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg>
+</button><a href=#comments id=view-comments class="tw-block tw-bg-bgColor-secondary tw-rounded-full" style=padding:.6rem;line-height:1.3rem;font-size:1rem title="View Comments"><svg class="icon" viewBox="0 0 512 512"><path d="M256 32C114.6 32 0 125.1.0 240c0 49.6 21.4 95 57 130.7C44.5 421.1 2.7 466 2.2 466.5c-2.2 2.3-2.8 5.7-1.5 8.7S4.8 480 8 480c66.3.0 116-31.8 140.6-51.4 32.7 12.3 69 19.4 107.4 19.4 141.4.0 256-93.1 256-208S397.4 32 256 32z"/></svg></a></div><script type=module>
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: (window.theme === 'dark' ? 'dark' : 'default') });
+</script><link rel=stylesheet href=/lib/katex/katex.min.css><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/katex/copy-tex.min.css><noscript><link rel=stylesheet href=/lib/katex/copy-tex.min.css></noscript><script>window.config={comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataInputPosition:"bottom",dataLang:"en",dataLoading:"lazy",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",dataStrict:"0",lightTheme:"light"}},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1}}</script><script src=/lib/katex/katex.min.js defer></script><script src=/lib/katex/auto-render.min.js defer></script><script src=/lib/katex/copy-tex.min.js defer></script><script src=/lib/katex/mhchem.min.js defer></script><script src=/js/katex.min.js defer></script><script src=/js/theme.min.js defer></script><script src=/js/giscus.min.js defer></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","UA-83257319-3",{anonymize_ip:!0})</script><script src="https://www.googletagmanager.com/gtag/js?id=UA-83257319-3" async></script><script type=speculationrules>
+  {
+    "prerender": [
+      {
+        "where": { "href_matches": "/*" },
+        "eagerness": "moderate"
+      }
+    ]
+  }
+</script></body></html>

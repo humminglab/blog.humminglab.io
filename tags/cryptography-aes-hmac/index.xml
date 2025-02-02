@@ -1,3 +1,29 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Cryptography, AES, HMAC - Tag - All about IoT</title><link>https://blog.humminglab.io/tags/cryptography-aes-hmac/</link><description>Cryptography, AES, HMAC - Tag - All about IoT</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 28 Feb 2022 19:00:00 +0900</lastBuildDate><atom:link href="https://blog.humminglab.io/tags/cryptography-aes-hmac/" rel="self" type="application/rss+xml"/><item><title>TLS/암호 알고리즘 쉽게 이해하기(4) - Block Cipher Mode</title><link>https://blog.humminglab.io/posts/tls-cryptography-4-block-cipher-mode/</link><pubDate>Mon, 28 Feb 2022 19:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/tls-cryptography-4-block-cipher-mode/</guid><description>이전 글의 Block Cipher(블럭암호) 암호화 방법을 그대로 사용하기에는 몇가지 문제가 있다 (아래 내용에서는 AES로 표기하나, 다른 블럭암호 방식에 공통적인 사항이다).
-우선 첫번째 문제는 공격자가 암호키를 몰라도 암호 블럭을 순서를 바꾸어나 다른 내용으로 바꿀 수 있다는 것이다. AES 암호의 경우 128bits(16bytes) 단위로 암호화 되는데, 예를 들어 다음과 같은 거래 정보를 암호화 한다고 해보자.
-1 2 3 4 5 6 7 8 9 10 11 struct { char from[16]; char to[16]; char amount[16]; } transaction; struct transaction tx = { .</description></item></channel></rss>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Cryptography, AES, HMAC - Tag - All about IoT</title><link>https://blog.humminglab.io/tags/cryptography-aes-hmac/</link><description>Cryptography, AES, HMAC - Tag - All about IoT</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>info@humminglab.io (HummingLab)</managingEditor><webMaster>info@humminglab.io (HummingLab)</webMaster><lastBuildDate>Mon, 28 Feb 2022 19:00:00 +0900</lastBuildDate><atom:link href="https://blog.humminglab.io/tags/cryptography-aes-hmac/" rel="self" type="application/rss+xml"/><item><title>TLS/암호 알고리즘 쉽게 이해하기(4) - Block Cipher Mode</title><link>https://blog.humminglab.io/posts/tls-cryptography-4-block-cipher-mode/</link><pubDate>Mon, 28 Feb 2022 19:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/tls-cryptography-4-block-cipher-mode/</guid><description><![CDATA[<p>이전 글의 <a href="https://blog.humminglab.io/posts/tls-cryptography-3-block-cipher/" rel="">Block Cipher(블럭암호)</a> 암호화 방법을 그대로 사용하기에는 몇가지 문제가 있다
+(아래 내용에서는 AES로 표기하나, 다른 블럭암호 방식에 공통적인 사항이다).</p>
+<p>우선 첫번째 문제는 공격자가 암호키를 몰라도 암호 블럭을 순서를 바꾸어나 다른 내용으로 바꿀 수 있다는 것이다.
+AES 암호의 경우 128bits(16bytes) 단위로 암호화 되는데, 예를 들어 다음과 같은 거래 정보를 암호화 한다고 해보자.</p>
+<div class="code-block highlight is-open show-line-numbers  tw-group tw-my-2">
+  <div class="
+    code-block-title 
+    
+    tw-flex 
+    tw-flex-row 
+    tw-justify-between 
+    tw-w-full tw-bg-bgColor-secondary
+    ">      
+    <button 
+      class="
+        tw-select-none 
+        tw-mx-2 
+        tw-block
+        group-[.is-open]:tw-rotate-90
+        tw-transition-[transform] 
+        tw-duration-500 
+        tw-ease-in-out
+        print:!tw-hidden"
+      disabled
+      aria-hidden="true"><svg class="icon"
+    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!-- Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) --><path d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></button>
+
+    <div class="code-block-title-bar tw-w-full">
+      <p class="tw-select-none !tw-my-1">C</p>]]></description></item></channel></rss>

@@ -1,7 +1,32 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Yocto Project 개발하기 - Series - All about IoT</title><link>https://blog.humminglab.io/series/yocto-project-%EA%B0%9C%EB%B0%9C%ED%95%98%EA%B8%B0/</link><description>Yocto Project 개발하기 - Series - All about IoT</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 18 Jan 2022 23:00:00 +0900</lastBuildDate><atom:link href="https://blog.humminglab.io/series/yocto-project-%EA%B0%9C%EB%B0%9C%ED%95%98%EA%B8%B0/" rel="self" type="application/rss+xml"/><item><title>Yocto Project 개발하기(3) - 개발 시 로컬 패키지 관리하기</title><link>https://blog.humminglab.io/posts/yocto-project-on-orange-pi-3/</link><pubDate>Tue, 18 Jan 2022 23:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/yocto-project-on-orange-pi-3/</guid><description>Yocto Project 개발 절차는 기본적으로 이미 개발이 완료된 패키지들의 recipe를 만들고, 이를 bitbake로 전체 이미지를 빌드하는 과정이다.
-하지만 개발 진행 중인 소프트웨어 패키지를 yocto에 추가하고, 이를 계속 수정 개발을 할 때 어떤 방식으로 관리를 할지 고민을 하여야 한다. 여기에서는 이와 같이 개발 중인 패키지를 yocto 에 추가하여 빌드 하는 방법을 알아본다.
-Yocto Project 개발하기(1) - Orange Pi 보드 빌드 Yocto Project 개발하기(2) - Custom Layer 만들기 Yocto Project 개발하기(3) - 개발 시 로컬 패키지 관리하기 Yocto Project 개발하기(4) - Yocto SDK 빌드 Yocto Project 개발하기(5) - Yocto eSDK 이용한 개발 모델 방법들예를 들어 u-boot 를 수정 하는 경우를 예로 들어 보자.</description></item><item><title>Yocto Project 개발하기(2) - Custom Layer 만들기</title><link>https://blog.humminglab.io/posts/yocto-project-on-orange-pi-2/</link><pubDate>Fri, 07 Jan 2022 19:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/yocto-project-on-orange-pi-2/</guid><description>이전 글 에서 meta-sunxi 를 추가하여 orage pi 용으로 빌드를 만들었고, 이번 과정은 project 용으로 meta layer를 만들어서 관리하는 방법을 설명한다.
-실제 개발 과정을 이해하기 좋도록 meta layer 를 만들어 가는 과정을 설명한다.
-Yocto Project 개발하기(1) - Orange Pi 보드 빌드 Yocto Project 개발하기(2) - Custom Layer 만들기 Yocto Project 개발하기(3) - 개발 시 로컬 패키지 관리하기 Yocto Project 개발하기(4) - Yocto SDK 빌드 Yocto Project 개발하기(5) - Yocto eSDK 이용한 개발 모델 Layer 및 machine 생성프로젝트를 sc-gateway 라고 명하고(이름에 특별한 의미는 없음), 이를 layer로 만든다.</description></item><item><title>Yocto Project 개발하기(1) - Orange Pi 보드 빌드</title><link>https://blog.humminglab.io/posts/yocto-project-on-orange-pi-1/</link><pubDate>Thu, 30 Dec 2021 22:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/yocto-project-on-orange-pi-1/</guid><description>이 문서는 Orange Pi Zero 보드에서 Yocto Project를 이용하여 배포본을 만들고, 개별 패키지를 관리하는 방법에 대하여 설명한다.
-설명은 다음과 같이 나누어서 설명을 할 예정이다.
-Yocto Project 개발하기(1) - Orange Pi 보드 빌드 Yocto Project 개발하기(2) - Custom Layer 만들기 Yocto Project 개발하기(3) - 개발 시 로컬 패키지 관리하기 Yocto Project 개발하기(4) - Yocto SDK 빌드 Yocto Project 개발하기(5) - Yocto eSDK 이용한 개발 모델 이 문서에서는 첫번째 과정인 필요한 layer를 추가해서 빌드하여 타겟에 올려서 동작을 확인하는 과정을 설명한다.</description></item></channel></rss>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Yocto Project 개발하기 - Series - All about IoT</title><link>https://blog.humminglab.io/series/yocto-project-%EA%B0%9C%EB%B0%9C%ED%95%98%EA%B8%B0/</link><description>Yocto Project 개발하기 - Series - All about IoT</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>info@humminglab.io (HummingLab)</managingEditor><webMaster>info@humminglab.io (HummingLab)</webMaster><lastBuildDate>Tue, 18 Jan 2022 23:00:00 +0900</lastBuildDate><atom:link href="https://blog.humminglab.io/series/yocto-project-%EA%B0%9C%EB%B0%9C%ED%95%98%EA%B8%B0/" rel="self" type="application/rss+xml"/><item><title>Yocto Project 개발하기(3) - 개발 시 로컬 패키지 관리하기</title><link>https://blog.humminglab.io/posts/yocto-project-on-orange-pi-3/</link><pubDate>Tue, 18 Jan 2022 23:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/yocto-project-on-orange-pi-3/</guid><description><![CDATA[<p>Yocto Project 개발 절차는 기본적으로 이미 개발이 완료된 패키지들의 recipe를 만들고, 이를 bitbake로 전체 이미지를 빌드하는 과정이다.</p>
+<p>하지만 개발 진행 중인 소프트웨어 패키지를 yocto에 추가하고, 이를 계속 수정 개발을 할 때 어떤 방식으로 관리를 할지 고민을 하여야 한다.
+여기에서는 이와 같이 개발 중인 패키지를 yocto 에 추가하여 빌드 하는 방법을 알아본다.</p>
+<ul>
+<li><a href="https://blog.humminglab.io/posts/yocto-project-on-orange-pi-1/" rel="">Yocto Project 개발하기(1) - Orange Pi 보드 빌드</a></li>
+<li><a href="https://blog.humminglab.io/posts/yocto-project-on-orange-pi-2/" rel="">Yocto Project 개발하기(2) - Custom Layer 만들기</a></li>
+<li><strong>Yocto Project 개발하기(3) - 개발 시 로컬 패키지 관리하기</strong></li>
+<li>Yocto Project 개발하기(4) - Yocto SDK 빌드</li>
+<li>Yocto Project 개발하기(5) - Yocto eSDK 이용한 개발 모델</li>
+</ul>
+<h2 id="방법들" class="headerLink">
+    <a href="#%eb%b0%a9%eb%b2%95%eb%93%a4" class="header-mark"></a>방법들</h2><p>예를 들어 u-boot 를 수정 하는 경우를 예로 들어 보자.
+수정되어 commit 된 경우라면 bb(append) recipe만 수정해서 재실행하면 되지만, commit 전에 yocto 에 추가하여 빌드하려면 다음과 같은 방법을 고려해 볼 수 있다.</p>]]></description></item><item><title>Yocto Project 개발하기(2) - Custom Layer 만들기</title><link>https://blog.humminglab.io/posts/yocto-project-on-orange-pi-2/</link><pubDate>Fri, 07 Jan 2022 19:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/yocto-project-on-orange-pi-2/</guid><description><![CDATA[<p><a href="https://blog.humminglab.io/posts/yocto-project-on-orange-pi-1/" rel="">이전 글</a> 에서 meta-sunxi 를 추가하여 orage pi 용으로 빌드를 만들었고, 이번 과정은 project 용으로 meta layer를 만들어서 관리하는 방법을 설명한다.</p>
+<p>실제 개발 과정을 이해하기 좋도록 meta layer 를 만들어 가는 과정을 설명한다.</p>
+<ul>
+<li><a href="https://blog.humminglab.io/posts/yocto-project-on-orange-pi-1/" rel="">Yocto Project 개발하기(1) - Orange Pi 보드 빌드</a></li>
+<li><strong>Yocto Project 개발하기(2) - Custom Layer 만들기</strong></li>
+<li><a href="https://blog.humminglab.io/posts/yocto-project-on-orange-pi-3/" rel="">Yocto Project 개발하기(3) - 개발 시 로컬 패키지 관리하기</a></li>
+<li>Yocto Project 개발하기(4) - Yocto SDK 빌드</li>
+<li>Yocto Project 개발하기(5) - Yocto eSDK 이용한 개발 모델</li>
+</ul>
+<h2 id="layer-및-machine-생성" class="headerLink">
+    <a href="#layer-%eb%b0%8f-machine-%ec%83%9d%ec%84%b1" class="header-mark"></a>Layer 및 machine 생성</h2><p>프로젝트를 sc-gateway 라고 명하고(이름에 특별한 의미는 없음), 이를 layer로 만든다. 다음과 같이 yocto 폴더 안에 meta-sc-gateway를 생성한다.</p>]]></description></item><item><title>Yocto Project 개발하기(1) - Orange Pi 보드 빌드</title><link>https://blog.humminglab.io/posts/yocto-project-on-orange-pi-1/</link><pubDate>Thu, 30 Dec 2021 22:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/yocto-project-on-orange-pi-1/</guid><description><![CDATA[<p>이 문서는 <a href="http://www.orangepi.org/orangepizero/" target="_blank" rel="noopener noreferrer">Orange Pi Zero</a> 보드에서 <a href="https://www.yoctoproject.org/" target="_blank" rel="noopener noreferrer">Yocto Project</a>를 이용하여 배포본을 만들고, 개별 패키지를 관리하는 방법에 대하여 설명한다.</p>
+<p>설명은 다음과 같이 나누어서 설명을 할 예정이다.</p>
+<ul>
+<li><strong>Yocto Project 개발하기(1) - Orange Pi 보드 빌드</strong></li>
+<li><a href="https://blog.humminglab.io/posts/yocto-project-on-orange-pi-2/" rel="">Yocto Project 개발하기(2) - Custom Layer 만들기</a></li>
+<li><a href="https://blog.humminglab.io/posts/yocto-project-on-orange-pi-3/" rel="">Yocto Project 개발하기(3) - 개발 시 로컬 패키지 관리하기</a></li>
+<li>Yocto Project 개발하기(4) - Yocto SDK 빌드</li>
+<li>Yocto Project 개발하기(5) - Yocto eSDK 이용한 개발 모델</li>
+</ul>
+<p>이 문서에서는 첫번째 과정인 필요한 layer를 추가해서 빌드하여 타겟에 올려서 동작을 확인하는 과정을 설명한다.</p>]]></description></item></channel></rss>

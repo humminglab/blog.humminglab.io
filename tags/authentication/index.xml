@@ -1,4 +1,18 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Authentication - Tag - All about IoT</title><link>https://blog.humminglab.io/tags/authentication/</link><description>Authentication - Tag - All about IoT</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 23 Jul 2023 09:00:00 +0900</lastBuildDate><atom:link href="https://blog.humminglab.io/tags/authentication/" rel="self" type="application/rss+xml"/><item><title>HTTP SHA-256 Digest Authentication</title><link>https://blog.humminglab.io/posts/http-sha-256-digest-auth/</link><pubDate>Sun, 23 Jul 2023 09:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/http-sha-256-digest-auth/</guid><description>일반 웹 환경에서는 이제는 사양화 되어 거의 사용하지는 않지만, CCTV 표준인 ONVIF나 관련 보안 인증에서는 아직까지 HTTP Digest Authentication 을 사용한다.
-이 글에서는 HTTP Digest Authentication의 전반적인 사항을 정리한다. 목차는 다음과 같다.
-HTTP MD5, SHA-2 (SHA-256) Digest 인증 절차 Digest Authentication 웹 환경에서 더이상 사용하지 않는 이유 브라우저에서 SHA-256 Digest Authentication 구현 방법 HTTP MD5, SHA-2 (SHA-256) Digest 인증 절차HTTP Authentication은 RFC 표준으로 다음과 같이 정의 되어 있다.
-RFC 2617 - HTTP Authentication: Basic and Digest Access Authentication RFC 7616 - HTTP Digest Access Authentication 웹 초창기에 사용자 인증이 필요한 페이지를 위하여 RFC 2617 로 표준이 정의 되었다.</description></item></channel></rss>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Authentication - Tag - All about IoT</title><link>https://blog.humminglab.io/tags/authentication/</link><description>Authentication - Tag - All about IoT</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>info@humminglab.io (HummingLab)</managingEditor><webMaster>info@humminglab.io (HummingLab)</webMaster><lastBuildDate>Sun, 23 Jul 2023 09:00:00 +0900</lastBuildDate><atom:link href="https://blog.humminglab.io/tags/authentication/" rel="self" type="application/rss+xml"/><item><title>HTTP SHA-256 Digest Authentication</title><link>https://blog.humminglab.io/posts/http-sha-256-digest-auth/</link><pubDate>Sun, 23 Jul 2023 09:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/http-sha-256-digest-auth/</guid><description><![CDATA[<p>일반 웹 환경에서는 이제는 사양화 되어 거의 사용하지는 않지만,
+CCTV 표준인 <a href="https://www.onvif.org" target="_blank" rel="noopener noreferrer">ONVIF</a>나 관련 보안 인증에서는 아직까지 HTTP Digest Authentication 을 사용한다.</p>
+<p>이 글에서는 HTTP Digest Authentication의 전반적인 사항을 정리한다.
+목차는 다음과 같다.</p>
+<ul>
+<li>HTTP MD5, SHA-2 (SHA-256) Digest 인증 절차</li>
+<li>Digest Authentication</li>
+<li>웹 환경에서 더이상 사용하지 않는 이유</li>
+<li>브라우저에서 SHA-256 Digest Authentication 구현 방법</li>
+</ul>
+<h2 id="http-md5-sha-2-sha-256-digest-인증-절차" class="headerLink">
+    <a href="#http-md5-sha-2-sha-256-digest-%ec%9d%b8%ec%a6%9d-%ec%a0%88%ec%b0%a8" class="header-mark"></a>HTTP MD5, SHA-2 (SHA-256) Digest 인증 절차</h2><p>HTTP Authentication은 RFC 표준으로 다음과 같이 정의 되어 있다.</p>
+<ul>
+<li><a href="https://datatracker.ietf.org/doc/html/rfc2617" target="_blank" rel="noopener noreferrer">RFC 2617 - HTTP Authentication: Basic and Digest Access Authentication</a></li>
+<li><a href="https://datatracker.ietf.org/doc/html/rfc7616" target="_blank" rel="noopener noreferrer">RFC 7616 - HTTP Digest Access Authentication</a></li>
+</ul>
+<p>웹 초창기에 사용자 인증이 필요한 페이지를 위하여  RFC 2617 로 표준이 정의 되었다.
+이 표준안에는 다음과 같은 2가지 인증을 정의한다.</p>]]></description></item></channel></rss>

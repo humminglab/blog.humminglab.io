@@ -1,13 +1,12 @@
 <!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><title>TLS/암호 알고리즘 쉽게 이해하기(14) - PKI and X.509 - All about IoT</title><meta name=Description content><meta property="og:url" content="https://blog.humminglab.io/posts/tls-cryptography-14-x509/">
 <meta property="og:site_name" content="All about IoT"><meta property="og:title" content="TLS/암호 알고리즘 쉽게 이해하기(14) - PKI and X.509"><meta property="og:description" content="이전글 에서 설명한 Digital Signature 를 사용하면 문서의 서명을 검증할 수 있다. 이 서명을 체이닝으로 이어 나가면 3자 인증 기반의 PKI(Public Key Infrastructure)를 구성할 수 있다. X.509 는 ITU-T 에서 정의한 PKI 표준이다. 우리가 흔히 사용하는 인증서는 X.509 표준을 따른다.
 인증의 기본적인 방법은 다음과 같은 절차이다.
-Root 인증 기관(Certificate Authority, CA)가 있다고 하자. Root CA는 자신의 public key 를 별도의 방법으로 공개를 한다. 일반적인 PC 환경에서는 웹브라우저나 OS에 검증된 CA 인증서들이 내장되어 있다."><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2023-04-02T20:00:00+09:00"><meta property="article:modified_time" content="2023-04-02T20:00:00+09:00"><meta property="article:tag" content="PKI"><meta property="article:tag" content="X.509"><meta property="og:see_also" content="https://blog.humminglab.io/posts/tls-cryptography-13-mac-aead/"><meta property="og:see_also" content="https://blog.humminglab.io/posts/tls-cryptography-12-ecc2/"><meta property="og:see_also" content="https://blog.humminglab.io/posts/tls-cryptography-11-ecc/"><meta property="og:see_also" content="https://blog.humminglab.io/posts/tls-cryptography-10-hash/"><meta property="og:see_also" content="https://blog.humminglab.io/posts/tls-cryptography-9-dsa/"><meta property="og:see_also" content="https://blog.humminglab.io/posts/tls-cryptography-8-rsa/"><meta name=twitter:card content="summary"><meta name=twitter:title content="TLS/암호 알고리즘 쉽게 이해하기(14) - PKI and X.509"><meta name=twitter:description content="이전글 에서 설명한 Digital Signature 를 사용하면 문서의 서명을 검증할 수 있다. 이 서명을 체이닝으로 이어 나가면 3자 인증 기반의 PKI(Public Key Infrastructure)를 구성할 수 있다. X.509 는 ITU-T 에서 정의한 PKI 표준이다. 우리가 흔히 사용하는 인증서는 X.509 표준을 따른다.
+Root 인증 기관(Certificate Authority, CA)가 있다고 하자. Root CA는 자신의 public key 를 별도의 방법으로 공개를 한다. 일반적인 PC 환경에서는 웹브라우저나 OS에 검증된 CA 인증서들이 내장되어 있다. Alice는 자신의 정보와 public key를 포함한 문서를 만들어서 Root CA에게 별도의 방법으로 제출(CSR, Certificate Signing Request)하여 root CA의 private key로 서명을 받아온다. 다른 사용자 Bob은 Alice와 통신 시 먼저 인증서를 요청하면 Alice는 자신의 인증서를 보낸다. Bob은 Alice의 인증서를 Root CA의 public key로 서명 검증한다. Bob이 Alias에게 임의의 랜덤한 문자열을 보내어 서명을 요청하면 Alias는 자신의 private key로 서명을 하여 Bob에게 보낸다. Bob은 Alias의 public key로 서명을 검증해 보면 Alias private key를 들고 있는 Alias 본인임을 알 수 있다. sequenceDiagram participant Root CA participant Alias participant Bob Root CA-->>Bob: Root CA public key 전달 Alias-->>Root CA: 자신의 정보와 public key를 포함한 문서 전달 Root CA-->>Alias: Root CA private key로 서명하여 전달 Bob->>Alias: Alias 인증서 요청 Alias->>Bob: Alias 인증서 전달 note over Bob: Alias 인증서를 root CA publickey로 검증 Bob->>Alias: 임의의 랜덤한 문자열 전달 Alias->>Bob: 문자열을 Alias private key로 서명하여 전달 note over Bob: Alias public key로 서명 검증 위와 같은 절차가 PKI를 이용하여 서버 검증을 하는 기본적인 방법이다. 사전에 Root CA 인증서만 있으면, 이 Root CA 가 서명한 인증서를 검증할 수 있다. 이와 깉은 인증 체인을 2단계, 3단계 이상으로 체인으로 연결하여 구성할 수도 있다."><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2023-04-02T20:00:00+09:00"><meta property="article:modified_time" content="2023-04-02T20:00:00+09:00"><meta property="article:tag" content="PKI"><meta property="article:tag" content="X.509"><meta property="og:see_also" content="https://blog.humminglab.io/posts/tls-cryptography-13-mac-aead/"><meta property="og:see_also" content="https://blog.humminglab.io/posts/tls-cryptography-12-ecc2/"><meta property="og:see_also" content="https://blog.humminglab.io/posts/tls-cryptography-11-ecc/"><meta property="og:see_also" content="https://blog.humminglab.io/posts/tls-cryptography-10-hash/"><meta property="og:see_also" content="https://blog.humminglab.io/posts/tls-cryptography-9-dsa/"><meta property="og:see_also" content="https://blog.humminglab.io/posts/tls-cryptography-8-rsa/"><meta name=twitter:card content="summary"><meta name=twitter:title content="TLS/암호 알고리즘 쉽게 이해하기(14) - PKI and X.509"><meta name=twitter:description content="이전글 에서 설명한 Digital Signature 를 사용하면 문서의 서명을 검증할 수 있다. 이 서명을 체이닝으로 이어 나가면 3자 인증 기반의 PKI(Public Key Infrastructure)를 구성할 수 있다. X.509 는 ITU-T 에서 정의한 PKI 표준이다. 우리가 흔히 사용하는 인증서는 X.509 표준을 따른다.
 인증의 기본적인 방법은 다음과 같은 절차이다.
-Root 인증 기관(Certificate Authority, CA)가 있다고 하자. Root CA는 자신의 public key 를 별도의 방법으로 공개를 한다. 일반적인 PC 환경에서는 웹브라우저나 OS에 검증된 CA 인증서들이 내장되어 있다."><meta name=application-name content="All about IoT"><meta name=apple-mobile-web-app-title content="All about IoT"><meta name=theme-color content="#f8f8f8"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/posts/tls-cryptography-14-x509/><link rel=prev href=https://blog.humminglab.io/posts/platformio-2-stm32-cube/><link rel=next href=https://blog.humminglab.io/posts/http-sha-256-digest-auth/><link rel=stylesheet href=/css/main.css><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/color.css><link rel=stylesheet href=/css/style.min.css><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/fontawesome-free/all.min.css><noscript><link rel=stylesheet href=/lib/fontawesome-free/all.min.css></noscript><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/animate/animate.min.css><noscript><link rel=stylesheet href=/lib/animate/animate.min.css></noscript><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"TLS/암호 알고리즘 쉽게 이해하기(14) - PKI and X.509","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.humminglab.io\/posts\/tls-cryptography-14-x509\/"},"genre":"posts","keywords":"PKI, X.509","wordcount":2144,"url":"https:\/\/blog.humminglab.io\/posts\/tls-cryptography-14-x509\/","datePublished":"2023-04-02T20:00:00+09:00","dateModified":"2023-04-02T20:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"authors":[{"@type":"Person","name":"YSLee"}],"description":""}</script><script src=//instant.page/5.2.0 defer type=module integrity=sha384-jnZyxPjiipYXnSU0ygqeac2q7CVYMbh84q0uHVRRxEtvFPiQYbXWUorga2aqZJ0z></script></head><body header-desktop header-mobile><script type=text/javascript>function setTheme(e){document.body.setAttribute("theme",e),document.documentElement.style.setProperty("color-scheme",e==="light"?"light":"dark"),window.theme=e,window.isDark=window.theme!=="light"}function saveTheme(e){window.localStorage&&localStorage.setItem("theme",e)}function getMeta(e){const t=document.getElementsByTagName("meta");for(let n=0;n<t.length;n++)if(t[n].getAttribute("name")===e)return t[n];return""}if(window.localStorage&&localStorage.getItem("theme")){let e=localStorage.getItem("theme");e==="light"||e==="dark"||e==="black"?setTheme(e):setTheme(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}else""==="light"||""==="dark"||""==="black"?(setTheme(""),saveTheme("")):(saveTheme("auto"),setTheme(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));let metaColors={light:"#f8f8f8",dark:"#252627",black:"#000000"};getMeta("theme-color").content=metaColors[document.body.getAttribute("theme")],window.switchThemeEventSet=new Set</script><div id=back-to-top></div><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title="All about IoT">All about IoT</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/>Posts </a><a class=menu-item href=/tags/>Tags </a><a class=menu-item href=/categories/>Categories </a><a class=menu-item href=https://www.humminglab.io/ rel="noopener noreferrer" target=_blank>HummingLab </a><span class="menu-item delimiter"></span><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
-<i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title="All about IoT">All about IoT</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><a class=menu-item href=/posts/ title>Posts</a><a class=menu-item href=/tags/ title>Tags</a><a class=menu-item href=/categories/ title>Categories</a><a class=menu-item href=https://www.humminglab.io/ title rel="noopener noreferrer" target=_blank>HummingLab</a><a href=javascript:void(0); class="menu-item theme-switch" title="Switch Theme">
-<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>Contents</h2><div class=toc-content id=toc-content-auto><nav id=TableOfContents><ul><li><a href=#인증서-확인해-보기>인증서 확인해 보기</a><ul><li><a href=#depth0-인증서-내용>Depth=0 인증서 내용</a></li><li><a href=#depth1-인증서-내용>Depth=1 인증서 내용</a></li><li><a href=#root-ca-depth2-인증서-내용>Root CA (depth=2) 인증서 내용</a></li></ul></li><li><a href=#인증서-저장-방식>인증서 저장 방식</a><ul><li><a href=#pem-형식>PEM 형식</a></li><li><a href=#der-형식>DER 형식</a></li></ul></li><li><a href=#정리>정리</a></li></ul></nav></div></div><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC","true")</script><article class="page single"><h1 class="single-title animate__animated animate__flipInX">TLS/암호 알고리즘 쉽게 이해하기(14) - PKI and X.509</h1><div class=post-meta><div class=post-meta-line><span class=post-author><span class=author><span class="author fas fa-user-circle fa-fw"></span><span class=screen-reader-text> </span><a href=https://blog.humminglab.io/authors/yslee>YSLee</a></span>
-</span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/security/><i class="far fa-folder fa-fw"></i>Security</a></span>&nbsp;<span class=post-category>and</span>&nbsp;<span class=post-series>series <a href=/series/tls/%EC%95%94%ED%98%B8-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0/><i class="far fa-list-alt fa-fw"></i>TLS/암호 알고리즘 쉽게 이해하기</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2023-04-02>2023-04-02</time>&nbsp;<i class="far fa-edit fa-fw"></i>&nbsp;<time datetime=2023-04-02>2023-04-02</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;2144 words&nbsp;<i class="far fa-clock fa-fw"></i>&nbsp;11 minutes&nbsp;</div></div><div class="details series-nav open"><div class="details-summary series-title"><span>Series - </span><span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content series-content"><nav><ul><li><span class=active>TLS/암호 알고리즘 쉽게 이해하기(14) - PKI and X.509</span></li><li><a href=/posts/tls-cryptography-13-mac-aead/>TLS/암호 알고리즘 쉽게 이해하기(13) - MAC, AE, AEAD</a></li><li><a href=/posts/tls-cryptography-12-ecc2/>TLS/암호 알고리즘 쉽게 이해하기(12) - ECDH, ECDSA</a></li><li><a href=/posts/tls-cryptography-11-ecc/>TLS/암호 알고리즘 쉽게 이해하기(11) - Elliptic Curve Cryptography(ECC)</a></li><li><a href=/posts/tls-cryptography-10-hash/>TLS/암호 알고리즘 쉽게 이해하기(10) - Hash</a></li><li><a href=/posts/tls-cryptography-9-dsa/>TLS/암호 알고리즘 쉽게 이해하기(9) - Digital Signature</a></li><li><a href=/posts/tls-cryptography-8-rsa/>TLS/암호 알고리즘 쉽게 이해하기(8) - RSA</a></li><li><a href=/posts/tls-cryptography-7-diffie-hellman/>TLS/암호 알고리즘 쉽게 이해하기(7) - Diffie-Hellman Key Exchange</a></li><li><a href=/posts/tls-cryptography-6-math/>TLS/암호 알고리즘 쉽게 이해하기(6) - 이산 대수</a></li><li><a href=/posts/tls-cryptography-5-stream-cipher/>TLS/암호 알고리즘 쉽게 이해하기(5) - Stream Cipher</a></li><li><a href=/posts/tls-cryptography-4-block-cipher-mode/>TLS/암호 알고리즘 쉽게 이해하기(4) - Block Cipher Mode</a></li><li><a href=/posts/tls-cryptography-3-block-cipher/>TLS/암호 알고리즘 쉽게 이해하기(3) - Block Cipher</a></li><li><a href=/posts/tls-cryptography-2-random/>TLS/암호 알고리즘 쉽게 이해하기(2) - Random</a></li><li><a href=/posts/tls-cryptography-1-overview/>TLS/암호 알고리즘 쉽게 이해하기(1) - 개요</a></li></ul></nav></div></div><div class="details toc" id=toc-static kept><div class="details-summary toc-title"><span>Contents</span>
-<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#인증서-확인해-보기>인증서 확인해 보기</a><ul><li><a href=#depth0-인증서-내용>Depth=0 인증서 내용</a></li><li><a href=#depth1-인증서-내용>Depth=1 인증서 내용</a></li><li><a href=#root-ca-depth2-인증서-내용>Root CA (depth=2) 인증서 내용</a></li></ul></li><li><a href=#인증서-저장-방식>인증서 저장 방식</a><ul><li><a href=#pem-형식>PEM 형식</a></li><li><a href=#der-형식>DER 형식</a></li></ul></li><li><a href=#정리>정리</a></li></ul></nav></div></div><div class=content id=content><p>이전글 에서 설명한 <a href=https://blog.humminglab.io/posts/tls-cryptography-9-dsa/ rel>Digital Signature</a> 를 사용하면 문서의 서명을 검증할 수 있다. 이 서명을 체이닝으로 이어 나가면 3자 인증 기반의 PKI(Public Key Infrastructure)를 구성할 수 있다. <a href=https://www.itu.int/rec/T-REC-X.509 target=_blank rel="noopener noreferrer">X.509</a> 는 ITU-T 에서 정의한 PKI 표준이다. 우리가 흔히 사용하는 인증서는 X.509 표준을 따른다.</p><p>인증의 기본적인 방법은 다음과 같은 절차이다.</p><ul><li>Root 인증 기관(Certificate Authority, CA)가 있다고 하자. Root CA는 자신의 public key 를 별도의 방법으로 공개를 한다. 일반적인 PC 환경에서는 웹브라우저나 OS에 검증된 CA 인증서들이 내장되어 있다.</li><li>Alice는 자신의 정보와 public key를 포함한 문서를 만들어서 Root CA에게 별도의 방법으로 제출(CSR, Certificate Signing Request)하여 root CA의 private key로 서명을 받아온다.</li><li>다른 사용자 Bob은 Alice와 통신 시 먼저 인증서를 요청하면 Alice는 자신의 인증서를 보낸다.</li><li>Bob은 Alice의 인증서를 Root CA의 public key로 서명 검증한다.</li><li>Bob이 Alias에게 임의의 랜덤한 문자열을 보내어 서명을 요청하면 Alias는 자신의 private key로 서명을 하여 Bob에게 보낸다.</li><li>Bob은 Alias의 public key로 서명을 검증해 보면 Alias private key를 들고 있는 Alias 본인임을 알 수 있다.</li></ul><pre class=mermaid>sequenceDiagram
+Root 인증 기관(Certificate Authority, CA)가 있다고 하자. Root CA는 자신의 public key 를 별도의 방법으로 공개를 한다. 일반적인 PC 환경에서는 웹브라우저나 OS에 검증된 CA 인증서들이 내장되어 있다. Alice는 자신의 정보와 public key를 포함한 문서를 만들어서 Root CA에게 별도의 방법으로 제출(CSR, Certificate Signing Request)하여 root CA의 private key로 서명을 받아온다. 다른 사용자 Bob은 Alice와 통신 시 먼저 인증서를 요청하면 Alice는 자신의 인증서를 보낸다. Bob은 Alice의 인증서를 Root CA의 public key로 서명 검증한다. Bob이 Alias에게 임의의 랜덤한 문자열을 보내어 서명을 요청하면 Alias는 자신의 private key로 서명을 하여 Bob에게 보낸다. Bob은 Alias의 public key로 서명을 검증해 보면 Alias private key를 들고 있는 Alias 본인임을 알 수 있다. sequenceDiagram participant Root CA participant Alias participant Bob Root CA-->>Bob: Root CA public key 전달 Alias-->>Root CA: 자신의 정보와 public key를 포함한 문서 전달 Root CA-->>Alias: Root CA private key로 서명하여 전달 Bob->>Alias: Alias 인증서 요청 Alias->>Bob: Alias 인증서 전달 note over Bob: Alias 인증서를 root CA publickey로 검증 Bob->>Alias: 임의의 랜덤한 문자열 전달 Alias->>Bob: 문자열을 Alias private key로 서명하여 전달 note over Bob: Alias public key로 서명 검증 위와 같은 절차가 PKI를 이용하여 서버 검증을 하는 기본적인 방법이다. 사전에 Root CA 인증서만 있으면, 이 Root CA 가 서명한 인증서를 검증할 수 있다. 이와 깉은 인증 체인을 2단계, 3단계 이상으로 체인으로 연결하여 구성할 수도 있다."><meta name=application-name content="All about IoT"><meta name=apple-mobile-web-app-title content="All about IoT"><meta name=theme-color content="#f8f8f8"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=canonical href=https://blog.humminglab.io/posts/tls-cryptography-14-x509/><link rel=prev href=https://blog.humminglab.io/posts/platformio-2-stm32-cube/><link rel=next href=https://blog.humminglab.io/posts/http-sha-256-digest-auth/><link rel=stylesheet href=/css/main.min.css><link rel=stylesheet href=/css/style.min.css><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"TLS/암호 알고리즘 쉽게 이해하기(14) - PKI and X.509","inLanguage":"en","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.humminglab.io/posts/tls-cryptography-14-x509/"},"genre":"posts","keywords":["PKI","X.509"],"wordcount":1843,"url":"https://blog.humminglab.io/posts/tls-cryptography-14-x509/","datePublished":"2023-04-02T20:00:00+09:00","dateModified":"2023-04-02T20:00:00+09:00","publisher":{"@type":"Organization","name":"HummingLab"},"author":[{"@type":"Person","name":"YSLee","url":"https://www.humminglab.io"}],"description":""}</script></head><body data-instant-intensity=viewport><script type=text/javascript>function setTheme(e){document.body.setAttribute("theme",e),document.documentElement.className=e,document.documentElement.style.setProperty("color-scheme",e==="light"?"light":"dark"),e==="light"?document.documentElement.classList.remove("tw-dark"):document.documentElement.classList.add("tw-dark"),window.theme=e,window.isDark=window.theme!=="light"}function saveTheme(e){window.localStorage&&localStorage.setItem("theme",e)}function getMeta(e){const t=document.getElementsByTagName("meta");for(let n=0;n<t.length;n++)if(t[n].getAttribute("name")===e)return t[n];return""}if(window.localStorage&&localStorage.getItem("theme")){let e=localStorage.getItem("theme");e==="light"||e==="dark"?setTheme(e):setTheme(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}else""==="light"||""==="dark"?(setTheme(""),saveTheme("")):(saveTheme("auto"),setTheme(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));let metaColors={light:"#f8f8f8",dark:"#161b22"};getMeta("theme-color").content=metaColors[document.body.getAttribute("theme")],window.switchThemeEventSet=new Set</script><div id=back-to-top></div><div id=mask></div><header class="desktop print:!tw-hidden" id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title="All about IoT">All about IoT</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/>Posts </a><a class=menu-item href=/tags/>Tags </a><a class=menu-item href=/categories/>Categories </a><a class=menu-item href=https://www.humminglab.io/ rel="noopener noreferrer" target=_blank>HummingLab </a><span class="menu-item delimiter"></span><button class="menu-item theme-switch" aria-label="Switch Theme"><svg class="icon" viewBox="0 0 512 512"><path d="M8 256c0 136.966 111.033 248 248 248s248-111.034 248-248S392.966 8 256 8 8 119.033 8 256zm248 184V72c101.705.0 184 82.311 184 184 0 101.705-82.311 184-184 184z"/></svg></button></div></div></div></header><header class="mobile print:!tw-hidden" id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title="All about IoT">All about IoT</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><a class=menu-item href=/posts/ title>Posts</a><a class=menu-item href=/tags/ title>Tags</a><a class=menu-item href=/categories/ title>Categories</a><a class=menu-item href=https://www.humminglab.io/ title rel="noopener noreferrer" target=_blank>HummingLab</a><button class="menu-item theme-switch tw-w-full" aria-label="Switch Theme"><svg class="icon" viewBox="0 0 512 512"><path d="M8 256c0 136.966 111.033 248 248 248s248-111.034 248-248S392.966 8 256 8 8 119.033 8 256zm248 184V72c101.705.0 184 82.311 184 184 0 101.705-82.311 184-184 184z"/></svg></button></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=tw-mx-4><div class="toc print:!tw-hidden" id=toc-auto><h2 class=toc-title>Contents</h2><div class=toc-content id=toc-content-auto><nav id=TableOfContents><ul><li><a href=#인증서-확인해-보기>인증서 확인해 보기</a><ul><li><a href=#depth0-인증서-내용>Depth=0 인증서 내용</a></li><li><a href=#depth1-인증서-내용>Depth=1 인증서 내용</a></li><li><a href=#root-ca-depth2-인증서-내용>Root CA (depth=2) 인증서 내용</a></li></ul></li><li><a href=#인증서-저장-방식>인증서 저장 방식</a><ul><li><a href=#pem-형식>PEM 형식</a></li><li><a href=#der-형식>DER 형식</a></li></ul></li><li><a href=#정리>정리</a></li></ul></nav></div></div><dialog id=toc-dialog class="tw-max-w-full tw-w-full tw-max-h-full tw-h-full tw-ml-16"><div class="toc tw-mx-4 tw-max-w-full"><h2 class="tw-mx-0 tw-my-6 tw-uppercase tw-text-2xl">Contents</h2><div class=toc-content><nav id=TableOfContents><ul><li><a href=#인증서-확인해-보기>인증서 확인해 보기</a><ul><li><a href=#depth0-인증서-내용>Depth=0 인증서 내용</a></li><li><a href=#depth1-인증서-내용>Depth=1 인증서 내용</a></li><li><a href=#root-ca-depth2-인증서-내용>Root CA (depth=2) 인증서 내용</a></li></ul></li><li><a href=#인증서-저장-방식>인증서 저장 방식</a><ul><li><a href=#pem-형식>PEM 형식</a></li><li><a href=#der-형식>DER 형식</a></li></ul></li><li><a href=#정리>정리</a></li></ul></nav></div></div></dialog><script>document.getElementsByTagName("main")[0].setAttribute("autoTOC","true")</script><article class="page single print:!tw-w-full print:!tw-max-w-none print:!tw-m-0 print:!tw-p-0"><h1 class=single-title data-pagefind-meta=date:2023-04-02 data-pagefind-body>TLS/암호 알고리즘 쉽게 이해하기(14) - PKI and X.509</h1><div class=post-meta><div class=post-meta-line><span class=post-author><span class=author><span class=screen-reader-text></span><a href=https://blog.humminglab.io/authors/yslee/><img class="tw-inline-block tw-max-h-4 tw-rounded-full tw-translate-y-[-2px] tw-mr-1" src="https://www.gravatar.com/avatar/ebfb7d4b2184ae7b5f72ef31ebd7cc61?s=240&d=mp" alt="YSLee avatar" height=16 width=16>YSLee</a></span>
+</span>&nbsp;<span class=post-category>included in </span>&nbsp;<span class=post-category>category <a href=/categories/security/><svg class="icon" viewBox="0 0 512 512"><path d="M464 128H272l-54.63-54.63c-6-6-14.14-9.37-22.63-9.37H48C21.49 64 0 85.49.0 112v288c0 26.51 21.49 48 48 48h416c26.51.0 48-21.49 48-48V176c0-26.51-21.49-48-48-48zm0 272H48V112h140.12l54.63 54.63c6 6 14.14 9.37 22.63 9.37H464v224z"/></svg>Security</a></span>&nbsp;<span class=post-category>and</span>&nbsp;<span class=post-series>series <a href=/series/tls/%EC%95%94%ED%98%B8-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-%EC%89%BD%EA%B2%8C-%EC%9D%B4%ED%95%B4%ED%95%98%EA%B8%B0/><svg class="icon" viewBox="0 0 512 512"><path d="M464 32H48C21.49 32 0 53.49.0 80v352c0 26.51 21.49 48 48 48h416c26.51.0 48-21.49 48-48V80c0-26.51-21.49-48-48-48zm-6 4e2H54a6 6 0 01-6-6V86a6 6 0 016-6h404a6 6 0 016 6v340a6 6 0 01-6 6zm-42-92v24c0 6.627-5.373 12-12 12H204c-6.627.0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h2e2c6.627.0 12 5.373 12 12zm0-96v24c0 6.627-5.373 12-12 12H204c-6.627.0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h2e2c6.627.0 12 5.373 12 12zm0-96v24c0 6.627-5.373 12-12 12H204c-6.627.0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h2e2c6.627.0 12 5.373 12 12zm-252 12c0 19.882-16.118 36-36 36s-36-16.118-36-36 16.118-36 36-36 36 16.118 36 36zm0 96c0 19.882-16.118 36-36 36s-36-16.118-36-36 16.118-36 36-36 36 16.118 36 36zm0 96c0 19.882-16.118 36-36 36s-36-16.118-36-36 16.118-36 36-36 36 16.118 36 36z"/></svg>TLS/암호 알고리즘 쉽게 이해하기</a></span></div><div class=post-meta-line><svg class="icon" viewBox="0 0 448 512"><path d="M148 288h-40c-6.6.0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v40c0 6.6-5.4 12-12 12zm108-12v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm-96 96v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm-96 0v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm192 0v-40c0-6.6-5.4-12-12-12h-40c-6.6.0-12 5.4-12 12v40c0 6.6 5.4 12 12 12h40c6.6.0 12-5.4 12-12zm96-260v352c0 26.5-21.5 48-48 48H48c-26.5.0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h48V12c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v52h128V12c0-6.6 5.4-12 12-12h40c6.6.0 12 5.4 12 12v52h48c26.5.0 48 21.5 48 48zm-48 346V160H48v298c0 3.3 2.7 6 6 6h340c3.3.0 6-2.7 6-6z"/></svg>&nbsp;<time datetime=2023-04-02>2023-04-02</time>&nbsp;<svg class="icon" viewBox="0 0 576 512"><path d="M402.3 344.9l32-32c5-5 13.7-1.5 13.7 5.7V464c0 26.5-21.5 48-48 48H48c-26.5.0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h273.5c7.1.0 10.7 8.6 5.7 13.7l-32 32c-1.5 1.5-3.5 2.3-5.7 2.3H48v352h352V350.5c0-2.1.8-4.1 2.3-5.6zm156.6-201.8L296.3 405.7l-90.4 10c-26.2 2.9-48.5-19.2-45.6-45.6l10-90.4L432.9 17.1c22.9-22.9 59.9-22.9 82.7.0l43.2 43.2c22.9 22.9 22.9 60 .1 82.8zM460.1 174 402 115.9 216.2 301.8l-7.3 65.3 65.3-7.3L460.1 174zm64.8-79.7-43.2-43.2c-4.1-4.1-10.8-4.1-14.8.0L436 82l58.1 58.1 30.9-30.9c4-4.2 4-10.8-.1-14.9z"/></svg>&nbsp;<time datetime=2023-04-02>2023-04-02</time>&nbsp;<svg class="icon" viewBox="0 0 512 512"><path d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3.0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9.0l60.1 60.1c18.8 18.7 18.8 49.1.0 67.9zM284.2 99.8 21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3.0-17l-111-111c-4.8-4.7-12.4-4.7-17.1.0zM124.1 339.9c-5.5-5.5-5.5-14.3.0-19.8l154-154c5.5-5.5 14.3-5.5 19.8.0s5.5 14.3.0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8.0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"/></svg>&nbsp;1843 words&nbsp;
+<svg class="icon" viewBox="0 0 512 512"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 448c-110.5.0-2e2-89.5-2e2-2e2S145.5 56 256 56s2e2 89.5 2e2 2e2-89.5 2e2-2e2 2e2zm61.8-104.4-84.9-61.7c-3.1-2.3-4.9-5.9-4.9-9.7V116c0-6.6 5.4-12 12-12h32c6.6.0 12 5.4 12 12v141.7l66.8 48.6c5.4 3.9 6.5 11.4 2.6 16.8L334.6 349c-3.9 5.3-11.4 6.5-16.8 2.6z"/></svg>&nbsp;9 minutes&nbsp;</div></div><div class="details series-nav open"><div class="details-summary series-title"><span>Series - </span><span class=details-icon><svg class="icon" viewBox="0 0 256 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9.0l-22.6-22.6c-9.4-9.4-9.4-24.6.0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6.0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9.0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg></span></div><div class="details-content series-content"><nav><ul><li><span class=active>TLS/암호 알고리즘 쉽게 이해하기(14) - PKI and X.509</span></li><li><a href=/posts/tls-cryptography-13-mac-aead/>TLS/암호 알고리즘 쉽게 이해하기(13) - MAC, AE, AEAD</a></li><li><a href=/posts/tls-cryptography-12-ecc2/>TLS/암호 알고리즘 쉽게 이해하기(12) - ECDH, ECDSA</a></li><li><a href=/posts/tls-cryptography-11-ecc/>TLS/암호 알고리즘 쉽게 이해하기(11) - Elliptic Curve Cryptography(ECC)</a></li><li><a href=/posts/tls-cryptography-10-hash/>TLS/암호 알고리즘 쉽게 이해하기(10) - Hash</a></li><li><a href=/posts/tls-cryptography-9-dsa/>TLS/암호 알고리즘 쉽게 이해하기(9) - Digital Signature</a></li><li><a href=/posts/tls-cryptography-8-rsa/>TLS/암호 알고리즘 쉽게 이해하기(8) - RSA</a></li><li><a href=/posts/tls-cryptography-7-diffie-hellman/>TLS/암호 알고리즘 쉽게 이해하기(7) - Diffie-Hellman Key Exchange</a></li><li><a href=/posts/tls-cryptography-6-math/>TLS/암호 알고리즘 쉽게 이해하기(6) - 이산 대수</a></li><li><a href=/posts/tls-cryptography-5-stream-cipher/>TLS/암호 알고리즘 쉽게 이해하기(5) - Stream Cipher</a></li><li><a href=/posts/tls-cryptography-4-block-cipher-mode/>TLS/암호 알고리즘 쉽게 이해하기(4) - Block Cipher Mode</a></li><li><a href=/posts/tls-cryptography-3-block-cipher/>TLS/암호 알고리즘 쉽게 이해하기(3) - Block Cipher</a></li><li><a href=/posts/tls-cryptography-2-random/>TLS/암호 알고리즘 쉽게 이해하기(2) - Random</a></li><li><a href=/posts/tls-cryptography-1-overview/>TLS/암호 알고리즘 쉽게 이해하기(1) - 개요</a></li></ul></nav></div></div><div class="details toc print:!tw-block" id=toc-static kept><div class="details-summary toc-title"><span>Contents</span>
+<span class=details-icon><svg class="icon" viewBox="0 0 256 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9.0l-22.6-22.6c-9.4-9.4-9.4-24.6.0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6.0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9.0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#인증서-확인해-보기>인증서 확인해 보기</a><ul><li><a href=#depth0-인증서-내용>Depth=0 인증서 내용</a></li><li><a href=#depth1-인증서-내용>Depth=1 인증서 내용</a></li><li><a href=#root-ca-depth2-인증서-내용>Root CA (depth=2) 인증서 내용</a></li></ul></li><li><a href=#인증서-저장-방식>인증서 저장 방식</a><ul><li><a href=#pem-형식>PEM 형식</a></li><li><a href=#der-형식>DER 형식</a></li></ul></li><li><a href=#정리>정리</a></li></ul></nav></div></div><div class=content id=content data-pagefind-body><p>이전글 에서 설명한 <a href=https://blog.humminglab.io/posts/tls-cryptography-9-dsa/ rel>Digital Signature</a> 를 사용하면 문서의 서명을 검증할 수 있다. 이 서명을 체이닝으로 이어 나가면 3자 인증 기반의 PKI(Public Key Infrastructure)를 구성할 수 있다. <a href=https://www.itu.int/rec/T-REC-X.509 target=_blank rel="noopener noreferrer">X.509</a> 는 ITU-T 에서 정의한 PKI 표준이다. 우리가 흔히 사용하는 인증서는 X.509 표준을 따른다.</p><p>인증의 기본적인 방법은 다음과 같은 절차이다.</p><ul><li>Root 인증 기관(Certificate Authority, CA)가 있다고 하자. Root CA는 자신의 public key 를 별도의 방법으로 공개를 한다. 일반적인 PC 환경에서는 웹브라우저나 OS에 검증된 CA 인증서들이 내장되어 있다.</li><li>Alice는 자신의 정보와 public key를 포함한 문서를 만들어서 Root CA에게 별도의 방법으로 제출(CSR, Certificate Signing Request)하여 root CA의 private key로 서명을 받아온다.</li><li>다른 사용자 Bob은 Alice와 통신 시 먼저 인증서를 요청하면 Alice는 자신의 인증서를 보낸다.</li><li>Bob은 Alice의 인증서를 Root CA의 public key로 서명 검증한다.</li><li>Bob이 Alias에게 임의의 랜덤한 문자열을 보내어 서명을 요청하면 Alias는 자신의 private key로 서명을 하여 Bob에게 보낸다.</li><li>Bob은 Alias의 public key로 서명을 검증해 보면 Alias private key를 들고 있는 Alias 본인임을 알 수 있다.</li></ul><pre class=mermaid>sequenceDiagram
     participant Root CA
     participant Alias
     participant Bob
@@ -20,31 +19,57 @@ Root 인증 기관(Certificate Authority, CA)가 있다고 하자. Root CA는 �
     Bob->>Alias: 임의의 랜덤한 문자열 전달
     Alias->>Bob: 문자열을 Alias private key로 서명하여 전달
     note over Bob: Alias public key로 서명 검증
-</pre><p>위와 같은 절차가 PKI를 이용하여 서버 검증을 하는 기본적인 방법이다. 사전에 Root CA 인증서만 있으면, 이 Root CA 가 서명한 인증서를 검증할 수 있다. 이와 깉은 인증 체인을 2단계, 3단계 이상으로 체인으로 연결하여 구성할 수도 있다.</p><h2 id=인증서-확인해-보기 class=headerLink><a href=#%ec%9d%b8%ec%a6%9d%ec%84%9c-%ed%99%95%ec%9d%b8%ed%95%b4-%eb%b3%b4%ea%b8%b0 class=header-mark></a>인증서 확인해 보기</h2><p>이 블로그 페이지인 <a href=https://blog.humminglab.io/ target=_blank rel="noopener noreferrer">https://blog.humminglab.io/</a> 의 인증서가 어떻게 서명되어 있는지 확인해 보자.</p><p>OpenSSL CLI 를 이용하여 아래처럼 https 연결을 해보면 인증서 정보를 확인할 수 있다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
-</span><span class=lnt> 2
-</span><span class=lnt> 3
-</span><span class=lnt> 4
-</span><span class=lnt> 5
-</span><span class=lnt> 6
-</span><span class=lnt> 7
-</span><span class=lnt> 8
-</span><span class=lnt> 9
-</span><span class=lnt>10
-</span><span class=lnt>11
-</span><span class=lnt>12
-</span><span class=lnt>13
-</span><span class=lnt>14
-</span><span class=lnt>15
-</span><span class=lnt>16
-</span><span class=lnt>17
-</span><span class=lnt>18
-</span><span class=lnt>19
-</span><span class=lnt>20
-</span><span class=lnt>21
-</span><span class=lnt>22
-</span><span class=lnt>23
-</span><span class=lnt>24
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-sh data-lang=sh><span class=line><span class=cl>$ openssl s_client -connect blog.humminglab.io:443 -showcerts &lt; /dev/null
+</pre><p>위와 같은 절차가 PKI를 이용하여 서버 검증을 하는 기본적인 방법이다. 사전에 Root CA 인증서만 있으면, 이 Root CA 가 서명한 인증서를 검증할 수 있다. 이와 깉은 인증 체인을 2단계, 3단계 이상으로 체인으로 연결하여 구성할 수도 있다.</p><h2 id=인증서-확인해-보기 class=headerLink><a href=#%ec%9d%b8%ec%a6%9d%ec%84%9c-%ed%99%95%ec%9d%b8%ed%95%b4-%eb%b3%b4%ea%b8%b0 class=header-mark></a>인증서 확인해 보기</h2><p>이 블로그 페이지인 <a href=https://blog.humminglab.io/ target=_blank rel="noopener noreferrer">https://blog.humminglab.io/</a> 의 인증서가 어떻게 서명되어 있는지 확인해 보자.</p><p>OpenSSL CLI 를 이용하여 아래처럼 https 연결을 해보면 인증서 정보를 확인할 수 있다.</p><div class="code-block highlight is-open show-line-numbers tw-group tw-my-2"><div class="code-block-title
+tw-flex
+tw-flex-row
+tw-justify-between
+tw-w-full tw-bg-bgColor-secondary"><button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-rotate-90
+tw-transition-[transform]
+tw-duration-500
+tw-ease-in-out
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></button><div class="code-block-title-bar tw-w-full"><p class="tw-select-none !tw-my-1">sh</p></div><div class=tw-flex><button class="line-number-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.show-line-numbers]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.is-wrap]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+hover:tw-text-fgColor-link
+print:!tw-hidden" title="Copy code">
+<span class="copy-icon tw-block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw-hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-hidden
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw-block tw-m-0 tw-p-0"><code id=codeblock-id-1 class="chroma
+!tw-block
+tw-p-0
+tw-m-0
+tw-transition-[max-height]
+tw-duration-500
+tw-ease-in-out
+group-[.is-closed]:!tw-max-h-0
+group-[.is-wrap]:tw-text-wrap
+tw-overflow-y-hidden
+tw-overflow-x-auto
+tw-scrollbar-thin"><span class=line><span class=cl>$ openssl s_client -connect blog.humminglab.io:443 -showcerts &lt; /dev/null
 </span></span><span class=line><span class=cl>CONNECTED<span class=o>(</span>00000005<span class=o>)</span>
 </span></span><span class=line><span class=cl><span class=nv>depth</span><span class=o>=</span><span class=m>2</span> <span class=nv>C</span> <span class=o>=</span> IE, <span class=nv>O</span> <span class=o>=</span> Baltimore, <span class=nv>OU</span> <span class=o>=</span> CyberTrust, <span class=nv>CN</span> <span class=o>=</span> Baltimore CyberTrust Root
 </span></span><span class=line><span class=cl>verify <span class=k>return</span>:1
@@ -67,140 +92,109 @@ Root 인증 기관(Certificate Authority, CA)가 있다고 하자. Root CA는 �
 </span></span><span class=line><span class=cl>MIIDzTCCArWgAwIBAgIQCjeHZF5ftIwiTv0b7RQMPDANBgkqhkiG9w0BAQsFADBa
 </span></span><span class=line><span class=cl>...
 </span></span><span class=line><span class=cl>6DEdfgkfCv4+3ao8XnTSrLE<span class=o>=</span>
-</span></span><span class=line><span class=cl>-----END CERTIFICATE-----
-</span></span></code></pre></td></tr></table></div></div><p>인증서 체인 구조만 보면 다음과 같다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
-</span><span class=lnt>2
-</span><span class=lnt>3
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>depth=2 C = IE, O = Baltimore, OU = CyberTrust, CN = Baltimore CyberTrust Root
+</span></span><span class=line><span class=cl>-----END CERTIFICATE-----</span></span></code></pre></div><p>인증서 체인 구조만 보면 다음과 같다.</p><div class="code-block highlight is-open show-line-numbers tw-group tw-my-2"><div class="code-block-title
+tw-flex
+tw-flex-row
+tw-justify-between
+tw-w-full tw-bg-bgColor-secondary"><button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-rotate-90
+tw-transition-[transform]
+tw-duration-500
+tw-ease-in-out
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></button><div class="code-block-title-bar tw-w-full"><p class="tw-select-none !tw-my-1">text</p></div><div class=tw-flex><button class="line-number-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.show-line-numbers]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.is-wrap]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+hover:tw-text-fgColor-link
+print:!tw-hidden" title="Copy code">
+<span class="copy-icon tw-block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw-hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-hidden
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw-block tw-m-0 tw-p-0"><code id=codeblock-id-2 class="chroma
+!tw-block
+tw-p-0
+tw-m-0
+tw-transition-[max-height]
+tw-duration-500
+tw-ease-in-out
+group-[.is-closed]:!tw-max-h-0
+group-[.is-wrap]:tw-text-wrap
+tw-overflow-y-hidden
+tw-overflow-x-auto
+tw-scrollbar-thin"><span class=line><span class=cl>depth=2 C = IE, O = Baltimore, OU = CyberTrust, CN = Baltimore CyberTrust Root
 </span></span><span class=line><span class=cl>depth=1 C = US, O = &#34;Cloudflare, Inc.&#34;, CN = Cloudflare Inc ECC CA-3
-</span></span><span class=line><span class=cl>depth=0 C = US, ST = California, L = San Francisco, O = &#34;Cloudflare, Inc.&#34;, CN = sni.cloudflaressl.com
-</span></span></code></pre></td></tr></table></div></div><ul><li>depth=2 인증서는 최상위 루트 인증기관의 인증서(CN = Baltimore CyberTrust Root)이다.</li><li>depth=1 인증서는 depth=2 루트 이증기관으로 서명된 인증서(CN = Cloudflare Inc ECC CA-3)이다.</li><li>depth=0 인증서는 depth=1 인증서로 서명된 블로그 서버의 인증서(CN = sni.cloudflaressl.com)이다.</li></ul><p>내용에 sni.cloudflaressl.com로 되어 있는 것은 DNS proxy 서비스를 Cloudflare에서 하기 때문이다.</p><p>위 로그를 보면 필요한 인증서는 0,1,2 총 세개이지만 보통 TLS 프로토콜에서 서버는 root CA (depth=2)는 보내지 않고, 그 이하의 체이닝된 인증서만 보내준다. 그래서 &lsquo;&mdash;&ndash;BEGIN CERTIFICATE&mdash;&ndash;&rsquo; 로 된 인증서 2개만 보인다.</p><h3 id=depth0-인증서-내용 class=headerLink><a href=#depth0-%ec%9d%b8%ec%a6%9d%ec%84%9c-%eb%82%b4%ec%9a%a9 class=header-mark></a>Depth=0 인증서 내용</h3><p>OpenSSL CLI로 depth=0 인증서를 확인해 보면 아래와 같고, 이들 정보 중 유용한 것들을 살펴보자.</p><ul><li>Version: 3 으로 <a href=https://www.rfc-editor.org/rfc/rfc5280 target=_blank rel="noopener noreferrer">X.509 v3</a> 형식의 인증서 이다.</li><li>Issure는 이 인증서를 서명한 상위 인증서 정보이다. 사람이 구분할 수 있는 이름이라고 생각하면된다. 이 문장은 depth=1 인증서 정보와 동일하다.</li><li>Subject는 이 인증서의 이름이라고 보면 된다.</li><li>Serial Number: 상위 인증기관(depth=1)에서 발행한 유일한 값이다. 인증서의 고유값은 이 Serial number와 Subect 를 합친 정보이다.</li><li>Validity: 인증서의 유효기간이다.</li><li>Subject Public Key Info: 공개키 정보가 기록되어 있다.<ul><li><a href=https://neuromancer.sk/std/x962/prime256v1 target=_blank rel="noopener noreferrer">prim256v1(P-256)</a> 이라는 타원암호 알고리즘으로 공개키를 만들었다.</li><li>pub에는 공개키가 들어있다.</li></ul></li><li>X509v3 extensions: 인증서의 확장 정보로 인증에 필요한 여러 정보가 들어있다.<ul><li>Authority Key Identifier, Subject Key Identifier: 인증서 검증을 빠르게 하기 위한 고유한 키 값이다. Authority Key Identifier 정보가 상위 인증서의 Subject Key Identifier 이다.</li><li>Subject Alternative Name: DNS:blog.humminglab.io 도메인을 인증하기 위한 정보가 들어있다.</li><li>Key Usage: Digital Signature, 즉 서명 검증용으로만 사용</li><li>Extended Key Usage: TLS server/client 용도로 한정</li><li>CRL Distribution Points: CRL(CRL Distribution Points)로 분실 등의 폐기된 목록을 확인용도</li></ul></li><li>Signature Algorithm: 본 인증서를 서명한 알고리즘과 상위 인증서로 서명한 값이 들어있다.<ul><li>ecdsa-with-SHA256 방식으로 상위 인증기관(depth=1)의 private key로 서명된 값이다.</li></ul></li></ul><p>이제 상위 인증서로 서명된 값이 맞다면, 이 인증서는 blog.humminglab.io TLS 서버의 인증서라고 확신할 수 있다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>  1
-</span><span class=lnt>  2
-</span><span class=lnt>  3
-</span><span class=lnt>  4
-</span><span class=lnt>  5
-</span><span class=lnt>  6
-</span><span class=lnt>  7
-</span><span class=lnt>  8
-</span><span class=lnt>  9
-</span><span class=lnt> 10
-</span><span class=lnt> 11
-</span><span class=lnt> 12
-</span><span class=lnt> 13
-</span><span class=lnt> 14
-</span><span class=lnt> 15
-</span><span class=lnt> 16
-</span><span class=lnt> 17
-</span><span class=lnt> 18
-</span><span class=lnt> 19
-</span><span class=lnt> 20
-</span><span class=lnt> 21
-</span><span class=lnt> 22
-</span><span class=lnt> 23
-</span><span class=lnt> 24
-</span><span class=lnt> 25
-</span><span class=lnt> 26
-</span><span class=lnt> 27
-</span><span class=lnt> 28
-</span><span class=lnt> 29
-</span><span class=lnt> 30
-</span><span class=lnt> 31
-</span><span class=lnt> 32
-</span><span class=lnt> 33
-</span><span class=lnt> 34
-</span><span class=lnt> 35
-</span><span class=lnt> 36
-</span><span class=lnt> 37
-</span><span class=lnt> 38
-</span><span class=lnt> 39
-</span><span class=lnt> 40
-</span><span class=lnt> 41
-</span><span class=lnt> 42
-</span><span class=lnt> 43
-</span><span class=lnt> 44
-</span><span class=lnt> 45
-</span><span class=lnt> 46
-</span><span class=lnt> 47
-</span><span class=lnt> 48
-</span><span class=lnt> 49
-</span><span class=lnt> 50
-</span><span class=lnt> 51
-</span><span class=lnt> 52
-</span><span class=lnt> 53
-</span><span class=lnt> 54
-</span><span class=lnt> 55
-</span><span class=lnt> 56
-</span><span class=lnt> 57
-</span><span class=lnt> 58
-</span><span class=lnt> 59
-</span><span class=lnt> 60
-</span><span class=lnt> 61
-</span><span class=lnt> 62
-</span><span class=lnt> 63
-</span><span class=lnt> 64
-</span><span class=lnt> 65
-</span><span class=lnt> 66
-</span><span class=lnt> 67
-</span><span class=lnt> 68
-</span><span class=lnt> 69
-</span><span class=lnt> 70
-</span><span class=lnt> 71
-</span><span class=lnt> 72
-</span><span class=lnt> 73
-</span><span class=lnt> 74
-</span><span class=lnt> 75
-</span><span class=lnt> 76
-</span><span class=lnt> 77
-</span><span class=lnt> 78
-</span><span class=lnt> 79
-</span><span class=lnt> 80
-</span><span class=lnt> 81
-</span><span class=lnt> 82
-</span><span class=lnt> 83
-</span><span class=lnt> 84
-</span><span class=lnt> 85
-</span><span class=lnt> 86
-</span><span class=lnt> 87
-</span><span class=lnt> 88
-</span><span class=lnt> 89
-</span><span class=lnt> 90
-</span><span class=lnt> 91
-</span><span class=lnt> 92
-</span><span class=lnt> 93
-</span><span class=lnt> 94
-</span><span class=lnt> 95
-</span><span class=lnt> 96
-</span><span class=lnt> 97
-</span><span class=lnt> 98
-</span><span class=lnt> 99
-</span><span class=lnt>100
-</span><span class=lnt>101
-</span><span class=lnt>102
-</span><span class=lnt>103
-</span><span class=lnt>104
-</span><span class=lnt>105
-</span><span class=lnt>106
-</span><span class=lnt>107
-</span><span class=lnt>108
-</span><span class=lnt>109
-</span><span class=lnt>110
-</span><span class=lnt>111
-</span><span class=lnt>112
-</span><span class=lnt>113
-</span><span class=lnt>114
-</span><span class=lnt>115
-</span><span class=lnt>116
-</span><span class=lnt>117
-</span><span class=lnt>118
-</span><span class=lnt>119
-</span><span class=lnt>120
-</span><span class=lnt>121
-</span><span class=lnt>122
-</span><span class=lnt>123
-</span><span class=lnt>124
-</span><span class=lnt>125
-</span><span class=lnt>126
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ openssl x509 -in depth0.pem -text -noout
+</span></span><span class=line><span class=cl>depth=0 C = US, ST = California, L = San Francisco, O = &#34;Cloudflare, Inc.&#34;, CN = sni.cloudflaressl.com</span></span></code></pre></div><ul><li>depth=2 인증서는 최상위 루트 인증기관의 인증서(CN = Baltimore CyberTrust Root)이다.</li><li>depth=1 인증서는 depth=2 루트 이증기관으로 서명된 인증서(CN = Cloudflare Inc ECC CA-3)이다.</li><li>depth=0 인증서는 depth=1 인증서로 서명된 블로그 서버의 인증서(CN = sni.cloudflaressl.com)이다.</li></ul><p>내용에 sni.cloudflaressl.com로 되어 있는 것은 DNS proxy 서비스를 Cloudflare에서 하기 때문이다.</p><p>위 로그를 보면 필요한 인증서는 0,1,2 총 세개이지만 보통 TLS 프로토콜에서 서버는 root CA (depth=2)는 보내지 않고, 그 이하의 체이닝된 인증서만 보내준다. 그래서 &lsquo;&mdash;&ndash;BEGIN CERTIFICATE&mdash;&ndash;&rsquo; 로 된 인증서 2개만 보인다.</p><h3 id=depth0-인증서-내용 class=headerLink><a href=#depth0-%ec%9d%b8%ec%a6%9d%ec%84%9c-%eb%82%b4%ec%9a%a9 class=header-mark></a>Depth=0 인증서 내용</h3><p>OpenSSL CLI로 depth=0 인증서를 확인해 보면 아래와 같고, 이들 정보 중 유용한 것들을 살펴보자.</p><ul><li>Version: 3 으로 <a href=https://www.rfc-editor.org/rfc/rfc5280 target=_blank rel="noopener noreferrer">X.509 v3</a> 형식의 인증서 이다.</li><li>Issure는 이 인증서를 서명한 상위 인증서 정보이다. 사람이 구분할 수 있는 이름이라고 생각하면된다. 이 문장은 depth=1 인증서 정보와 동일하다.</li><li>Subject는 이 인증서의 이름이라고 보면 된다.</li><li>Serial Number: 상위 인증기관(depth=1)에서 발행한 유일한 값이다. 인증서의 고유값은 이 Serial number와 Subect 를 합친 정보이다.</li><li>Validity: 인증서의 유효기간이다.</li><li>Subject Public Key Info: 공개키 정보가 기록되어 있다.<ul><li><a href=https://neuromancer.sk/std/x962/prime256v1 target=_blank rel="noopener noreferrer">prim256v1(P-256)</a> 이라는 타원암호 알고리즘으로 공개키를 만들었다.</li><li>pub에는 공개키가 들어있다.</li></ul></li><li>X509v3 extensions: 인증서의 확장 정보로 인증에 필요한 여러 정보가 들어있다.<ul><li>Authority Key Identifier, Subject Key Identifier: 인증서 검증을 빠르게 하기 위한 고유한 키 값이다. Authority Key Identifier 정보가 상위 인증서의 Subject Key Identifier 이다.</li><li>Subject Alternative Name: DNS:blog.humminglab.io 도메인을 인증하기 위한 정보가 들어있다.</li><li>Key Usage: Digital Signature, 즉 서명 검증용으로만 사용</li><li>Extended Key Usage: TLS server/client 용도로 한정</li><li>CRL Distribution Points: CRL(CRL Distribution Points)로 분실 등의 폐기된 목록을 확인용도</li></ul></li><li>Signature Algorithm: 본 인증서를 서명한 알고리즘과 상위 인증서로 서명한 값이 들어있다.<ul><li>ecdsa-with-SHA256 방식으로 상위 인증기관(depth=1)의 private key로 서명된 값이다.</li></ul></li></ul><p>이제 상위 인증서로 서명된 값이 맞다면, 이 인증서는 blog.humminglab.io TLS 서버의 인증서라고 확신할 수 있다.</p><div class="code-block highlight is-closed show-line-numbers tw-group tw-my-2"><div class="code-block-title
+tw-flex
+tw-flex-row
+tw-justify-between
+tw-w-full tw-bg-bgColor-secondary"><button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-rotate-90
+tw-transition-[transform]
+tw-duration-500
+tw-ease-in-out
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></button><div class="code-block-title-bar tw-w-full"><p class="tw-select-none !tw-my-1">shell</p></div><div class=tw-flex><button class="line-number-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.show-line-numbers]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.is-wrap]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+hover:tw-text-fgColor-link
+print:!tw-hidden" title="Copy code">
+<span class="copy-icon tw-block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw-hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-hidden
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw-block tw-m-0 tw-p-0"><code id=codeblock-id-3 class="chroma
+!tw-block
+tw-p-0
+tw-m-0
+tw-transition-[max-height]
+tw-duration-500
+tw-ease-in-out
+group-[.is-closed]:!tw-max-h-0
+group-[.is-wrap]:tw-text-wrap
+tw-overflow-y-hidden
+tw-overflow-x-auto
+tw-scrollbar-thin"><span class=line><span class=cl>$ openssl x509 -in depth0.pem -text -noout
 </span></span><span class=line><span class=cl>Certificate:
 </span></span><span class=line><span class=cl>    Data:
 </span></span><span class=line><span class=cl>        Version: <span class=m>3</span> <span class=o>(</span>0x2<span class=o>)</span>
@@ -325,100 +319,57 @@ Root 인증 기관(Certificate Authority, CA)가 있다고 하자. Root CA는 �
 </span></span><span class=line><span class=cl>u3PX4Qpn56tUyj1DJ6lW7BvyaQ0CIE7cFsRnblSewTTlONloCg5UseJG1AFjVtUi
 </span></span><span class=line><span class=cl>ckSD7C7+MAoGCCqGSM49BAMCA0kAMEYCIQC+C3wLzoqaF93Yl9Lpl7MgNLB4NCD/
 </span></span><span class=line><span class=cl>InyA8Am8uqZTTQIhALLBPQsXTjH1iaYJFclOG11Sp7axtLWvm4DQLSAQcbIC
-</span></span><span class=line><span class=cl>-----END CERTIFICATE-----
-</span></span></code></pre></td></tr></table></div></div><h3 id=depth1-인증서-내용 class=headerLink><a href=#depth1-%ec%9d%b8%ec%a6%9d%ec%84%9c-%eb%82%b4%ec%9a%a9 class=header-mark></a>Depth=1 인증서 내용</h3><p>depth=1 인증서를 확인해 보면 아래와 같고, 이들 정보 중 유용한 것들을 살펴보자.</p><ul><li>Serial Number: 상위 인증기관(인증서 발급자)가 발행한 serial number</li><li>Subject: 인증서의 정보</li><li>Issuer: 인증서의 발급자의 정보</li><li>Subject Public Key Info: 인증서의 공개키 정보. 동일하게 prime256v1을 사용한다.</li><li>X509v3 extensions<ul><li>Key Usage: Digital Signature(디지털서명), Certificate Sign(인증서 서명), CRL Sign(CRL 서명)을 사용할 수 있다. CRL은 Certificate Revocation List의 약자로 분실 등으로 폐기된 인증서 목록을 관리하는 용도이다.</li><li>Extended Key Usage: 마찬가지로 TLS client/server 인증용도</li></ul></li><li>Signature Algorithm: sha256WithRSAEncryption 로 상위 인증서의 private 키로 서명되어 있다. 이를 보면 상위 인증서는 EC를 사용하지 않고, RSA를 사용함을 알수 있다.</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
-</span><span class=lnt> 2
-</span><span class=lnt> 3
-</span><span class=lnt> 4
-</span><span class=lnt> 5
-</span><span class=lnt> 6
-</span><span class=lnt> 7
-</span><span class=lnt> 8
-</span><span class=lnt> 9
-</span><span class=lnt>10
-</span><span class=lnt>11
-</span><span class=lnt>12
-</span><span class=lnt>13
-</span><span class=lnt>14
-</span><span class=lnt>15
-</span><span class=lnt>16
-</span><span class=lnt>17
-</span><span class=lnt>18
-</span><span class=lnt>19
-</span><span class=lnt>20
-</span><span class=lnt>21
-</span><span class=lnt>22
-</span><span class=lnt>23
-</span><span class=lnt>24
-</span><span class=lnt>25
-</span><span class=lnt>26
-</span><span class=lnt>27
-</span><span class=lnt>28
-</span><span class=lnt>29
-</span><span class=lnt>30
-</span><span class=lnt>31
-</span><span class=lnt>32
-</span><span class=lnt>33
-</span><span class=lnt>34
-</span><span class=lnt>35
-</span><span class=lnt>36
-</span><span class=lnt>37
-</span><span class=lnt>38
-</span><span class=lnt>39
-</span><span class=lnt>40
-</span><span class=lnt>41
-</span><span class=lnt>42
-</span><span class=lnt>43
-</span><span class=lnt>44
-</span><span class=lnt>45
-</span><span class=lnt>46
-</span><span class=lnt>47
-</span><span class=lnt>48
-</span><span class=lnt>49
-</span><span class=lnt>50
-</span><span class=lnt>51
-</span><span class=lnt>52
-</span><span class=lnt>53
-</span><span class=lnt>54
-</span><span class=lnt>55
-</span><span class=lnt>56
-</span><span class=lnt>57
-</span><span class=lnt>58
-</span><span class=lnt>59
-</span><span class=lnt>60
-</span><span class=lnt>61
-</span><span class=lnt>62
-</span><span class=lnt>63
-</span><span class=lnt>64
-</span><span class=lnt>65
-</span><span class=lnt>66
-</span><span class=lnt>67
-</span><span class=lnt>68
-</span><span class=lnt>69
-</span><span class=lnt>70
-</span><span class=lnt>71
-</span><span class=lnt>72
-</span><span class=lnt>73
-</span><span class=lnt>74
-</span><span class=lnt>75
-</span><span class=lnt>76
-</span><span class=lnt>77
-</span><span class=lnt>78
-</span><span class=lnt>79
-</span><span class=lnt>80
-</span><span class=lnt>81
-</span><span class=lnt>82
-</span><span class=lnt>83
-</span><span class=lnt>84
-</span><span class=lnt>85
-</span><span class=lnt>86
-</span><span class=lnt>87
-</span><span class=lnt>88
-</span><span class=lnt>89
-</span><span class=lnt>90
-</span><span class=lnt>91
-</span><span class=lnt>92
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ openssl x509 -in depth1.pem -text -noout
+</span></span><span class=line><span class=cl>-----END CERTIFICATE-----</span></span></code></pre></div><h3 id=depth1-인증서-내용 class=headerLink><a href=#depth1-%ec%9d%b8%ec%a6%9d%ec%84%9c-%eb%82%b4%ec%9a%a9 class=header-mark></a>Depth=1 인증서 내용</h3><p>depth=1 인증서를 확인해 보면 아래와 같고, 이들 정보 중 유용한 것들을 살펴보자.</p><ul><li>Serial Number: 상위 인증기관(인증서 발급자)가 발행한 serial number</li><li>Subject: 인증서의 정보</li><li>Issuer: 인증서의 발급자의 정보</li><li>Subject Public Key Info: 인증서의 공개키 정보. 동일하게 prime256v1을 사용한다.</li><li>X509v3 extensions<ul><li>Key Usage: Digital Signature(디지털서명), Certificate Sign(인증서 서명), CRL Sign(CRL 서명)을 사용할 수 있다. CRL은 Certificate Revocation List의 약자로 분실 등으로 폐기된 인증서 목록을 관리하는 용도이다.</li><li>Extended Key Usage: 마찬가지로 TLS client/server 인증용도</li></ul></li><li>Signature Algorithm: sha256WithRSAEncryption 로 상위 인증서의 private 키로 서명되어 있다. 이를 보면 상위 인증서는 EC를 사용하지 않고, RSA를 사용함을 알수 있다.</li></ul><div class="code-block highlight is-closed show-line-numbers tw-group tw-my-2"><div class="code-block-title
+tw-flex
+tw-flex-row
+tw-justify-between
+tw-w-full tw-bg-bgColor-secondary"><button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-rotate-90
+tw-transition-[transform]
+tw-duration-500
+tw-ease-in-out
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></button><div class="code-block-title-bar tw-w-full"><p class="tw-select-none !tw-my-1">shell</p></div><div class=tw-flex><button class="line-number-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.show-line-numbers]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.is-wrap]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+hover:tw-text-fgColor-link
+print:!tw-hidden" title="Copy code">
+<span class="copy-icon tw-block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw-hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-hidden
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw-block tw-m-0 tw-p-0"><code id=codeblock-id-4 class="chroma
+!tw-block
+tw-p-0
+tw-m-0
+tw-transition-[max-height]
+tw-duration-500
+tw-ease-in-out
+group-[.is-closed]:!tw-max-h-0
+group-[.is-wrap]:tw-text-wrap
+tw-overflow-y-hidden
+tw-overflow-x-auto
+tw-scrollbar-thin"><span class=line><span class=cl>$ openssl x509 -in depth1.pem -text -noout
 </span></span><span class=line><span class=cl>Certificate:
 </span></span><span class=line><span class=cl>    Data:
 </span></span><span class=line><span class=cl>        Version: <span class=m>3</span> <span class=o>(</span>0x2<span class=o>)</span>
@@ -509,65 +460,57 @@ Root 인증 기관(Certificate Authority, CA)가 있다고 하자. Root CA는 �
 </span></span><span class=line><span class=cl>goE6y/SJXQ7vTQ1unBuCJN0yJV0ReFEQPaA1IwQvZW+cwdFD19Ae8zFnWSfda9J1
 </span></span><span class=line><span class=cl>CZMRJCQUzym+5iPDuI9yP+kHyCREU3qzuWFloUwOxkgAyXVjBYdwRVKD05WdRerw
 </span></span><span class=line><span class=cl>6DEdfgkfCv4+3ao8XnTSrLE<span class=o>=</span>
-</span></span><span class=line><span class=cl>-----END CERTIFICATE-----
-</span></span></code></pre></td></tr></table></div></div><h3 id=root-ca-depth2-인증서-내용 class=headerLink><a href=#root-ca-depth2-%ec%9d%b8%ec%a6%9d%ec%84%9c-%eb%82%b4%ec%9a%a9 class=header-mark></a>Root CA (depth=2) 인증서 내용</h3><p>최상위 인증서는 브라우저나 운영체제에 사전에 내장되어 있다. Linux의 경우에는 /etc/ssl/certs/ 디렉토리에 있다.</p><p>이 인증서의 내용을 보면 다음과 같다.</p><ul><li>Root CA 이므로 Subject와 서명한 Issuer가 동일한 self-signed 인증서이다.</li><li>Subject Public Key Info: RSA 2048 공개기카 들어있다.</li></ul><p>다른 필드도 이전에 설명한 것과 유사하다. 수신측은 이렇게 총 세개의 인증서를 이용하여 각각을 서명 검증하면 최종적으로 서버 인증서가 신뢰할 수 있는 것인지를 판단할 수 있다. 이 과정이 끝나면 blog.humminglab.io 서버의 공개키를 확인할 수 있고, 추가적인 과정을 통하여 진짜로 private key를 가지고 있는지를 확인하면 서버의 신원을 확인할 수 있게 된다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
-</span><span class=lnt> 2
-</span><span class=lnt> 3
-</span><span class=lnt> 4
-</span><span class=lnt> 5
-</span><span class=lnt> 6
-</span><span class=lnt> 7
-</span><span class=lnt> 8
-</span><span class=lnt> 9
-</span><span class=lnt>10
-</span><span class=lnt>11
-</span><span class=lnt>12
-</span><span class=lnt>13
-</span><span class=lnt>14
-</span><span class=lnt>15
-</span><span class=lnt>16
-</span><span class=lnt>17
-</span><span class=lnt>18
-</span><span class=lnt>19
-</span><span class=lnt>20
-</span><span class=lnt>21
-</span><span class=lnt>22
-</span><span class=lnt>23
-</span><span class=lnt>24
-</span><span class=lnt>25
-</span><span class=lnt>26
-</span><span class=lnt>27
-</span><span class=lnt>28
-</span><span class=lnt>29
-</span><span class=lnt>30
-</span><span class=lnt>31
-</span><span class=lnt>32
-</span><span class=lnt>33
-</span><span class=lnt>34
-</span><span class=lnt>35
-</span><span class=lnt>36
-</span><span class=lnt>37
-</span><span class=lnt>38
-</span><span class=lnt>39
-</span><span class=lnt>40
-</span><span class=lnt>41
-</span><span class=lnt>42
-</span><span class=lnt>43
-</span><span class=lnt>44
-</span><span class=lnt>45
-</span><span class=lnt>46
-</span><span class=lnt>47
-</span><span class=lnt>48
-</span><span class=lnt>49
-</span><span class=lnt>50
-</span><span class=lnt>51
-</span><span class=lnt>52
-</span><span class=lnt>53
-</span><span class=lnt>54
-</span><span class=lnt>55
-</span><span class=lnt>56
-</span><span class=lnt>57
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ openssl x509 -in /etc/ssl/certs/Baltimore_CyberTrust_Root.pem -text -noout
+</span></span><span class=line><span class=cl>-----END CERTIFICATE-----</span></span></code></pre></div><h3 id=root-ca-depth2-인증서-내용 class=headerLink><a href=#root-ca-depth2-%ec%9d%b8%ec%a6%9d%ec%84%9c-%eb%82%b4%ec%9a%a9 class=header-mark></a>Root CA (depth=2) 인증서 내용</h3><p>최상위 인증서는 브라우저나 운영체제에 사전에 내장되어 있다. Linux의 경우에는 /etc/ssl/certs/ 디렉토리에 있다.</p><p>이 인증서의 내용을 보면 다음과 같다.</p><ul><li>Root CA 이므로 Subject와 서명한 Issuer가 동일한 self-signed 인증서이다.</li><li>Subject Public Key Info: RSA 2048 공개기카 들어있다.</li></ul><p>다른 필드도 이전에 설명한 것과 유사하다. 수신측은 이렇게 총 세개의 인증서를 이용하여 각각을 서명 검증하면 최종적으로 서버 인증서가 신뢰할 수 있는 것인지를 판단할 수 있다. 이 과정이 끝나면 blog.humminglab.io 서버의 공개키를 확인할 수 있고, 추가적인 과정을 통하여 진짜로 private key를 가지고 있는지를 확인하면 서버의 신원을 확인할 수 있게 된다.</p><div class="code-block highlight is-closed show-line-numbers tw-group tw-my-2"><div class="code-block-title
+tw-flex
+tw-flex-row
+tw-justify-between
+tw-w-full tw-bg-bgColor-secondary"><button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-rotate-90
+tw-transition-[transform]
+tw-duration-500
+tw-ease-in-out
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></button><div class="code-block-title-bar tw-w-full"><p class="tw-select-none !tw-my-1">shell</p></div><div class=tw-flex><button class="line-number-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.show-line-numbers]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.is-wrap]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+hover:tw-text-fgColor-link
+print:!tw-hidden" title="Copy code">
+<span class="copy-icon tw-block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw-hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-hidden
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw-block tw-m-0 tw-p-0"><code id=codeblock-id-5 class="chroma
+!tw-block
+tw-p-0
+tw-m-0
+tw-transition-[max-height]
+tw-duration-500
+tw-ease-in-out
+group-[.is-closed]:!tw-max-h-0
+group-[.is-wrap]:tw-text-wrap
+tw-overflow-y-hidden
+tw-overflow-x-auto
+tw-scrollbar-thin"><span class=line><span class=cl>$ openssl x509 -in /etc/ssl/certs/Baltimore_CyberTrust_Root.pem -text -noout
 </span></span><span class=line><span class=cl>Certificate:
 </span></span><span class=line><span class=cl>    Data:
 </span></span><span class=line><span class=cl>        Version: <span class=m>3</span> <span class=o>(</span>0x2<span class=o>)</span>
@@ -623,23 +566,224 @@ Root 인증 기관(Certificate Authority, CA)가 있다고 하자. Root CA는 �
 </span></span><span class=line><span class=cl>         7e:35:ab:90:af:3e:30:94:7a:d0:33:3d:a7:65:0f:f5:fc:8e:
 </span></span><span class=line><span class=cl>         9e:62:cf:47:44:2c:01:5d:bb:1d:b5:32:d2:47:d2:38:2e:d0:
 </span></span><span class=line><span class=cl>         fe:81:dc:32:6a:1e:b5:ee:3c:d5:fc:e7:81:1d:19:c3:24:42:
-</span></span><span class=line><span class=cl>         ea:63:39:a9
-</span></span></code></pre></td></tr></table></div></div><p>참고로 위 인증서의 유효기간이 2025년 5월까지로 글 작성한 시점이 2023년 이므로 2년 가량 밖에 남지 않은 상태이다. 일반적인 PC 인 경우에는 이 인증서가 만료되기 전에 브라우저나 OS를 업그레이드를 하기도 하고, 여러 루트 인증서를 내장하고 있기 때문에 큰 문제가 되지 않을 수 있다.</p><p>하지만 IoT 장비의 경우 제한된 메모리 용량으로 인하여 보통은 하나의 root CA만 내장하고, 이로 서명된 MQTT 나 HTTPS 서버와 통신을 하는 경우가 많다. 이런 경우에는 이 root CA 의 인증서 유효기간이 만료되면 통신이 불가능하게 된다. 예를 들어 위와 같은 root CA를 이용하는 경우에 기기를 2년 동안 전원을 끄고 방치한 상태에서 켜보면 인증서 유효기간이 만료되어 더이상 OTA(Over The Air) 업그레이드도 불가능하고 IoT 서버와도 통신이 불가능하게 된다.</p><p>AWS IoT Core의 경우에는 아래 페이지를 보면 루트 인증서에 대한 정보가 나와 있다. 이를 사용하는 경우 인증서의 유효기간이 2038년 처럼 매우 길게 되어 있어 이런 문제가 발생할 가능성이 낮지만, 다른 CA에 서명된 경우 해당 CA의 인증서 유효기간을 반드시 확인하여 서비스가 중단되는 일이 없도록 하여야 한다.</p><ul><li><a href=https://docs.aws.amazon.com/ko_kr/iot/latest/developerguide/server-authentication.html target=_blank rel="noopener noreferrer">AWS IoT Core 서버인증</a></li></ul><h2 id=인증서-저장-방식 class=headerLink><a href=#%ec%9d%b8%ec%a6%9d%ec%84%9c-%ec%a0%80%ec%9e%a5-%eb%b0%a9%ec%8b%9d class=header-mark></a>인증서 저장 방식</h2><p>인증서는 text 형태로 저장하는 PEM 형식과 binary 형태로 저장하는 DER 형식이 있다.</p><h3 id=pem-형식 class=headerLink><a href=#pem-%ed%98%95%ec%8b%9d class=header-mark></a>PEM 형식</h3><p>PEM 형식은 다음처럼 구성된다. &ldquo;HELLO&rdquo; 부분이 용도에 따라서 &ldquo;CERTIFICATE&rdquo;, &ldquo;PRIVATE KEY&rdquo;, &ldquo;CERTIFICATE REQUEST&rdquo; 등으로 구분될 수 있다.</p><p>내용은 text로 보여지도록 base64 인코딩 되어 있다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
-</span><span class=lnt>2
-</span><span class=lnt>3
-</span><span class=lnt>4
-</span><span class=lnt>5
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>-----BEGIN HELLO-----
+</span></span><span class=line><span class=cl>         ea:63:39:a9</span></span></code></pre></div><p>참고로 위 인증서의 유효기간이 2025년 5월까지로 글 작성한 시점이 2023년 이므로 2년 가량 밖에 남지 않은 상태이다. 일반적인 PC 인 경우에는 이 인증서가 만료되기 전에 브라우저나 OS를 업그레이드를 하기도 하고, 여러 루트 인증서를 내장하고 있기 때문에 큰 문제가 되지 않을 수 있다.</p><p>하지만 IoT 장비의 경우 제한된 메모리 용량으로 인하여 보통은 하나의 root CA만 내장하고, 이로 서명된 MQTT 나 HTTPS 서버와 통신을 하는 경우가 많다. 이런 경우에는 이 root CA 의 인증서 유효기간이 만료되면 통신이 불가능하게 된다. 예를 들어 위와 같은 root CA를 이용하는 경우에 기기를 2년 동안 전원을 끄고 방치한 상태에서 켜보면 인증서 유효기간이 만료되어 더이상 OTA(Over The Air) 업그레이드도 불가능하고 IoT 서버와도 통신이 불가능하게 된다.</p><p>AWS IoT Core의 경우에는 아래 페이지를 보면 루트 인증서에 대한 정보가 나와 있다. 이를 사용하는 경우 인증서의 유효기간이 2038년 처럼 매우 길게 되어 있어 이런 문제가 발생할 가능성이 낮지만, 다른 CA에 서명된 경우 해당 CA의 인증서 유효기간을 반드시 확인하여 서비스가 중단되는 일이 없도록 하여야 한다.</p><ul><li><a href=https://docs.aws.amazon.com/ko_kr/iot/latest/developerguide/server-authentication.html target=_blank rel="noopener noreferrer">AWS IoT Core 서버인증</a></li></ul><h2 id=인증서-저장-방식 class=headerLink><a href=#%ec%9d%b8%ec%a6%9d%ec%84%9c-%ec%a0%80%ec%9e%a5-%eb%b0%a9%ec%8b%9d class=header-mark></a>인증서 저장 방식</h2><p>인증서는 text 형태로 저장하는 PEM 형식과 binary 형태로 저장하는 DER 형식이 있다.</p><h3 id=pem-형식 class=headerLink><a href=#pem-%ed%98%95%ec%8b%9d class=header-mark></a>PEM 형식</h3><p>PEM 형식은 다음처럼 구성된다. &ldquo;HELLO&rdquo; 부분이 용도에 따라서 &ldquo;CERTIFICATE&rdquo;, &ldquo;PRIVATE KEY&rdquo;, &ldquo;CERTIFICATE REQUEST&rdquo; 등으로 구분될 수 있다.</p><p>내용은 text로 보여지도록 base64 인코딩 되어 있다.</p><div class="code-block highlight is-open show-line-numbers tw-group tw-my-2"><div class="code-block-title
+tw-flex
+tw-flex-row
+tw-justify-between
+tw-w-full tw-bg-bgColor-secondary"><button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-rotate-90
+tw-transition-[transform]
+tw-duration-500
+tw-ease-in-out
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></button><div class="code-block-title-bar tw-w-full"><p class="tw-select-none !tw-my-1">text</p></div><div class=tw-flex><button class="line-number-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.show-line-numbers]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.is-wrap]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+hover:tw-text-fgColor-link
+print:!tw-hidden" title="Copy code">
+<span class="copy-icon tw-block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw-hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-hidden
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw-block tw-m-0 tw-p-0"><code id=codeblock-id-6 class="chroma
+!tw-block
+tw-p-0
+tw-m-0
+tw-transition-[max-height]
+tw-duration-500
+tw-ease-in-out
+group-[.is-closed]:!tw-max-h-0
+group-[.is-wrap]:tw-text-wrap
+tw-overflow-y-hidden
+tw-overflow-x-auto
+tw-scrollbar-thin"><span class=line><span class=cl>-----BEGIN HELLO-----
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>base64-encoded-text
 </span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>-----END HELLO-----
-</span></span></code></pre></td></tr></table></div></div><h3 id=der-형식 class=headerLink><a href=#der-%ed%98%95%ec%8b%9d class=header-mark></a>DER 형식</h3><p>DER 형식은 PEM 의 본문이 base64 인코딩 되어 있지 않고 그대로 binary 형태로 저장되어 있다.</p><p>예를 들어 depth1.pem 을 다음과 같이 DER로 변경할 수 있다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ openssl x509 -in depth1.pem -out depth1.der -outform DER
-</span></span></code></pre></td></tr></table></div></div><p>마찬가지로 DER 형식의 인증서 내용을 확인해 볼수도 있다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ openssl x509 -in depth1.der -inform DER -text -noout
-</span></span></code></pre></td></tr></table></div></div><p>DER 형식은 ASN.1 형식으로 인코딩 되어 있으며, 이를 파싱하여 인증서 내용을 확인할 수 있다. 아래와 같이 asn1parse 명령을 사용할 수 있다.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ openssl asn1parse -in depth1.der -inform DER
-</span></span></code></pre></td></tr></table></div></div><h2 id=정리 class=headerLink><a href=#%ec%a0%95%eb%a6%ac class=header-mark></a>정리</h2><p>이상으로 인증서 관련한 사항은 이해에 필요한 내용 위주로 간략하게 정리해 보았다.</p></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>Updated on 2023-04-02</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/pki/>PKI</a>,&nbsp;<a href=/tags/x.509/>X.509</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>Back</a></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span></section></div><div class=post-nav><a href=/posts/platformio-2-stm32-cube/ class=prev rel=prev title="PlatformIO (2) - STM32Cube Platform 개발"><i class="fas fa-angle-left fa-fw"></i>PlatformIO (2) - STM32Cube Platform 개발</a>
-<a href=/posts/http-sha-256-digest-auth/ class=next rel=next title="HTTP SHA-256 Digest Authentication">HTTP SHA-256 Digest Authentication<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=giscus></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://giscus.app/>giscus</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2024</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://www.humminglab.io target=_blank rel="noopener noreferrer">HummingLab</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div><div class=footer-line></div><div class=footer-line></div></div></footer></div><div id=fixed-buttons><a href=#back-to-top id=back-to-top-button class=fixed-button title="Back to Top"><i class="fas fa-arrow-up fa-fw"></i>
-</a><a href=# id=view-comments class=fixed-button title="View Comments"><i class="fas fa-comment fa-fw"></i></a></div><div class=assets><link rel=stylesheet href=/lib/katex/katex.min.css><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/katex/copy-tex.min.css><noscript><link rel=stylesheet href=/lib/katex/copy-tex.min.css></noscript><script type=text/javascript>window.config={code:{copyTitle:"Copy to clipboard",maxShownLines:50},comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataInputPosition:"bottom",dataLang:"en",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",dataStrict:"0",lightTheme:"light"}},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1}}</script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js defer></script><script type=text/javascript src=/lib/katex/auto-render.min.js defer></script><script type=text/javascript src=/lib/katex/copy-tex.min.js defer></script><script type=text/javascript src=/lib/katex/mhchem.min.js defer></script><script type=text/javascript src=/js/katex.min.js defer></script><script type=text/javascript src=/js/theme.min.js defer></script><script type=text/javascript src=/js/giscus.min.js defer></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","UA-83257319-3",{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=UA-83257319-3" async></script></div></body></html>
+</span></span><span class=line><span class=cl>-----END HELLO-----</span></span></code></pre></div><h3 id=der-형식 class=headerLink><a href=#der-%ed%98%95%ec%8b%9d class=header-mark></a>DER 형식</h3><p>DER 형식은 PEM 의 본문이 base64 인코딩 되어 있지 않고 그대로 binary 형태로 저장되어 있다.</p><p>예를 들어 depth1.pem 을 다음과 같이 DER로 변경할 수 있다.</p><div class="code-block highlight is-open show-line-numbers tw-group tw-my-2"><div class="code-block-title
+tw-flex
+tw-flex-row
+tw-justify-between
+tw-w-full tw-bg-bgColor-secondary"><button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-rotate-90
+tw-transition-[transform]
+tw-duration-500
+tw-ease-in-out
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></button><div class="code-block-title-bar tw-w-full"><p class="tw-select-none !tw-my-1">shell</p></div><div class=tw-flex><button class="line-number-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.show-line-numbers]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.is-wrap]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+hover:tw-text-fgColor-link
+print:!tw-hidden" title="Copy code">
+<span class="copy-icon tw-block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw-hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-hidden
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw-block tw-m-0 tw-p-0"><code id=codeblock-id-7 class="chroma
+!tw-block
+tw-p-0
+tw-m-0
+tw-transition-[max-height]
+tw-duration-500
+tw-ease-in-out
+group-[.is-closed]:!tw-max-h-0
+group-[.is-wrap]:tw-text-wrap
+tw-overflow-y-hidden
+tw-overflow-x-auto
+tw-scrollbar-thin"><span class=line><span class=cl>$ openssl x509 -in depth1.pem -out depth1.der -outform DER</span></span></code></pre></div><p>마찬가지로 DER 형식의 인증서 내용을 확인해 볼수도 있다.</p><div class="code-block highlight is-open show-line-numbers tw-group tw-my-2"><div class="code-block-title
+tw-flex
+tw-flex-row
+tw-justify-between
+tw-w-full tw-bg-bgColor-secondary"><button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-rotate-90
+tw-transition-[transform]
+tw-duration-500
+tw-ease-in-out
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></button><div class="code-block-title-bar tw-w-full"><p class="tw-select-none !tw-my-1">shell</p></div><div class=tw-flex><button class="line-number-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.show-line-numbers]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.is-wrap]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+hover:tw-text-fgColor-link
+print:!tw-hidden" title="Copy code">
+<span class="copy-icon tw-block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw-hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-hidden
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw-block tw-m-0 tw-p-0"><code id=codeblock-id-8 class="chroma
+!tw-block
+tw-p-0
+tw-m-0
+tw-transition-[max-height]
+tw-duration-500
+tw-ease-in-out
+group-[.is-closed]:!tw-max-h-0
+group-[.is-wrap]:tw-text-wrap
+tw-overflow-y-hidden
+tw-overflow-x-auto
+tw-scrollbar-thin"><span class=line><span class=cl>$ openssl x509 -in depth1.der -inform DER -text -noout</span></span></code></pre></div><p>DER 형식은 ASN.1 형식으로 인코딩 되어 있으며, 이를 파싱하여 인증서 내용을 확인할 수 있다. 아래와 같이 asn1parse 명령을 사용할 수 있다.</p><div class="code-block highlight is-open show-line-numbers tw-group tw-my-2"><div class="code-block-title
+tw-flex
+tw-flex-row
+tw-justify-between
+tw-w-full tw-bg-bgColor-secondary"><button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-rotate-90
+tw-transition-[transform]
+tw-duration-500
+tw-ease-in-out
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 320 512"><path d="M285.476 272.971 91.132 467.314c-9.373 9.373-24.569 9.373-33.941.0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941.0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"/></svg></button><div class="code-block-title-bar tw-w-full"><p class="tw-select-none !tw-my-1">shell</p></div><div class=tw-flex><button class="line-number-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.show-line-numbers]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle line numbers"><svg class="icon" viewBox="0 0 512 512"><path d="M61.77 401l17.5-20.15a19.92 19.92.0 005.07-14.19v-3.31C84.34 356 80.5 352 73 352H16a8 8 0 00-8 8v16a8 8 0 008 8h22.83a157.41 157.41.0 00-11 12.31l-5.61 7c-4 5.07-5.25 10.13-2.8 14.88l1.05 1.93c3 5.76 6.29 7.88 12.25 7.88h4.73c10.33.0 15.94 2.44 15.94 9.09.0 4.72-4.2 8.22-14.36 8.22a41.54 41.54.0 01-15.47-3.12c-6.49-3.88-11.74-3.5-15.6 3.12l-5.59 9.31c-3.72 6.13-3.19 11.72 2.63 15.94 7.71 4.69 20.38 9.44 37 9.44 34.16.0 48.5-22.75 48.5-44.12-.03-14.38-9.12-29.76-28.73-34.88zM496 224H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zm0-160H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16V80a16 16 0 00-16-16zm0 320H176a16 16 0 00-16 16v32a16 16 0 0016 16h320a16 16 0 0016-16v-32a16 16 0 00-16-16zM16 160h64a8 8 0 008-8v-16a8 8 0 00-8-8H64V40a8 8 0 00-8-8H32a8 8 0 00-7.14 4.42l-8 16A8 8 0 0024 64h8v64H16a8 8 0 00-8 8v16a8 8 0 008 8zm-3.91 160H80a8 8 0 008-8v-16a8 8 0 00-8-8H41.32c3.29-10.29 48.34-18.68 48.34-56.44.0-29.06-25-39.56-44.47-39.56-21.36.0-33.8 10-40.46 18.75-4.37 5.59-3 10.84 2.8 15.37l8.58 6.88c5.61 4.56 11 2.47 16.12-2.44a13.44 13.44.0 019.46-3.84c3.33.0 9.28 1.56 9.28 8.75C51 248.19.0 257.31.0 304.59v4C0 316 5.08 320 12.09 320z"/></svg></button>
+<button class="wrap-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+group-[.is-wrap]:tw-text-fgColor-link
+print:!tw-hidden" title="Toggle code wrap"><svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg></button>
+<button class="copy-code-button
+tw-select-none
+tw-mx-2
+tw-hidden
+group-[.is-open]:tw-block
+hover:tw-text-fgColor-link
+print:!tw-hidden" title="Copy code">
+<span class="copy-icon tw-block"><svg class="icon" viewBox="0 0 448 512"><path d="M433.941 65.941l-51.882-51.882A48 48 0 00348.118.0H176c-26.51.0-48 21.49-48 48v48H48c-26.51.0-48 21.49-48 48v320c0 26.51 21.49 48 48 48h224c26.51.0 48-21.49 48-48v-48h80c26.51.0 48-21.49 48-48V99.882a48 48 0 00-14.059-33.941zM266 464H54a6 6 0 01-6-6V150a6 6 0 016-6h74v224c0 26.51 21.49 48 48 48h96v42a6 6 0 01-6 6zm128-96H182a6 6 0 01-6-6V54a6 6 0 016-6h106v88c0 13.255 10.745 24 24 24h88v202a6 6 0 01-6 6zm6-256h-64V48h9.632c1.591.0 3.117.632 4.243 1.757l48.368 48.368a6 6 0 011.757 4.243V112z"/></svg></span>
+<span class="check-icon tw-hidden"><svg class="icon" viewBox="0 0 512 512"><path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206.0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204.0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204.0l36.203 36.204c9.997 9.997 9.997 26.206.0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"/></svg></span>
+</button>
+<button class="tw-select-none
+tw-mx-2
+tw-block
+group-[.is-open]:tw-hidden
+print:!tw-hidden" disabled aria-hidden=true><svg class="icon" viewBox="0 0 512 512"><path d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8.0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"/></svg></button></div></div><pre style=counter-reset:codeblock class="tw-block tw-m-0 tw-p-0"><code id=codeblock-id-9 class="chroma
+!tw-block
+tw-p-0
+tw-m-0
+tw-transition-[max-height]
+tw-duration-500
+tw-ease-in-out
+group-[.is-closed]:!tw-max-h-0
+group-[.is-wrap]:tw-text-wrap
+tw-overflow-y-hidden
+tw-overflow-x-auto
+tw-scrollbar-thin"><span class=line><span class=cl>$ openssl asn1parse -in depth1.der -inform DER</span></span></code></pre></div><h2 id=정리 class=headerLink><a href=#%ec%a0%95%eb%a6%ac class=header-mark></a>정리</h2><p>이상으로 인증서 관련한 사항은 이해에 필요한 내용 위주로 간략하게 정리해 보았다.</p></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>Updated on 2023-04-02</span></div><div class=post-info-license></div></div><div class="post-info-line print:!tw-hidden"><div class=post-info-md></div><div class=post-info-share></div></div></div><div class=post-info-more><section class=post-tags><svg class="icon" viewBox="0 0 640 512"><path d="M497.941 225.941 286.059 14.059A48 48 0 00252.118.0H48C21.49.0.0 21.49.0 48v204.118a48 48 0 0014.059 33.941l211.882 211.882c18.744 18.745 49.136 18.746 67.882.0l204.118-204.118c18.745-18.745 18.745-49.137.0-67.882zM112 160c-26.51.0-48-21.49-48-48s21.49-48 48-48 48 21.49 48 48-21.49 48-48 48zm513.941 133.823L421.823 497.941c-18.745 18.745-49.137 18.745-67.882.0l-.36-.36L527.64 323.522c16.999-16.999 26.36-39.6 26.36-63.64s-9.362-46.641-26.36-63.64L331.397.0h48.721a48 48 0 0133.941 14.059l211.882 211.882c18.745 18.745 18.745 49.137.0 67.882z"/></svg>&nbsp;<a href=/tags/pki/>PKI</a>,&nbsp;<a href=/tags/x.509/>X.509</a></section><section class=print:!tw-hidden><span><button class="tw-text-fgColor-link-muted hover:tw-text-fgColor-link-muted-hover" onclick=window.history.back()>Back</button></span>&nbsp;|&nbsp;<span><a href=/>Home</a></span></section></div><div class="post-nav print:tw-hidden"><a href=/posts/platformio-2-stm32-cube/ class=prev rel=prev title="PlatformIO (2) - STM32Cube Platform 개발"><svg class="icon" viewBox="0 0 256 512"><path d="M31.7 239l136-136c9.4-9.4 24.6-9.4 33.9.0l22.6 22.6c9.4 9.4 9.4 24.6.0 33.9L127.9 256l96.4 96.4c9.4 9.4 9.4 24.6.0 33.9L201.7 409c-9.4 9.4-24.6 9.4-33.9.0l-136-136c-9.5-9.4-9.5-24.6-.1-34z"/></svg>PlatformIO (2) - STM32Cube Platform 개발</a>
+<a href=/posts/http-sha-256-digest-auth/ class=next rel=next title="HTTP SHA-256 Digest Authentication">HTTP SHA-256 Digest Authentication<svg class="icon" viewBox="0 0 256 512"><path d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9.0l-22.6-22.6c-9.4-9.4-9.4-24.6.0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6.0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9.0l136 136c9.5 9.4 9.5 24.6.1 34z"/></svg></a></div></div><div id=comments class="print:!tw-hidden tw-pt-32 tw-pb-8"><div id=giscus></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://giscus.app/>giscus</a>.</noscript></div></article></main><footer class=footer><div class=footer-container><div class=footer-line><svg class="icon" viewBox="0 0 512 512"><path d="M256 8C119.033 8 8 119.033 8 256s111.033 248 248 248 248-111.033 248-248S392.967 8 256 8zm0 448c-110.532.0-2e2-89.451-2e2-2e2.0-110.531 89.451-2e2 2e2-2e2 110.532.0 2e2 89.451 2e2 2e2.0 110.532-89.451 2e2-2e2 2e2zm107.351-101.064c-9.614 9.712-45.53 41.396-104.065 41.396-82.43.0-140.484-61.425-140.484-141.567.0-79.152 60.275-139.401 139.762-139.401 55.531.0 88.738 26.62 97.593 34.779a11.965 11.965.0 011.936 15.322l-18.155 28.113c-3.841 5.95-11.966 7.282-17.499 2.921-8.595-6.776-31.814-22.538-61.708-22.538-48.303.0-77.916 35.33-77.916 80.082.0 41.589 26.888 83.692 78.277 83.692 32.657.0 56.843-19.039 65.726-27.225 5.27-4.857 13.596-4.039 17.82 1.738l19.865 27.17a11.947 11.947.0 01-1.152 15.518z"/></svg>2025<span class=author>&nbsp;<a href=https://www.humminglab.io target=_blank rel="noopener noreferrer">HummingLab</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div><div class=footer-line></div><div class=footer-line></div></div></footer><div class="print:!tw-hidden tw-flex tw-flex-col tw-fixed tw-right-4 tw-bottom-4 tw-gap-2"><a href=#back-to-top id=back-to-top-button class="tw-transition-opacity tw-opacity-0 tw-block tw-bg-bgColor-secondary tw-rounded-full" style=padding:.6rem;line-height:1.3rem;font-size:1rem title="Back to Top"><svg class="icon" viewBox="0 0 448 512"><path d="M34.9 289.5l-22.2-22.2c-9.4-9.4-9.4-24.6.0-33.9L207 39c9.4-9.4 24.6-9.4 33.9.0l194.3 194.3c9.4 9.4 9.4 24.6.0 33.9L413 289.4c-9.5 9.5-25 9.3-34.3-.4L264 168.6V456c0 13.3-10.7 24-24 24h-32c-13.3.0-24-10.7-24-24V168.6L69.2 289.1c-9.3 9.8-24.8 10-34.3.4z"/></svg>
+</a><button id=toc-drawer-button class="tw-block tw-bg-bgColor-secondary tw-rounded-full md:tw-hidden" style=padding:.6rem;line-height:1.3rem;font-size:1rem>
+<svg class="icon" viewBox="0 0 448 512"><path d="M16 132h416c8.837.0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163.0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837.0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837.0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg>
+</button><a href=#comments id=view-comments class="tw-block tw-bg-bgColor-secondary tw-rounded-full" style=padding:.6rem;line-height:1.3rem;font-size:1rem title="View Comments"><svg class="icon" viewBox="0 0 512 512"><path d="M256 32C114.6 32 0 125.1.0 240c0 49.6 21.4 95 57 130.7C44.5 421.1 2.7 466 2.2 466.5c-2.2 2.3-2.8 5.7-1.5 8.7S4.8 480 8 480c66.3.0 116-31.8 140.6-51.4 32.7 12.3 69 19.4 107.4 19.4 141.4.0 256-93.1 256-208S397.4 32 256 32z"/></svg></a></div><script type=module>
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: (window.theme === 'dark' ? 'dark' : 'default') });
+</script><link rel=stylesheet href=/lib/katex/katex.min.css><link rel=preload as=style onload='this.onload=null,this.rel="stylesheet"' href=/lib/katex/copy-tex.min.css><noscript><link rel=stylesheet href=/lib/katex/copy-tex.min.css></noscript><script>window.config={comment:{giscus:{darkTheme:"dark",dataCategory:"Announcements",dataCategoryId:"DIC_kwDOGdk00s4CAGXN",dataEmitMetadata:"0",dataInputPosition:"bottom",dataLang:"en",dataLoading:"lazy",dataMapping:"pathname",dataReactionsEnabled:"1",dataRepo:"humminglab/blog.humminglab.io",dataRepoId:"R_kgDOGdk00g",dataStrict:"0",lightTheme:"light"}},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1}}</script><script src=/lib/katex/katex.min.js defer></script><script src=/lib/katex/auto-render.min.js defer></script><script src=/lib/katex/copy-tex.min.js defer></script><script src=/lib/katex/mhchem.min.js defer></script><script src=/js/katex.min.js defer></script><script src=/js/theme.min.js defer></script><script src=/js/giscus.min.js defer></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","UA-83257319-3",{anonymize_ip:!0})</script><script src="https://www.googletagmanager.com/gtag/js?id=UA-83257319-3" async></script><script type=speculationrules>
+  {
+    "prerender": [
+      {
+        "where": { "href_matches": "/*" },
+        "eagerness": "moderate"
+      }
+    ]
+  }
+</script></body></html>

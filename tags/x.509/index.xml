@@ -1,3 +1,24 @@
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>X.509 - Tag - All about IoT</title><link>https://blog.humminglab.io/tags/x.509/</link><description>X.509 - Tag - All about IoT</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 02 Apr 2023 20:00:00 +0900</lastBuildDate><atom:link href="https://blog.humminglab.io/tags/x.509/" rel="self" type="application/rss+xml"/><item><title>TLS/암호 알고리즘 쉽게 이해하기(14) - PKI and X.509</title><link>https://blog.humminglab.io/posts/tls-cryptography-14-x509/</link><pubDate>Sun, 02 Apr 2023 20:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/tls-cryptography-14-x509/</guid><description>이전글 에서 설명한 Digital Signature 를 사용하면 문서의 서명을 검증할 수 있다. 이 서명을 체이닝으로 이어 나가면 3자 인증 기반의 PKI(Public Key Infrastructure)를 구성할 수 있다. X.509 는 ITU-T 에서 정의한 PKI 표준이다. 우리가 흔히 사용하는 인증서는 X.509 표준을 따른다.
-인증의 기본적인 방법은 다음과 같은 절차이다.
-Root 인증 기관(Certificate Authority, CA)가 있다고 하자. Root CA는 자신의 public key 를 별도의 방법으로 공개를 한다. 일반적인 PC 환경에서는 웹브라우저나 OS에 검증된 CA 인증서들이 내장되어 있다.</description></item></channel></rss>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>X.509 - Tag - All about IoT</title><link>https://blog.humminglab.io/tags/x.509/</link><description>X.509 - Tag - All about IoT</description><generator>Hugo -- gohugo.io</generator><language>en</language><managingEditor>info@humminglab.io (HummingLab)</managingEditor><webMaster>info@humminglab.io (HummingLab)</webMaster><lastBuildDate>Sun, 02 Apr 2023 20:00:00 +0900</lastBuildDate><atom:link href="https://blog.humminglab.io/tags/x.509/" rel="self" type="application/rss+xml"/><item><title>TLS/암호 알고리즘 쉽게 이해하기(14) - PKI and X.509</title><link>https://blog.humminglab.io/posts/tls-cryptography-14-x509/</link><pubDate>Sun, 02 Apr 2023 20:00:00 +0900</pubDate><author><name>YSLee</name><uri>https://www.humminglab.io</uri><email>info@humminglab.io</email></author><guid>https://blog.humminglab.io/posts/tls-cryptography-14-x509/</guid><description><![CDATA[<p>이전글 에서 설명한 <a href="https://blog.humminglab.io/posts/tls-cryptography-9-dsa/" rel="">Digital Signature</a> 를 사용하면 문서의 서명을 검증할 수 있다. 이 서명을 체이닝으로 이어 나가면 3자 인증 기반의 PKI(Public Key Infrastructure)를 구성할 수 있다. <a href="https://www.itu.int/rec/T-REC-X.509" target="_blank" rel="noopener noreferrer">X.509</a> 는 ITU-T 에서 정의한 PKI 표준이다. 우리가 흔히 사용하는 인증서는 X.509 표준을 따른다.</p>
+<p>인증의 기본적인 방법은 다음과 같은 절차이다.</p>
+<ul>
+<li>Root 인증 기관(Certificate Authority, CA)가 있다고 하자. Root CA는 자신의 public key 를 별도의 방법으로 공개를 한다. 일반적인 PC 환경에서는 웹브라우저나 OS에 검증된 CA 인증서들이 내장되어 있다.</li>
+<li>Alice는 자신의 정보와 public key를 포함한 문서를 만들어서 Root CA에게 별도의 방법으로 제출(CSR, Certificate Signing Request)하여 root CA의 private key로 서명을 받아온다.</li>
+<li>다른 사용자 Bob은 Alice와 통신 시 먼저 인증서를 요청하면 Alice는 자신의 인증서를 보낸다.</li>
+<li>Bob은 Alice의 인증서를 Root CA의 public key로 서명 검증한다.</li>
+<li>Bob이 Alias에게 임의의 랜덤한 문자열을 보내어 서명을 요청하면 Alias는 자신의 private key로 서명을 하여 Bob에게 보낸다.</li>
+<li>Bob은 Alias의 public key로 서명을 검증해 보면 Alias private key를 들고 있는 Alias 본인임을 알 수 있다.</li>
+</ul>
+<pre class="mermaid">sequenceDiagram
+    participant Root CA
+    participant Alias
+    participant Bob
+    Root CA-->>Bob: Root CA public key 전달
+    Alias-->>Root CA: 자신의 정보와 public key를 포함한 문서 전달
+    Root CA-->>Alias: Root CA private key로 서명하여 전달
+    Bob->>Alias: Alias 인증서 요청
+    Alias->>Bob: Alias 인증서 전달
+    note over Bob: Alias 인증서를 root CA publickey로 검증
+    Bob->>Alias: 임의의 랜덤한 문자열 전달
+    Alias->>Bob: 문자열을 Alias private key로 서명하여 전달
+    note over Bob: Alias public key로 서명 검증
+</pre><p>위와 같은 절차가 PKI를 이용하여 서버 검증을 하는 기본적인 방법이다. 사전에 Root CA 인증서만 있으면, 이 Root CA 가 서명한 인증서를 검증할 수 있다. 이와 깉은 인증 체인을 2단계, 3단계 이상으로 체인으로 연결하여 구성할 수도 있다.</p>]]></description></item></channel></rss>
