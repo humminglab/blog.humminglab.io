@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BT Tester 개인정보처리방침 · Privacy Policy</title>
+<style>
+  :root { --bg: #ffffff; --fg: #1f2328; --muted: #59636e; --line: #d1d9e0; --accent: #1f6fb0; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0d1117; --fg: #e6edf3; --muted: #9198a1; --line: #3d444d; --accent: #4da3ff; }
+  }
+  body { margin: 0; background: var(--bg); color: var(--fg);
+         font: 16px/1.7 -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1 { font-size: 1.6rem; margin: 0 0 4px; }
+  h2 { font-size: 1.15rem; margin: 32px 0 8px; }
+  p, li { color: var(--fg); }
+  .meta { color: var(--muted); font-size: .9rem; margin: 0 0 24px; }
+  nav a, a { color: var(--accent); }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 48px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+  th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+</style>
+</head>
+<body>
+<main>
+<nav><a href="#ko">한국어</a> · <a href="#en">English</a></nav>
+
+<section id="ko" lang="ko">
+<h1>BT Tester 개인정보처리방침</h1>
+<p class="meta">앱: BT Tester (io.humminglab.app.bttester) · 운영: HummingLab · 시행일: 2026년 10월 12일</p>
+
+<p>BT Tester(이하 "앱")는 HummingLab이 제공하는 Bluetooth Low Energy(BLE) 기기 설치·점검용 업무 도구입니다. 이 방침은 앱이 어떤 정보를 다루는지 설명합니다.</p>
+
+<h2>1. 수집하는 개인정보</h2>
+<p>앱은 개인정보를 수집하지 않습니다. 회원가입이나 로그인이 없고, HummingLab 서버로 어떤 정보도 전송하지 않으며, 광고나 분석(애널리틱스) 도구를 사용하지 않습니다.</p>
+
+<h2>2. 기기 안에서만 처리되는 정보</h2>
+<table>
+<tr><th>정보</th><th>용도와 처리 방식</th></tr>
+<tr><td>주변 BLE 기기의 이름, 주소, 신호 세기(RSSI)</td><td>스캔 목록 표시와 연결에만 사용합니다. 화면에 표시될 뿐 저장하거나 외부로 전송하지 않습니다.</td></tr>
+<tr><td>Wi-Fi 네트워크 이름(SSID)과 비밀번호</td><td>프로비저닝 시 사용자가 입력한 값을 BLE로 사용자가 연결한 기기에 직접 전달합니다. 앱에 저장하지 않으며 다른 곳으로 전송하지 않습니다.</td></tr>
+<tr><td>기기 자산번호 (QR 코드)</td><td>연결할 기기를 찾고 허브 AP 비밀번호를 계산하는 데 기기 안에서만 사용합니다.</td></tr>
+<tr><td>송수신 명령 기록</td><td>점검 중 화면 표시용으로 메모리에만 보관하며 앱을 종료하면 사라집니다.</td></tr>
+<tr><td>앱 설정 (스캔 필터, 명령 줄바꿈 설정)</td><td>사용자 편의를 위해 기기 내부 저장소에만 저장합니다. 앱을 삭제하면 함께 삭제됩니다.</td></tr>
+</table>
+
+<h2>3. 권한</h2>
+<ul>
+<li><b>근처 기기(Bluetooth 스캔·연결)</b>: BLE 기기 검색과 통신에 사용합니다. 스캔 결과로 위치를 추정하지 않습니다.</li>
+<li><b>위치</b>: Android 11 이하에서만 요청하며, 해당 버전의 Android가 BLE 스캔에 위치 권한을 요구하기 때문입니다. 앱은 위치 정보를 읽거나 저장하지 않습니다.</li>
+<li><b>카메라</b>: 자산번호 QR 코드 스캔에만 사용합니다. 영상과 사진은 저장하거나 전송하지 않습니다.</li>
+</ul>
+
+<h2>4. 제3자 구성요소</h2>
+<p>QR 코드 인식에는 기기 안에서 동작하는 Google ML Kit 바코드 스캐닝을 사용합니다. 카메라 영상은 기기 안에서만 처리됩니다. Google은 ML Kit의 품질 개선을 위해 성능·사용량 지표 같은 진단 정보를 수집할 수 있으며, 이는 <a href="https://developers.google.com/ml-kit/terms">ML Kit 약관</a>과 <a href="https://policies.google.com/privacy">Google 개인정보처리방침</a>을 따릅니다.</p>
+
+<h2>5. 아동</h2>
+<p>앱은 설치·유지보수 담당자를 위한 업무용 도구이며 아동을 대상으로 하지 않습니다.</p>
+
+<h2>6. 방침의 변경</h2>
+<p>이 방침이 바뀌면 이 페이지에 게시하고 시행일을 갱신합니다.</p>
+
+<h2>7. 문의</h2>
+<p>HummingLab · <a href="mailto:sungyong@humminglab.io">sungyong@humminglab.io</a></p>
+</section>
+
+<hr>
+
+<section id="en" lang="en">
+<h1>BT Tester Privacy Policy</h1>
+<p class="meta">App: BT Tester (io.humminglab.app.bttester) · Operated by HummingLab · Effective October 12, 2026</p>
+
+<p>BT Tester ("the app") is a work tool from HummingLab for installing and checking Bluetooth Low Energy (BLE) devices. This policy explains what information the app handles.</p>
+
+<h2>1. Personal information we collect</h2>
+<p>The app does not collect personal information. There is no account or sign-in, nothing is sent to HummingLab servers, and the app contains no advertising or analytics.</p>
+
+<h2>2. Information processed only on your device</h2>
+<table>
+<tr><th>Information</th><th>Purpose and handling</th></tr>
+<tr><td>Names, addresses and signal strength (RSSI) of nearby BLE devices</td><td>Used only to list and connect to devices. Shown on screen; not stored or transmitted.</td></tr>
+<tr><td>Wi-Fi network name (SSID) and password</td><td>Entered by you during provisioning and sent over BLE directly to the device you connected to. Not stored by the app and not sent anywhere else.</td></tr>
+<tr><td>Device asset number (QR code)</td><td>Used on the device to find the device to connect to and to derive the hub access-point passphrase.</td></tr>
+<tr><td>Command TX/RX history</td><td>Kept in memory for display during a session and discarded when the app closes.</td></tr>
+<tr><td>App settings (scan filter, command line ending)</td><td>Stored in the app's local storage on your device for convenience. Removed when the app is uninstalled.</td></tr>
+</table>
+
+<h2>3. Permissions</h2>
+<ul>
+<li><b>Nearby devices (Bluetooth scan and connect)</b>: to discover and communicate with BLE devices. Scan results are not used to infer location.</li>
+<li><b>Location</b>: requested only on Android 11 and earlier, where Android requires it for BLE scanning. The app does not read or store your location.</li>
+<li><b>Camera</b>: only to scan asset-number QR codes. No images or video are stored or transmitted.</li>
+</ul>
+
+<h2>4. Third-party components</h2>
+<p>QR codes are read with Google ML Kit barcode scanning, which runs on the device; camera frames are processed locally. Google may collect diagnostic information such as performance and usage metrics to improve ML Kit, governed by the <a href="https://developers.google.com/ml-kit/terms">ML Kit Terms</a> and the <a href="https://policies.google.com/privacy">Google Privacy Policy</a>.</p>
+
+<h2>5. Children</h2>
+<p>The app is a work tool for installation and maintenance staff and is not directed at children.</p>
+
+<h2>6. Changes</h2>
+<p>If this policy changes, the new version will be posted on this page with an updated effective date.</p>
+
+<h2>7. Contact</h2>
+<p>HummingLab · <a href="mailto:sungyong@humminglab.io">sungyong@humminglab.io</a></p>
+</section>
+</main>
+</body>
+</html>
